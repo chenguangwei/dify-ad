@@ -1,7 +1,7 @@
 {
-  "name": "Dify",
-  "short_name": "Dify",
-  "description": "Build Production Ready Agentic AI Solutions",
+  "name": "星渊智能体平台",
+  "short_name": "星渊",
+  "description": "新一代智能体构建平台",
   "icons": [
     {
       "src": "/icon-192x192.png",
@@ -31,26 +31,26 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#1C64F2",
+  "theme_color": "#007AFF",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
   "orientation": "portrait-primary",
   "categories": ["productivity", "utilities", "developer"],
-  "lang": "en-US",
+  "lang": "zh-CN",
   "dir": "ltr",
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "Apps",
-      "short_name": "Apps",
+      "name": "应用",
+      "short_name": "应用",
       "url": "/apps",
       "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
     },
     {
-      "name": "Datasets",
-      "short_name": "Datasets",
+      "name": "知识库",
+      "short_name": "知识库",
       "url": "/datasets",
       "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
     }

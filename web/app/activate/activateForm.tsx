@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -60,7 +61,7 @@ const ActivateForm = () => {
           </div>
           <div className="mx-auto mt-6 w-full">
             <Button variant="primary" className="w-full !text-sm">
-              <a href="https://dify.ai">{t('explore', { ns: 'login' })}</a>
+              <Link href="/">{t('explore', { ns: 'login' })}</Link>
             </Button>
           </div>
         </div>

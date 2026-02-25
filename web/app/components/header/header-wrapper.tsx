@@ -28,7 +28,7 @@ const HeaderWrapper = ({
   })
 
   return (
-    <div className={cn('sticky left-0 right-0 top-0 z-[30] flex min-h-[56px] shrink-0 grow-0 basis-auto flex-col', s.header, isBordered ? 'border-b border-divider-regular' : '', hideHeader && (inWorkflowCanvas || isPipelineCanvas) && 'hidden')}>
+    <div className={cn('bg-background-default/80 sticky left-0 right-0 top-0 z-[30] flex min-h-[56px] shrink-0 grow-0 basis-auto flex-col backdrop-blur-xl', s.header, isBordered ? 'border-b border-divider-regular' : '', hideHeader && (inWorkflowCanvas || isPipelineCanvas) && 'hidden')}>
       {children}
     </div>
   )

@@ -20,7 +20,7 @@
 
   .premium-badge-blue {
     @apply bg-util-colors-blue-blue-200;
-    background-image: linear-gradient(90deg, #5289ffe6 0%, #155aefe6 100%), linear-gradient(135deg, var(--color-premium-badge-border-highlight-color) 0%, #155aef 100%);
+    background-image: linear-gradient(90deg, #5289ffe6 0%, #007AFFe6 100%), linear-gradient(135deg, var(--color-premium-badge-border-highlight-color) 0%, #007AFF 100%);
   }
   .premium-badge-blue.allowHover:hover {
     @apply bg-util-colors-blue-blue-300;

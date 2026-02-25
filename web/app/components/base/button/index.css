@@ -2,7 +2,7 @@
 
 @layer components {
   .btn {
-    @apply inline-flex justify-center items-center cursor-pointer whitespace-nowrap;
+    @apply inline-flex justify-center items-center cursor-pointer whitespace-nowrap transition-all duration-200 ease-out;
   }
 
   .btn-disabled {
@@ -10,24 +10,26 @@
   }
 
   .btn-small {
-    @apply px-2 h-6 rounded-md text-xs font-medium;
+    @apply px-2.5 h-7 rounded-lg text-xs font-medium;
   }
 
   .btn-medium {
-    @apply px-3.5 h-8 rounded-lg text-[13px] leading-4 font-medium;
+    @apply px-4 h-8 rounded-xl text-[13px] leading-4 font-medium;
   }
 
   .btn-large {
-    @apply px-4 h-9 rounded-[10px] text-sm font-semibold;
+    @apply px-5 h-10 rounded-xl text-sm font-semibold;
   }
 
   .btn-primary {
     @apply
-    shadow
+    shadow-sm
     bg-components-button-primary-bg
     border-components-button-primary-border
     hover:bg-components-button-primary-bg-hover
     hover:border-components-button-primary-border-hover
+    hover:shadow-md
+    active:scale-[0.98]
     text-components-button-primary-text;
   }
 
@@ -45,7 +47,8 @@
     shadow-none
     bg-components-button-primary-bg-disabled
     border-components-button-primary-border-disabled
-    text-components-button-primary-text-disabled;
+    text-components-button-primary-text-disabled
+    active:scale-100;
   }
 
   .btn-primary.btn-destructive.btn-disabled {
@@ -65,6 +68,8 @@
     border-components-button-secondary-border
     hover:bg-components-button-secondary-bg-hover
     hover:border-components-button-secondary-border-hover
+    hover:shadow-sm
+    active:scale-[0.98]
     text-components-button-secondary-text;
   }
 
@@ -73,7 +78,8 @@
     backdrop-blur-sm
     bg-components-button-secondary-bg-disabled
     border-components-button-secondary-border-disabled
-    text-components-button-secondary-text-disabled;
+    text-components-button-secondary-text-disabled
+    active:scale-100;
   }
 
   .btn-secondary.btn-destructive {
@@ -101,6 +107,8 @@
     border-components-button-secondary-border
     hover:bg-components-button-secondary-bg-hover
     hover:border-components-button-secondary-border-hover
+    hover:shadow-sm
+    active:scale-[0.98]
     text-components-button-secondary-accent-text;
   }
 
@@ -108,7 +116,8 @@
     @apply
     bg-components-button-secondary-bg-disabled
     border-components-button-secondary-border-disabled
-    text-components-button-secondary-accent-text-disabled;
+    text-components-button-secondary-accent-text-disabled
+    active:scale-100;
   }
 
   .btn-warning {
@@ -131,13 +140,16 @@
     @apply
     bg-components-button-tertiary-bg
     hover:bg-components-button-tertiary-bg-hover
+    hover:shadow-sm
+    active:scale-[0.98]
     text-components-button-tertiary-text;
   }
 
   .btn-tertiary.btn-disabled {
     @apply
     bg-components-button-tertiary-bg-disabled
-    text-components-button-tertiary-text-disabled;
+    text-components-button-tertiary-text-disabled
+    active:scale-100;
   }
 
   .btn-tertiary.btn-destructive {
@@ -156,12 +168,14 @@
   .btn-ghost {
     @apply
     hover:bg-components-button-ghost-bg-hover
+    active:scale-[0.98]
     text-components-button-ghost-text;
   }
 
   .btn-ghost.btn-disabled {
     @apply
-    text-components-button-ghost-text-disabled;
+    text-components-button-ghost-text-disabled
+    active:scale-100;
   }
 
   .btn-ghost.btn-destructive {
@@ -178,11 +192,13 @@
   .btn-ghost-accent {
     @apply
     hover:bg-state-accent-hover
+    active:scale-[0.98]
     text-components-button-secondary-accent-text;
   }
 
   .btn-ghost-accent.btn-disabled {
     @apply
-    text-components-button-secondary-accent-text-disabled;
+    text-components-button-secondary-accent-text-disabled
+    active:scale-100;
   }
 }

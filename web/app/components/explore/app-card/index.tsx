@@ -38,7 +38,7 @@ const AppCard = ({
   }, [setShowTryAppPanel, app])
 
   return (
-    <div className={cn('group relative col-span-1 flex cursor-pointer flex-col overflow-hidden rounded-lg border-[0.5px] border-components-panel-border bg-components-panel-on-panel-item-bg pb-2 shadow-sm transition-all duration-200 ease-in-out hover:bg-components-panel-on-panel-item-bg-hover hover:shadow-lg')}>
+    <div className={cn('group relative col-span-1 flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-components-panel-on-panel-item-bg pb-2 shadow-md transition-all duration-200 ease-in-out hover:bg-components-panel-on-panel-item-bg-hover hover:shadow-xl')}>
       <div className="flex h-[66px] shrink-0 grow-0 items-center gap-3 px-[14px] pb-3 pt-[14px]">
         <div className="relative shrink-0">
           <AppIcon
@@ -67,7 +67,7 @@ const AppCard = ({
           </div>
         </div>
       </div>
-      <div className="description-wrapper system-xs-regular h-[90px] px-[14px] text-text-tertiary">
+      <div className="description-wrapper h-[90px] px-[14px] text-text-tertiary system-xs-regular">
         <div className="line-clamp-4 group-hover:line-clamp-2">
           {app.description}
         </div>

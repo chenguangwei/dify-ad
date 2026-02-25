@@ -1,5 +1,5 @@
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
-import { RiArrowRightSLine, RiArrowRightUpLine, RiChatSmile2Line, RiDiscordLine, RiDiscussLine, RiMailSendLine, RiQuestionLine } from '@remixicon/react'
+import { RiArrowRightSLine, RiArrowRightUpLine, RiChatSmile2Line, RiMailSendLine, RiQuestionLine } from '@remixicon/react'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,7 +35,7 @@ export default function Support({ closeAccountDropdown }: SupportProps) {
             }
             >
               <RiQuestionLine className="size-4 shrink-0 text-text-tertiary" />
-              <div className="system-md-regular grow px-1 text-left text-text-secondary">{t('userProfile.support', { ns: 'common' })}</div>
+              <div className="grow px-1 text-left text-text-secondary system-md-regular">{t('userProfile.support', { ns: 'common' })}</div>
               <RiArrowRightSLine className="size-[14px] shrink-0 text-text-tertiary" />
             </MenuButton>
             <Transition
@@ -67,7 +67,7 @@ export default function Support({ closeAccountDropdown }: SupportProps) {
                               }}
                             >
                               <RiChatSmile2Line className="size-4 shrink-0 text-text-tertiary" />
-                              <div className="system-md-regular grow px-1 text-text-secondary">{t('userProfile.contactUs', { ns: 'common' })}</div>
+                              <div className="grow px-1 text-text-secondary system-md-regular">{t('userProfile.contactUs', { ns: 'common' })}</div>
                             </button>
                           )
                         : (
@@ -78,36 +78,12 @@ export default function Support({ closeAccountDropdown }: SupportProps) {
                               rel="noopener noreferrer"
                             >
                               <RiMailSendLine className="size-4 shrink-0 text-text-tertiary" />
-                              <div className="system-md-regular grow px-1 text-text-secondary">{t('userProfile.emailSupport', { ns: 'common' })}</div>
+                              <div className="grow px-1 text-text-secondary system-md-regular">{t('userProfile.emailSupport', { ns: 'common' })}</div>
                               <RiArrowRightUpLine className="size-[14px] shrink-0 text-text-tertiary" />
                             </a>
                           )}
                     </MenuItem>
                   )}
-                  <MenuItem>
-                    <Link
-                      className={cn(itemClassName, 'group justify-between', 'data-[active]:bg-state-base-hover')}
-                      href="https://forum.dify.ai/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <RiDiscussLine className="size-4 shrink-0 text-text-tertiary" />
-                      <div className="system-md-regular grow px-1 text-text-secondary">{t('userProfile.forum', { ns: 'common' })}</div>
-                      <RiArrowRightUpLine className="size-[14px] shrink-0 text-text-tertiary" />
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      className={cn(itemClassName, 'group justify-between', 'data-[active]:bg-state-base-hover')}
-                      href="https://discord.gg/5AEfbxcd9k"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <RiDiscordLine className="size-4 shrink-0 text-text-tertiary" />
-                      <div className="system-md-regular grow px-1 text-text-secondary">{t('userProfile.community', { ns: 'common' })}</div>
-                      <RiArrowRightUpLine className="size-[14px] shrink-0 text-text-tertiary" />
-                    </Link>
-                  </MenuItem>
                 </div>
               </MenuItems>
             </Transition>

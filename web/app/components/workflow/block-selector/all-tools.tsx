@@ -260,7 +260,7 @@ const AllTools = ({
             {hasToolsListContent && (
               <>
                 <div className="px-3 pb-1 pt-2">
-                  <span className="system-xs-medium text-text-primary">{t('allTools', { ns: 'tools' })}</span>
+                  <span className="text-text-primary system-xs-medium">{t('allTools', { ns: 'tools' })}</span>
                 </div>
                 <Tools
                   className={toolContentClassName}
@@ -295,18 +295,6 @@ const AllTools = ({
               <div className="text-sm font-medium text-text-secondary">
                 {t('tabs.noPluginsFound', { ns: 'workflow' })}
               </div>
-              <Link
-                href="https://github.com/langgenius/dify-plugins/issues/new?template=plugin_request.yaml"
-                target="_blank"
-              >
-                <Button
-                  size="small"
-                  variant="secondary-accent"
-                  className="h-6 cursor-pointer px-3 text-xs"
-                >
-                  {t('tabs.requestToCommunity', { ns: 'workflow' })}
-                </Button>
-              </Link>
             </div>
           )}
         </div>

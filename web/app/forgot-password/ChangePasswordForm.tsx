@@ -1,5 +1,6 @@
 'use client'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -90,7 +91,7 @@ const ChangePasswordForm = () => {
           </div>
           <div className="mx-auto mt-6 w-full">
             <Button variant="primary" className="w-full !text-sm">
-              <a href="https://dify.ai">{t('explore', { ns: 'login' })}</a>
+              <Link href="/">{t('explore', { ns: 'login' })}</Link>
             </Button>
           </div>
         </div>

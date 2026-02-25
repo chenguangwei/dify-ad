@@ -105,7 +105,7 @@ const UploaderButton: FC<UploaderButtonProps> = ({
                 {hovering => (
                   <div
                     className={cn(
-                      'flex h-8 cursor-pointer items-center justify-center rounded-lg text-[13px] font-medium text-[#155EEF]',
+                      'flex h-8 cursor-pointer items-center justify-center rounded-lg text-[13px] font-medium text-[#007AFF]',
                       hovering && 'bg-primary-50',
                     )}
                   >

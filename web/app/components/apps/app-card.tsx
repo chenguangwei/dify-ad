@@ -265,14 +265,14 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
     return (
       <div className="relative flex w-full flex-col py-1" onMouseLeave={onMouseLeave}>
         <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickSettings}>
-          <span className="system-sm-regular text-text-secondary">{t('editApp', { ns: 'app' })}</span>
+          <span className="text-text-secondary system-sm-regular">{t('editApp', { ns: 'app' })}</span>
         </button>
         <Divider className="my-1" />
         <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickDuplicate}>
-          <span className="system-sm-regular text-text-secondary">{t('duplicate', { ns: 'app' })}</span>
+          <span className="text-text-secondary system-sm-regular">{t('duplicate', { ns: 'app' })}</span>
         </button>
         <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickExport}>
-          <span className="system-sm-regular text-text-secondary">{t('export', { ns: 'app' })}</span>
+          <span className="text-text-secondary system-sm-regular">{t('export', { ns: 'app' })}</span>
         </button>
         {(app.mode === AppModeEnum.COMPLETION || app.mode === AppModeEnum.CHAT) && (
           <>
@@ -293,7 +293,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
                   <>
                     <Divider className="my-1" />
                     <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                      <span className="system-sm-regular text-text-secondary">{t('openInExplore', { ns: 'app' })}</span>
+                      <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
                     </button>
                   </>
                 )
@@ -301,7 +301,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
                   <>
                     <Divider className="my-1" />
                     <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                      <span className="system-sm-regular text-text-secondary">{t('openInExplore', { ns: 'app' })}</span>
+                      <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
                     </button>
                   </>
                 )
@@ -323,7 +323,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
           className="group mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 py-[6px] hover:bg-state-destructive-hover"
           onClick={onClickDelete}
         >
-          <span className="system-sm-regular text-text-secondary group-hover:text-text-destructive">
+          <span className="text-text-secondary system-sm-regular group-hover:text-text-destructive">
             {t('operation.delete', { ns: 'common' })}
           </span>
         </button>
@@ -351,7 +351,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
           e.preventDefault()
           getRedirection(isCurrentWorkspaceEditor, app, push)
         }}
-        className="group relative col-span-1 inline-flex h-[160px] cursor-pointer flex-col rounded-xl border-[1px] border-solid border-components-card-border bg-components-card-bg shadow-sm transition-all duration-200 ease-in-out hover:shadow-lg"
+        className="group relative col-span-1 inline-flex h-[160px] cursor-pointer flex-col rounded-2xl bg-components-card-bg shadow-md transition-all duration-200 ease-in-out hover:shadow-xl"
       >
         <div className="flex h-[66px] shrink-0 grow-0 items-center gap-3 px-[14px] pb-3 pt-[14px]">
           <div className="relative shrink-0">

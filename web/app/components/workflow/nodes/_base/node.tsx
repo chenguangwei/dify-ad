@@ -168,8 +168,8 @@ const BaseNode: FC<BaseNodeProps> = ({
       }
       <div
         className={cn(
-          'group relative pb-1 shadow-xs',
-          'rounded-[15px] border border-transparent',
+          'group relative pb-1 shadow-sm',
+          'rounded-2xl border border-transparent',
           (data.type !== BlockEnum.Iteration && data.type !== BlockEnum.Loop) && 'w-[240px] bg-workflow-block-bg',
           (data.type === BlockEnum.Iteration || data.type === BlockEnum.Loop) && 'flex h-full w-full flex-col border-workflow-block-border bg-workflow-block-bg-transparent',
           !data._runningStatus && 'hover:shadow-lg',

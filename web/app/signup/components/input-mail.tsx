@@ -8,7 +8,6 @@ import Input from '@/app/components/base/input'
 import Toast from '@/app/components/base/toast'
 import Split from '@/app/signin/split'
 import { emailRegex } from '@/config'
-import { useGlobalPublicStore } from '@/context/global-public-context'
 import { useLocale } from '@/context/i18n'
 import { useSendMail } from '@/service/use-common'
 
@@ -21,8 +20,6 @@ export default function Form({
   const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const locale = useLocale()
-  const { systemFeatures } = useGlobalPublicStore()
-
   const { mutateAsync: submitMail, isPending } = useSendMail()
 
   const handleSubmit = useCallback(async () => {
@@ -52,7 +49,7 @@ export default function Form({
     }}
     >
       <div className="mb-3">
-        <label htmlFor="email" className="system-md-semibold my-2 text-text-secondary">
+        <label htmlFor="email" className="my-2 text-text-secondary system-md-semibold">
           {t('email', { ns: 'login' })}
         </label>
         <div className="mt-1">
@@ -89,32 +86,6 @@ export default function Form({
           {t('signup.signIn', { ns: 'login' })}
         </Link>
       </div>
-
-      {!systemFeatures.branding.enabled && (
-        <>
-          <div className="system-xs-regular mt-3 block w-full text-text-tertiary">
-            {t('tosDesc', { ns: 'login' })}
-            &nbsp;
-            <Link
-              className="system-xs-medium text-text-secondary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://dify.ai/terms"
-            >
-              {t('tos', { ns: 'login' })}
-            </Link>
-            &nbsp;&&nbsp;
-            <Link
-              className="system-xs-medium text-text-secondary hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://dify.ai/privacy"
-            >
-              {t('pp', { ns: 'login' })}
-            </Link>
-          </div>
-        </>
-      )}
 
     </form>
   )

@@ -44,7 +44,7 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
     <div
       className={`
       group inline-flex h-6 items-center rounded-[5px] border border-transparent bg-[#F4F3FF] pl-1 pr-0.5 text-[#6938EF] hover:bg-[#EBE9FE]
-      ${open ? 'bg-[#EBE9FE]' : 'bg-[#F4F3FF]'}
+      ${open ? 'bg-[#EBE9FE]' : ''}
       ${isSelected && '!border-[#9B8AFB]'}
     `}
       ref={ref}
@@ -87,7 +87,7 @@ const ContextBlockComponent: FC<ContextBlockComponentProps> = ({
                     ))
                   }
                 </div>
-                <div className="flex h-8 cursor-pointer items-center text-[#155EEF]" onClick={onAddContext}>
+                <div className="flex h-8 cursor-pointer items-center text-[#007AFF]" onClick={onAddContext}>
                   <div className="mr-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-[0.5px] border-gray-100">
                     <RiAddLine className="h-[14px] w-[14px]" />
                   </div>

@@ -2,12 +2,8 @@
 import type { LangGeniusVersionResponse } from '@/models/common'
 import { RiCloseLine } from '@remixicon/react'
 import dayjs from 'dayjs'
-import Link from 'next/link'
-import { useTranslation } from 'react-i18next'
-import Button from '@/app/components/base/button'
 import DifyLogo from '@/app/components/base/logo/dify-logo'
 import Modal from '@/app/components/base/modal'
-import { IS_CE_EDITION } from '@/config'
 
 import { useGlobalPublicStore } from '@/context/global-public-context'
 
@@ -20,8 +16,6 @@ export default function AccountAbout({
   langGeniusVersionInfo,
   onCancel,
 }: IAccountSettingProps) {
-  const { t } = useTranslation()
-  const isLatest = langGeniusVersionInfo.current_version === langGeniusVersionInfo.latest_version
   const systemFeatures = useGlobalPublicStore(s => s.systemFeatures)
 
   return (
@@ -54,55 +48,8 @@ export default function AccountAbout({
               ©
               {dayjs().year()}
               {' '}
-              LangGenius, Inc., Contributors.
+              云知声智能科技股份有限公司
             </div>
-            <div className="text-text-accent">
-              {
-                IS_CE_EDITION
-                  ? <Link href="https://github.com/langgenius/dify/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">Open Source License</Link>
-                  : (
-                      <>
-                        <Link href="https://dify.ai/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link>
-                        ,&nbsp;
-                        <Link href="https://dify.ai/terms" target="_blank" rel="noopener noreferrer">Terms of Service</Link>
-                      </>
-                    )
-              }
-            </div>
-          </div>
-        </div>
-        <div className="-mx-8 mb-4 h-[0.5px] bg-divider-regular" />
-        <div className="flex items-center justify-between">
-          <div className="text-xs font-medium text-text-tertiary">
-            {
-              isLatest
-                ? t('about.latestAvailable', { ns: 'common', version: langGeniusVersionInfo.latest_version })
-                : t('about.nowAvailable', { ns: 'common', version: langGeniusVersionInfo.latest_version })
-            }
-          </div>
-          <div className="flex items-center">
-            <Button className="mr-2" size="small">
-              <Link
-                href="https://github.com/langgenius/dify/releases"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {t('about.changeLog', { ns: 'common' })}
-              </Link>
-            </Button>
-            {
-              !isLatest && !IS_CE_EDITION && (
-                <Button variant="primary" size="small">
-                  <Link
-                    href={langGeniusVersionInfo.release_notes}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {t('about.updateNow', { ns: 'common' })}
-                  </Link>
-                </Button>
-              )
-            }
           </div>
         </div>
       </div>

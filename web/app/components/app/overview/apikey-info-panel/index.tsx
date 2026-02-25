@@ -29,7 +29,7 @@ const APIKeyInfoPanel: FC = () => {
     return null
 
   return (
-    <div className={cn('border-components-panel-border bg-components-panel-bg', 'relative mb-6 rounded-2xl border p-8 shadow-md ')}>
+    <div className={cn('border-components-panel-border bg-components-panel-bg', 'relative mb-6 rounded-2xl border p-8 shadow-md')}>
       <div className={cn('text-[24px] font-semibold text-text-primary', isCloud ? 'flex h-8 items-center space-x-1' : 'mb-6 leading-8')}>
         {isCloud && <em-emoji id="😀" />}
         {isCloud
@@ -54,20 +54,9 @@ const APIKeyInfoPanel: FC = () => {
         <div className="text-sm font-medium">{t('apiKeyInfo.setAPIBtn', { ns: 'appOverview' })}</div>
         <LinkExternal02 className="h-4 w-4" />
       </Button>
-      {!isCloud && (
-        <a
-          className="mt-2 flex h-[26px] items-center space-x-1  p-1 text-xs font-medium text-[#155EEF]"
-          href="https://cloud.dify.ai/apps"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div>{t('apiKeyInfo.tryCloud', { ns: 'appOverview' })}</div>
-          <LinkExternal02 className="h-3 w-3" />
-        </a>
-      )}
       <div
         onClick={() => setIsShow(false)}
-        className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center "
+        className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center"
       >
         <RiCloseLine className="h-4 w-4 text-text-tertiary" />
       </div>

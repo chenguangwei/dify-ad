@@ -13,7 +13,7 @@ html[data-theme="light"] {
   --color-components-input-text-filled-disabled: #676f83;
   --color-components-input-border-hover: #d0d5dc;
   --color-components-input-border-active-prompt-1: #0ba5ec;
-  --color-components-input-border-active-prompt-2: #155aef;
+  --color-components-input-border-active-prompt-2: #007AFF;
 
   --color-components-kbd-bg-gray: rgb(16 24 40 / 0.04);
   --color-components-kbd-bg-white: rgb(255 255 255 / 0.12);
@@ -21,11 +21,11 @@ html[data-theme="light"] {
   --color-components-tooltip-bg: rgb(255 255 255 / 0.95);
 
   --color-components-button-primary-text: #ffffff;
-  --color-components-button-primary-bg: #155aef;
-  --color-components-button-primary-border: rgb(16 24 40 / 0.04);
-  --color-components-button-primary-bg-hover: #004aeb;
-  --color-components-button-primary-border-hover: rgb(16 24 40 / 0.08);
-  --color-components-button-primary-bg-disabled: rgb(21 90 239 / 0.14);
+  --color-components-button-primary-bg: #007AFF;
+  --color-components-button-primary-border: rgb(0 0 0 / 0.04);
+  --color-components-button-primary-bg-hover: #0066d6;
+  --color-components-button-primary-border-hover: rgb(0 0 0 / 0.08);
+  --color-components-button-primary-bg-disabled: rgb(0 122 255 / 0.14);
   --color-components-button-primary-border-disabled: rgb(255 255 255 / 0);
   --color-components-button-primary-text-disabled: rgb(255 255 255 / 0.6);
 
@@ -76,7 +76,7 @@ html[data-theme="light"] {
   --color-components-button-destructive-ghost-text-disabled: rgb(240 68 56 / 0.2);
   --color-components-button-destructive-ghost-bg-hover: #fee4e2;
 
-  --color-components-button-secondary-accent-text: #155aef;
+  --color-components-button-secondary-accent-text: #007AFF;
   --color-components-button-secondary-accent-text-disabled: #b2caff;
   --color-components-button-secondary-accent-bg: #ffffff;
   --color-components-button-secondary-accent-bg-hover: #f2f4f7;
@@ -102,8 +102,8 @@ html[data-theme="light"] {
 
   --color-components-checkbox-icon: #ffffff;
   --color-components-checkbox-icon-disabled: rgb(255 255 255 / 0.5);
-  --color-components-checkbox-bg: #155aef;
-  --color-components-checkbox-bg-hover: #004aeb;
+  --color-components-checkbox-bg: #007AFF;
+  --color-components-checkbox-bg-hover: #0066d6;
   --color-components-checkbox-bg-disabled: #f2f4f7;
   --color-components-checkbox-border: #d0d5dc;
   --color-components-checkbox-border-hover: #98a2b2;
@@ -112,8 +112,8 @@ html[data-theme="light"] {
   --color-components-checkbox-bg-unchecked-hover: #ffffff;
   --color-components-checkbox-bg-disabled-checked: #b2caff;
 
-  --color-components-radio-border-checked: #155aef;
-  --color-components-radio-border-checked-hover: #004aeb;
+  --color-components-radio-border-checked: #007AFF;
+  --color-components-radio-border-checked-hover: #0066d6;
   --color-components-radio-border-checked-disabled: #b2caff;
   --color-components-radio-bg-disabled: rgb(255 255 255 / 0);
   --color-components-radio-border: #d0d5dc;
@@ -124,8 +124,8 @@ html[data-theme="light"] {
 
   --color-components-toggle-knob: #ffffff;
   --color-components-toggle-knob-disabled: rgb(255 255 255 / 0.95);
-  --color-components-toggle-bg: #155aef;
-  --color-components-toggle-bg-hover: #004aeb;
+  --color-components-toggle-bg: #007AFF;
+  --color-components-toggle-bg-hover: #0066d6;
   --color-components-toggle-bg-disabled: #d1e0ff;
   --color-components-toggle-bg-unchecked: #e9ebf0;
   --color-components-toggle-bg-unchecked-hover: #d0d5dc;
@@ -163,7 +163,7 @@ html[data-theme="light"] {
   --color-components-panel-bg-blur-burn: rgb(255 255 255 / 0.9);
 
   --color-components-main-nav-nav-button-text: #495464;
-  --color-components-main-nav-nav-button-text-active: #155aef;
+  --color-components-main-nav-nav-button-text-active: #007AFF;
   --color-components-main-nav-nav-button-bg: rgb(255 255 255 / 0);
   --color-components-main-nav-nav-button-bg-active: #fcfcfd;
   --color-components-main-nav-nav-button-border: rgb(255 255 255 / 0.95);
@@ -212,7 +212,7 @@ html[data-theme="light"] {
   --color-components-option-card-option-bg-hover: #ffffff;
   --color-components-option-card-option-border-hover: #d0d5dc;
 
-  --color-components-tab-active: #155aef;
+  --color-components-tab-active: #007AFF;
 
   --color-components-badge-white-to-dark: #ffffff;
   --color-components-badge-status-light-success-bg: #47cd89;
@@ -247,7 +247,7 @@ html[data-theme="light"] {
   --color-components-chart-line: #296dff;
   --color-components-chart-area-1: rgb(21 90 239 / 0.14);
   --color-components-chart-area-2: rgb(21 90 239 / 0.04);
-  --color-components-chart-current-1: #155aef;
+  --color-components-chart-current-1: #007AFF;
   --color-components-chart-current-2: #d1e0ff;
   --color-components-chart-bg: #ffffff;
 
@@ -303,14 +303,14 @@ html[data-theme="light"] {
   --color-components-label-gray: #f2f4f7;
 
   --color-components-premium-badge-blue-bg-stop-0: #5289ff;
-  --color-components-premium-badge-blue-bg-stop-100: #155aef;
+  --color-components-premium-badge-blue-bg-stop-100: #007AFF;
   --color-components-premium-badge-blue-stroke-stop-0: rgb(255 255 255 / 0.95);
-  --color-components-premium-badge-blue-stroke-stop-100: #155aef;
+  --color-components-premium-badge-blue-stroke-stop-100: #007AFF;
   --color-components-premium-badge-blue-text-stop-0: #f5f7ff;
   --color-components-premium-badge-blue-text-stop-100: #d1e0ff;
   --color-components-premium-badge-blue-glow: #00329e;
   --color-components-premium-badge-blue-bg-stop-0-hover: #296dff;
-  --color-components-premium-badge-blue-bg-stop-100-hover: #004aeb;
+  --color-components-premium-badge-blue-bg-stop-100-hover: #0066d6;
   --color-components-premium-badge-blue-glow-hover: #84abff;
   --color-components-premium-badge-blue-stroke-stop-0-hover: rgb(255 255 255 / 0.95);
   --color-components-premium-badge-blue-stroke-stop-100-hover: #00329e;
@@ -370,7 +370,7 @@ html[data-theme="light"] {
   --color-components-icon-bg-green-solid: #4ca30d;
   --color-components-icon-bg-teal-solid: #0e9384;
   --color-components-icon-bg-blue-light-solid: #0ba5ec;
-  --color-components-icon-bg-blue-solid: #155aef;
+  --color-components-icon-bg-blue-solid: #007AFF;
   --color-components-icon-bg-indigo-solid: #444ce7;
   --color-components-icon-bg-violet-solid: #7839ee;
   --color-components-icon-bg-midnight-solid: #828dad;
@@ -401,12 +401,12 @@ html[data-theme="light"] {
   --color-text-destructive-secondary: #f04438;
   --color-text-success-secondary: #17b26a;
   --color-text-warning-secondary: #f79009;
-  --color-text-accent: #155aef;
+  --color-text-accent: #007AFF;
   --color-text-primary-on-surface: #ffffff;
   --color-text-placeholder: #98a2b2;
   --color-text-disabled: #d0d5dc;
   --color-text-accent-secondary: #296dff;
-  --color-text-accent-light-mode-only: #155aef;
+  --color-text-accent-light-mode-only: #007AFF;
   --color-text-text-selected: rgb(21 90 239 / 0.14);
   --color-text-secondary-on-surface: rgb(255 255 255 / 0.9);
   --color-text-logo-text: #18222f;
@@ -543,7 +543,7 @@ html[data-theme="light"] {
   --color-workflow-debug-run-status-bg-alt: rgb(255 68 5 / 0.14);
 
   --color-workflow-test-run-run-status-bg: rgb(21 90 239 / 0.08);
-  --color-workflow-test-run-text: #004aeb;
+  --color-workflow-test-run-text: #0066d6;
   --color-workflow-test-run-run-status-bg-alt: rgb(21 90 239 / 0.14);
   --color-workflow-test-run-paused-bg: rgb(247 144 9 / 0.14);
   --color-workflow-test-run-paused-text: #dc6803;
@@ -682,8 +682,8 @@ html[data-theme="light"] {
   --color-util-colors-blue-brand-blue-brand-300: #84abff;
   --color-util-colors-blue-brand-blue-brand-400: #5289ff;
   --color-util-colors-blue-brand-blue-brand-500: #296dff;
-  --color-util-colors-blue-brand-blue-brand-600: #155aef;
-  --color-util-colors-blue-brand-blue-brand-700: #004aeb;
+  --color-util-colors-blue-brand-blue-brand-600: #007AFF;
+  --color-util-colors-blue-brand-blue-brand-700: #0066d6;
 
   --color-util-colors-red-red-50: #fef3f2;
   --color-util-colors-red-red-100: #fee4e2;
@@ -807,9 +807,9 @@ html[data-theme="light"] {
   --color-saas-background-inverted: #0b0b0e;
   --color-saas-background-inverted-hover: #222225;
 
-  --color-dify-logo-blue: #0033ff;
-  --color-dify-logo-black: #000000;
-  --color-dify-logo-outline-1: rgb(0 0 0 / 0);
-  --color-dify-logo-outline-2: rgb(0 0 0 / 0);
+  --color-brand-logo-blue: #007AFF;
+  --color-brand-logo-black: #000000;
+  --color-brand-logo-outline-1: rgb(0 0 0 / 0);
+  --color-brand-logo-outline-2: rgb(0 0 0 / 0);
 
 }

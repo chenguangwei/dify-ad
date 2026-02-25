@@ -807,10 +807,10 @@ const vars = {
   'saas-background-inverted': 'var(--color-saas-background-inverted)',
   'saas-background-inverted-hover': 'var(--color-saas-background-inverted-hover)',
 
-  'dify-logo-blue': 'var(--color-dify-logo-blue)',
-  'dify-logo-black': 'var(--color-dify-logo-black)',
-  'dify-logo-outline-1': 'var(--color-dify-logo-outline-1)',
-  'dify-logo-outline-2': 'var(--color-dify-logo-outline-2)',
+  'brand-logo-blue': 'var(--color-brand-logo-blue)',
+  'brand-logo-black': 'var(--color-brand-logo-black)',
+  'brand-logo-outline-1': 'var(--color-brand-logo-outline-1)',
+  'brand-logo-outline-2': 'var(--color-brand-logo-outline-2)',
 
 }
 export default vars

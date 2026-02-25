@@ -236,3 +236,7 @@ scripts/stress-test/reports/
 # settings
 *.local.json
 *.local.md
+*cluade.md
+CLAUDE.md
+**/CLAUDE.md
+*.local.yaml

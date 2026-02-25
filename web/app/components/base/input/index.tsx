@@ -13,8 +13,8 @@ export const inputVariants = cva(
   {
     variants: {
       size: {
-        regular: 'px-3 radius-md system-sm-regular',
-        large: 'px-4 radius-lg system-md-regular',
+        regular: 'px-3 system-sm-regular radius-md',
+        large: 'px-4 system-md-regular radius-lg',
       },
     },
     defaultVariants: {
@@ -131,7 +131,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
       )}
       {
         unit && (
-          <div className="system-sm-regular absolute right-2 top-1/2 -translate-y-1/2 text-text-tertiary">
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 text-text-tertiary system-sm-regular">
             {unit}
           </div>
         )
