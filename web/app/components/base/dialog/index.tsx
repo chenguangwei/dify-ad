@@ -35,7 +35,7 @@ const CustomDialog = ({
     <Transition appear show={show} as={Fragment}>
       <Dialog as="div" className="relative z-40" onClose={close}>
         <TransitionChild>
-          <div className={cn('fixed inset-0 bg-background-overlay-backdrop backdrop-blur-[6px]', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')} />
+          <div className={cn('fixed inset-0 bg-black/60', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')} />
         </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">

@@ -160,7 +160,7 @@ export default function MailAndPasswordAuth({ isEmailSetup }: MailAndPasswordAut
               variant="ghost"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? '👀' : '😝'}
+              {showPassword ? '隐藏' : '显示'}
             </Button>
           </div>
         </div>

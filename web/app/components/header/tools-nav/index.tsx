@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  RiHammerFill,
-  RiHammerLine,
+  RiPuzzle2Fill,
+  RiPuzzle2Line,
 } from '@remixicon/react'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
@@ -27,8 +27,8 @@ const ToolsNav = ({
     >
       {
         activated
-          ? <RiHammerFill className="h-4 w-4" />
-          : <RiHammerLine className="h-4 w-4" />
+          ? <RiPuzzle2Fill className="h-4 w-4" />
+          : <RiPuzzle2Line className="h-4 w-4" />
       }
       <div className="ml-2 max-[1024px]:hidden">
         {t('menus.tools', { ns: 'common' })}

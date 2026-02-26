@@ -152,20 +152,6 @@ export default function InviteSettingsPage() {
           </Button>
         </div>
       </form>
-      {!systemFeatures.branding.enabled && (
-        <div className="mt-2 block w-full text-text-tertiary system-xs-regular">
-          {t('license.tip', { ns: 'login' })}
-      &nbsp;
-          <Link
-            className="text-text-accent-secondary system-xs-medium"
-            target="_blank"
-            rel="noopener noreferrer"
-            href={LICENSE_LINK}
-          >
-            {t('license.link', { ns: 'login' })}
-          </Link>
-        </div>
-      )}
     </div>
   )
 }

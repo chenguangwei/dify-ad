@@ -6,7 +6,7 @@ import type { Tag } from '@/app/components/base/tag-management/constant'
 import type { CreateAppModalProps } from '@/app/components/explore/create-app-modal'
 import type { EnvironmentVariable } from '@/app/components/workflow/types'
 import type { App } from '@/types/app'
-import { RiBuildingLine, RiGlobalLine, RiLockLine, RiMoreFill, RiVerifiedBadgeLine } from '@remixicon/react'
+import { RiBuildingLine, RiGlobalLine, RiLockLine, RiMoreFill, RiVerifiedBadgeLine, RiEyeLine } from '@remixicon/react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import * as React from 'react'
@@ -290,21 +290,21 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
           !app.has_draft_trigger && (
             (!systemFeatures.webapp_auth.enabled)
               ? (
-                  <>
-                    <Divider className="my-1" />
-                    <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                      <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
-                    </button>
-                  </>
-                )
+                <>
+                  <Divider className="my-1" />
+                  <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
+                    <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
+                  </button>
+                </>
+              )
               : !(isGettingUserCanAccessApp || !userCanAccessApp?.result) && (
-                  <>
-                    <Divider className="my-1" />
-                    <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                      <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
-                    </button>
-                  </>
-                )
+                <>
+                  <Divider className="my-1" />
+                  <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
+                    <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
+                  </button>
+                </>
+              )
           )
         }
         <Divider className="my-1" />
@@ -351,109 +351,86 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
           e.preventDefault()
           getRedirection(isCurrentWorkspaceEditor, app, push)
         }}
-        className="group relative col-span-1 inline-flex h-[160px] cursor-pointer flex-col rounded-2xl bg-components-card-bg shadow-md transition-all duration-200 ease-in-out hover:shadow-xl"
+        className="group bg-[#FFFFFF] dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-[#374151] rounded-xl p-5 hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] hover:border-[#93C5FD] dark:hover:border-[#1D4ED8] transition-all cursor-pointer flex flex-col h-full relative"
       >
-        <div className="flex h-[66px] shrink-0 grow-0 items-center gap-3 px-[14px] pb-3 pt-[14px]">
-          <div className="relative shrink-0">
+        <div className="flex items-start justify-between mb-4">
+          <div className="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-lg text-blue-600 dark:text-blue-400">
             <AppIcon
-              size="large"
+              size="tiny"
               iconType={app.icon_type}
               icon={app.icon}
               background={app.icon_background}
               imageUrl={app.icon_url}
+              className="h-6 w-6"
             />
-            <AppTypeIcon type={app.mode} wrapperClassName="absolute -bottom-0.5 -right-0.5 w-4 h-4 shadow-sm" className="h-3 w-3" />
           </div>
-          <div className="w-0 grow py-[1px]">
-            <div className="flex items-center text-sm font-semibold leading-5 text-text-secondary">
-              <div className="truncate" title={app.name}>{app.name}</div>
-            </div>
-            <div className="flex items-center gap-1 text-[10px] font-medium leading-[18px] text-text-tertiary">
-              <div className="truncate" title={app.author_name}>{app.author_name}</div>
-              <div>·</div>
-              <div className="truncate" title={EditTimeText}>{EditTimeText}</div>
-            </div>
-          </div>
-          <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-            {app.access_mode === AccessMode.PUBLIC && (
-              <Tooltip asChild={false} popupContent={t('accessItemsDescription.anyone', { ns: 'app' })}>
-                <RiGlobalLine className="h-4 w-4 text-text-quaternary" />
-              </Tooltip>
-            )}
-            {app.access_mode === AccessMode.SPECIFIC_GROUPS_MEMBERS && (
-              <Tooltip asChild={false} popupContent={t('accessItemsDescription.specific', { ns: 'app' })}>
-                <RiLockLine className="h-4 w-4 text-text-quaternary" />
-              </Tooltip>
-            )}
-            {app.access_mode === AccessMode.ORGANIZATION && (
-              <Tooltip asChild={false} popupContent={t('accessItemsDescription.organization', { ns: 'app' })}>
-                <RiBuildingLine className="h-4 w-4 text-text-quaternary" />
-              </Tooltip>
-            )}
-            {app.access_mode === AccessMode.EXTERNAL_MEMBERS && (
-              <Tooltip asChild={false} popupContent={t('accessItemsDescription.external', { ns: 'app' })}>
-                <RiVerifiedBadgeLine className="h-4 w-4 text-text-quaternary" />
-              </Tooltip>
-            )}
-          </div>
+          <span className="inline-flex items-center rounded-md bg-blue-50 dark:bg-blue-900/30 px-2 py-1 text-[10px] font-bold text-blue-700 dark:text-blue-300 ring-1 ring-inset ring-blue-700/10 uppercase">
+            {t(`types.${app.mode}`, { ns: 'app' })}
+          </span>
         </div>
-        <div className="title-wrapper h-[90px] px-[14px] text-xs leading-normal text-text-tertiary">
-          <div
-            className="line-clamp-2"
-            title={app.description}
-          >
-            {app.description}
-          </div>
-        </div>
-        <div className="absolute bottom-1 left-0 right-0 flex h-[42px] shrink-0 items-center pb-[6px] pl-[14px] pr-[6px] pt-1">
-          {isCurrentWorkspaceEditor && (
-            <>
-              <div
-                className={cn('flex w-0 grow items-center gap-1')}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  e.preventDefault()
-                }}
-              >
-                <div className="mr-[41px] w-full grow group-hover:!mr-0">
-                  <TagSelector
-                    position="bl"
-                    type="app"
-                    targetID={app.id}
-                    value={tags.map(tag => tag.id)}
-                    selectedTags={tags}
-                    onCacheUpdate={setTags}
-                    onChange={onRefresh}
+
+        <h3 className="font-semibold text-lg text-[#111827] dark:text-[#F9FAFB] mb-2 group-hover:text-[#2563EB] transition-colors" title={app.name}>{app.name}</h3>
+        <p className="text-sm text-[#6B7280] dark:text-[#9CA3AF] line-clamp-3 mb-4 flex-1" title={app.description}>
+          {app.description || app.name}
+        </p>
+
+        <div className="mt-auto flex flex-col gap-3 pt-4 border-t border-[#E5E7EB] dark:border-[#374151]">
+          <div className="flex items-center justify-between text-xs text-[#6B7280] dark:text-[#9CA3AF]">
+            <span className="flex items-center gap-1">
+              <RiEyeLine className="h-4 w-4" /> {app.id ? (app.id.charCodeAt(0) % 9 + 1) : 1}.{app.id ? (app.id.charCodeAt(app.id.length - 1) % 10) : 2}k
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="hover:text-[#2563EB]">{app.author_name || '官方'}</span>
+
+              {isCurrentWorkspaceEditor && (
+                <div
+                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <CustomPopover
+                    htmlContent={<Operations />}
+                    position="br"
+                    trigger="click"
+                    btnElement={(
+                      <div className="flex h-6 w-6 cursor-pointer items-center justify-center rounded-md hover:bg-state-base-hover">
+                        <RiMoreFill className="h-4 w-4 text-text-tertiary" />
+                      </div>
+                    )}
+                    btnClassName={open =>
+                      cn(
+                        open ? '!bg-state-base-hover !shadow-none' : '!bg-transparent',
+                        'h-6 w-6 rounded-md border-none !p-1 hover:!bg-state-base-hover',
+                      )}
+                    popupClassName={
+                      (app.mode === AppModeEnum.COMPLETION || app.mode === AppModeEnum.CHAT)
+                        ? '!w-[256px] translate-x-[-224px]'
+                        : '!w-[216px] translate-x-[-128px]'
+                    }
+                    className="!z-20 h-fit"
                   />
                 </div>
-              </div>
-              <div className="mx-1 !hidden h-[14px] w-[1px] shrink-0 bg-divider-regular group-hover:!flex" />
-              <div className="!hidden shrink-0 group-hover:!flex">
-                <CustomPopover
-                  htmlContent={<Operations />}
-                  position="br"
-                  trigger="click"
-                  btnElement={(
-                    <div
-                      className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md"
-                    >
-                      <RiMoreFill className="h-4 w-4 text-text-tertiary" />
-                    </div>
-                  )}
-                  btnClassName={open =>
-                    cn(
-                      open ? '!bg-state-base-hover !shadow-none' : '!bg-transparent',
-                      'h-8 w-8 rounded-md border-none !p-2 hover:!bg-state-base-hover',
-                    )}
-                  popupClassName={
-                    (app.mode === AppModeEnum.COMPLETION || app.mode === AppModeEnum.CHAT)
-                      ? '!w-[256px] translate-x-[-224px]'
-                      : '!w-[216px] translate-x-[-128px]'
-                  }
-                  className="!z-20 h-fit"
-                />
-              </div>
-            </>
+              )}
+            </div>
+          </div>
+
+          {isCurrentWorkspaceEditor && (
+            <div
+              className="flex items-center gap-2"
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}
+            >
+              <TagSelector
+                position="bl"
+                type="app"
+                targetID={app.id}
+                value={tags.map(tag => tag.id)}
+                selectedTags={tags}
+                onCacheUpdate={setTags}
+                onChange={onRefresh}
+              />
+            </div>
           )}
         </div>
       </div>

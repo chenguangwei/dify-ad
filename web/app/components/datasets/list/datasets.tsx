@@ -3,10 +3,8 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import Loading from '@/app/components/base/loading'
-import { useSelector as useAppContextWithSelector } from '@/context/app-context'
 import { useDatasetList, useInvalidDatasetList } from '@/service/knowledge/use-dataset'
 import DatasetCard from './dataset-card'
-import NewDatasetCard from './new-dataset-card'
 
 type Props = {
   tags: string[]
@@ -20,7 +18,6 @@ const Datasets = ({
   includeAll,
 }: Props) => {
   const { t } = useTranslation()
-  const isCurrentWorkspaceEditor = useAppContextWithSelector(state => state.isCurrentWorkspaceEditor)
   const {
     data: datasetList,
     fetchNextPage,
@@ -39,7 +36,7 @@ const Datasets = ({
   const observerRef = useRef<IntersectionObserver>(null)
 
   useEffect(() => {
-    document.title = `${t('knowledge', { ns: 'dataset' })} - Dify`
+    document.title = `${t('knowledge', { ns: 'dataset' })} - 星渊`
   }, [t])
 
   useEffect(() => {
@@ -55,12 +52,13 @@ const Datasets = ({
     return () => observerRef.current?.disconnect()
   }, [anchorRef, hasNextPage, isFetching, fetchNextPage])
 
+  const allDatasets = datasetList?.pages.flatMap(({ data: datasets }) => datasets) ?? []
+
   return (
     <>
-      <nav className="grid grow grid-cols-1 content-start gap-3 px-12 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {isCurrentWorkspaceEditor && <NewDatasetCard />}
-        {datasetList?.pages.map(({ data: datasets }) => datasets.map(dataset => (
-          <DatasetCard key={dataset.id} dataset={dataset} onSuccess={invalidDatasetList} />),
+      <nav className="grid grow grid-cols-1 content-start gap-6 px-4 md:px-8 pb-8 pt-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {allDatasets.map(dataset => (
+          <DatasetCard key={dataset.id} dataset={dataset} onSuccess={invalidDatasetList} />
         ))}
         {isFetchingNextPage && <Loading />}
         <div ref={anchorRef} className="h-0" />

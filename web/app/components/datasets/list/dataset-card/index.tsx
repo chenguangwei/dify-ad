@@ -65,7 +65,7 @@ const DatasetCard = ({
   return (
     <>
       <div
-        className="group relative col-span-1 flex h-[190px] cursor-pointer flex-col rounded-2xl bg-components-card-bg shadow-md transition-all duration-200 ease-in-out hover:bg-components-card-bg-alt hover:shadow-xl"
+        className="group bg-[#FFFFFF] dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-[#374151] rounded-xl p-0 hover:shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)] hover:border-[#93C5FD] dark:hover:border-[#1D4ED8] transition-all cursor-pointer flex flex-col h-full relative"
         data-disable-nprogress={true}
         onClick={handleCardClick}
       >

@@ -30,7 +30,7 @@ html[data-theme="dark"] {
   --color-components-kbd-bg-gray: rgb(255 255 255 / 0.03);
   --color-components-kbd-bg-white: rgb(255 255 255 / 0.12);
 
-  --color-components-tooltip-bg: rgb(24 24 27 / 0.95);
+  --color-components-tooltip-bg: #18181b;
 
   --color-components-button-primary-text: rgb(255 255 255 / 0.95);
   --color-components-button-primary-bg: #007AFF;

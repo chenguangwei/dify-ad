@@ -143,26 +143,26 @@ const NormalForm = () => {
       <div className="mx-auto mt-8 w-full">
         {isInviteLink
           ? (
-              <div className="mx-auto w-full">
-                <h2 className="text-text-primary title-4xl-semi-bold">
-                  {t('join', { ns: 'login' })}
+            <div className="mx-auto w-full">
+              <h2 className="text-text-primary title-4xl-semi-bold">
+                {t('join', { ns: 'login' })}
+                {workspaceName}
+              </h2>
+              {!systemFeatures.branding.enabled && (
+                <p className="mt-2 text-text-tertiary body-md-regular">
+                  {t('joinTipStart', { ns: 'login' })}
                   {workspaceName}
-                </h2>
-                {!systemFeatures.branding.enabled && (
-                  <p className="mt-2 text-text-tertiary body-md-regular">
-                    {t('joinTipStart', { ns: 'login' })}
-                    {workspaceName}
-                    {t('joinTipEnd', { ns: 'login' })}
-                  </p>
-                )}
-              </div>
-            )
+                  {t('joinTipEnd', { ns: 'login' })}
+                </p>
+              )}
+            </div>
+          )
           : (
-              <div className="mx-auto w-full">
-                <h2 className="text-text-primary title-4xl-semi-bold">{systemFeatures.branding.enabled ? t('pageTitleForE', { ns: 'login' }) : t('pageTitle', { ns: 'login' })}</h2>
-                <p className="mt-2 text-text-tertiary body-md-regular">{t('welcome', { ns: 'login' })}</p>
-              </div>
-            )}
+            <div className="mx-auto w-full">
+              <h2 className="signin-text-title title-4xl-semi-bold">{systemFeatures.branding.enabled ? t('pageTitleForE', { ns: 'login' }) : <>{t('pageTitle', { ns: 'login' })}</>}</h2>
+              <p className="mt-2 signin-text-body body-md-regular">{t('welcome', { ns: 'login' })}</p>
+            </div>
+          )}
         <div className="relative">
           <div className="mt-6 flex flex-col gap-3">
             {systemFeatures.enable_social_oauth_login && <SocialAuth />}
@@ -176,9 +176,9 @@ const NormalForm = () => {
           {showORLine && (
             <div className="relative mt-6">
               <div className="flex items-center">
-                <div className="h-px flex-1 bg-gradient-to-r from-background-gradient-mask-transparent to-divider-regular"></div>
-                <span className="px-3 text-text-tertiary system-xs-medium-uppercase">{t('or', { ns: 'login' })}</span>
-                <div className="h-px flex-1 bg-gradient-to-l from-background-gradient-mask-transparent to-divider-regular"></div>
+                <div className="signin-divider h-px flex-1"></div>
+                <span className="signin-text-caption px-3 system-xs-medium-uppercase">{t('or', { ns: 'login' })}</span>
+                <div className="signin-divider h-px flex-1"></div>
               </div>
             </div>
           )}
@@ -211,13 +211,10 @@ const NormalForm = () => {
           }
 
           {systemFeatures.is_allow_register && authType === 'password' && (
-            <div className="mb-3 text-[13px] font-medium leading-4 text-text-secondary">
-              <span>{t('signup.noAccount', { ns: 'login' })}</span>
-              <Link
-                className="text-text-accent"
-                href="/signup"
-              >
-                {t('signup.signUp', { ns: 'login' })}
+            <div className="mb-3 mt-6 text-[13px] font-medium leading-4 signin-text-body text-center">
+              <span>如果您还没有账号或想了解产品，请前往我们的官网</span>
+              <Link className="signin-link font-bold ml-1" href="/signup">
+                注册星渊账户
               </Link>
             </div>
           )}
@@ -242,7 +239,7 @@ const NormalForm = () => {
               {IS_CE_EDITION && (
                 <div className="w-hull mt-2 block text-text-tertiary system-xs-regular">
                   {t('goToInit', { ns: 'login' })}
-              &nbsp;
+                  &nbsp;
                   <Link
                     className="text-text-secondary system-xs-medium hover:underline"
                     href="/install"

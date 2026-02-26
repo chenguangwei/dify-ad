@@ -51,17 +51,17 @@ export default function Modal({
         >
           <div className={cn('flex min-h-full items-center justify-center p-4 text-center', containerClassName)}>
             <TransitionChild>
-              <DialogPanel className={cn('bg-components-panel-bg/95 relative w-full max-w-[480px] rounded-[20px] p-6 text-left align-middle shadow-xl backdrop-blur-[20px] transition-all', overflowVisible ? 'overflow-visible' : 'overflow-hidden', 'duration-100 ease-in data-[closed]:scale-95 data-[closed]:opacity-0', 'data-[enter]:scale-100 data-[enter]:opacity-100', 'data-[enter]:scale-95 data-[leave]:opacity-0', className)}>
+              <DialogPanel className={cn('bg-components-panel-bg relative w-full max-w-[480px] rounded-[24px] p-6 text-left align-middle shadow-2xl backdrop-blur-[40px] border border-components-panel-border transition-all', overflowVisible ? 'overflow-visible' : 'overflow-hidden', 'duration-100 ease-in data-[closed]:scale-95 data-[closed]:opacity-0', 'data-[enter]:scale-100 data-[enter]:opacity-100', 'data-[leave]:scale-95 data-[leave]:opacity-0', className)}>
                 {!!title && (
                   <DialogTitle
                     as="h3"
-                    className="text-text-primary title-2xl-semi-bold"
+                    className="text-text-primary text-xl font-semibold"
                   >
                     {title}
                   </DialogTitle>
                 )}
                 {!!description && (
-                  <div className="mt-2 text-text-secondary body-md-regular">
+                  <div className="mt-2 text-text-secondary text-sm">
                     {description}
                   </div>
                 )}

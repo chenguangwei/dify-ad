@@ -28,7 +28,7 @@ export default function FullScreenModal({
     <Transition show={open} appear>
       <Dialog as="div" className={cn('modal-dialog', wrapperClassName)} onClose={onClose}>
         <TransitionChild>
-          <div className={cn('fixed inset-0 bg-background-overlay-backdrop backdrop-blur-[6px]', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')} />
+          <div className={cn('fixed inset-0 bg-black/60', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')} />
         </TransitionChild>
 
         <div

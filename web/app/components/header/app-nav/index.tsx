@@ -2,8 +2,8 @@
 
 import type { NavItem } from '../nav/nav-selector'
 import {
-  RiRobot2Fill,
-  RiRobot2Line,
+  RiBrainFill,
+  RiBrainLine,
 } from '@remixicon/react'
 import { flatten } from 'es-toolkit/compat'
 import { produce } from 'immer'
@@ -102,8 +102,8 @@ const AppNav = () => {
     <>
       <Nav
         isApp
-        icon={<RiRobot2Line className="h-4 w-4" />}
-        activeIcon={<RiRobot2Fill className="h-4 w-4" />}
+        icon={<RiBrainLine className="h-4 w-4" />}
+        activeIcon={<RiBrainFill className="h-4 w-4" />}
         text={t('menus.apps', { ns: 'common' })}
         activeSegment={['apps', 'app']}
         link="/apps"

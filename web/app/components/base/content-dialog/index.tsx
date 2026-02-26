@@ -23,7 +23,7 @@ const ContentDialog = ({
     >
       <TransitionChild>
         <div
-          className={cn('absolute inset-0 left-0 w-full bg-app-detail-overlay-bg', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')}
+          className={cn('absolute inset-0 left-0 w-full bg-black/60', 'duration-300 ease-in data-[closed]:opacity-0', 'data-[enter]:opacity-100', 'data-[leave]:opacity-0')}
           onClick={onClose}
         />
       </TransitionChild>

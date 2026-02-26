@@ -3,8 +3,10 @@ import type { Collection } from './types'
 import { useQueryState } from 'nuqs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Input from '@/app/components/base/input'
-import TabSliderNew from '@/app/components/base/tab-slider-new'
+import {
+  RiAddLine,
+  RiSearchLine,
+} from '@remixicon/react'
 import Card from '@/app/components/plugins/card'
 import CardMoreInfo from '@/app/components/plugins/card/card-more-info'
 import { useTags } from '@/app/components/plugins/hooks'
@@ -14,6 +16,7 @@ import LabelFilter from '@/app/components/tools/labels/filter'
 import CustomCreateCard from '@/app/components/tools/provider/custom-create-card'
 import ProviderDetail from '@/app/components/tools/provider/detail'
 import WorkflowToolEmpty from '@/app/components/tools/provider/empty'
+import { useAppContext } from '@/context/app-context'
 import { useGlobalPublicStore } from '@/context/global-public-context'
 import { useCheckInstalled, useInvalidateInstalledPluginList } from '@/service/use-plugins'
 import { useAllToolProviders } from '@/service/use-tools'
@@ -37,31 +40,27 @@ const getToolType = (type: string) => {
       return ToolTypeEnum.BuiltIn
   }
 }
+
 const ProviderList = () => {
-  // const searchParams = useSearchParams()
-  // searchParams.get('category') === 'workflow'
   const { t } = useTranslation()
   const { getTagLabel } = useTags()
+  const { isCurrentWorkspaceManager } = useAppContext()
   const { enable_marketplace } = useGlobalPublicStore(s => s.systemFeatures)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [activeTab, setActiveTab] = useQueryState('category', {
     defaultValue: 'builtin',
   })
-  const options = [
-    { value: 'builtin', text: t('type.builtIn', { ns: 'tools' }) },
-    { value: 'api', text: t('type.custom', { ns: 'tools' }) },
-    { value: 'workflow', text: t('type.workflow', { ns: 'tools' }) },
+  const tabs = [
+    { value: 'builtin', text: '内置组件' },
+    { value: 'workflow', text: '工作流组件' },
     { value: 'mcp', text: 'MCP' },
   ]
+
   const [tagFilterValue, setTagFilterValue] = useState<string[]>([])
-  const handleTagsChange = (value: string[]) => {
-    setTagFilterValue(value)
-  }
   const [keywords, setKeywords] = useState<string>('')
-  const handleKeywordsChange = (value: string) => {
-    setKeywords(value)
-  }
+  const [showCreateCustomTool, setShowCreateCustomTool] = useState(false)
+
   const { data: collectionList = [], refetch } = useAllToolProviders()
   const filteredCollectionList = useMemo(() => {
     return collectionList.filter((collection) => {
@@ -79,6 +78,7 @@ const ProviderList = () => {
   const currentProvider = useMemo<Collection | undefined>(() => {
     return filteredCollectionList.find(collection => collection.id === currentProviderId)
   }, [currentProviderId, filteredCollectionList])
+
   const { data: checkedInstalledData } = useCheckInstalled({
     pluginIds: currentProvider?.plugin_id ? [currentProvider.plugin_id] : [],
     enabled: !!currentProvider?.plugin_id,
@@ -99,9 +99,7 @@ const ProviderList = () => {
   }, [toolListTailRef])
 
   const marketplaceContext = useMarketplace(keywords, tagFilterValue)
-  const {
-    handleScroll,
-  } = marketplaceContext
+  const { handleScroll } = marketplaceContext
 
   const [isMarketplaceArrowVisible, setIsMarketplaceArrowVisible] = useState(true)
   const onContainerScroll = useMemo(() => {
@@ -116,7 +114,6 @@ const ProviderList = () => {
     const container = containerRef.current
     if (container)
       container.addEventListener('scroll', onContainerScroll)
-
     return () => {
       if (container)
         container.removeEventListener('scroll', onContainerScroll)
@@ -128,43 +125,82 @@ const ProviderList = () => {
       <div className="relative flex h-0 shrink-0 grow overflow-hidden">
         <div
           ref={containerRef}
-          className="relative flex grow flex-col overflow-y-auto bg-background-body"
+          className="relative flex grow flex-col overflow-y-auto bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB]"
         >
+          {/* Page Header */}
           <div className={cn(
-            'sticky top-0 z-10 flex flex-wrap items-center justify-between gap-y-2 bg-background-body px-12 pb-2 pt-4 leading-[56px]',
+            'px-4 md:px-8 pt-6 mb-2',
             currentProviderId && 'pr-6',
-          )}
-          >
-            <TabSliderNew
-              value={activeTab}
-              onChange={(state) => {
-                setActiveTab(state)
-                if (state !== activeTab)
-                  setCurrentProviderId(undefined)
-              }}
-              options={options}
-            />
-            <div className="flex items-center gap-2">
-              {activeTab !== 'mcp' && (
-                <LabelFilter value={tagFilterValue} onChange={handleTagsChange} />
-              )}
-              <Input
-                showLeftIcon
-                showClearIcon
-                wrapperClassName="w-[200px]"
-                value={keywords}
-                onChange={e => handleKeywordsChange(e.target.value)}
-                onClear={() => handleKeywordsChange('')}
-              />
+          )}>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+              <div>
+                <h1 className="text-2xl font-bold text-[#111827] dark:text-[#F9FAFB] mb-2">
+                  {t('title', { ns: 'tools', defaultValue: '组件库' })}
+                </h1>
+                <p className="text-[#6B7280] dark:text-[#9CA3AF]">
+                  {t('toolDescription', { ns: 'tools', defaultValue: '管理内置组件、自定义组件和工作流组件。' })}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {/* Search */}
+                <div className="relative">
+                  <RiSearchLine className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] dark:text-[#9CA3AF] h-4 w-4" />
+                  <input
+                    className="pl-9 pr-4 py-2 w-56 bg-[#FFFFFF] dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent shadow-sm text-[#111827] dark:text-[#F9FAFB] placeholder:text-[#9CA3AF]"
+                    placeholder={t('search', { ns: 'common', defaultValue: '搜索组件...' })}
+                    value={keywords}
+                    onChange={e => setKeywords(e.target.value)}
+                  />
+                </div>
+                {/* Tag filter */}
+                {activeTab !== 'mcp' && (
+                  <LabelFilter value={tagFilterValue} onChange={setTagFilterValue} />
+                )}
+                {/* Create custom component */}
+                {isCurrentWorkspaceManager && (
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-blue-700 h-[38px] whitespace-nowrap"
+                    onClick={() => setShowCreateCustomTool(true)}
+                  >
+                    <RiAddLine className="h-4 w-4" />
+                    创建自定义组件
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Tab Navigation */}
+            <div className="flex items-center gap-1 border-b border-[#E5E7EB] dark:border-[#374151] pb-0">
+              {tabs.map(tab => (
+                <button
+                  key={tab.value}
+                  onClick={() => {
+                    setActiveTab(tab.value)
+                    if (tab.value !== activeTab)
+                      setCurrentProviderId(undefined)
+                  }}
+                  className={cn(
+                    'px-4 py-2 text-sm font-medium transition-colors rounded-t-lg border-b-2 -mb-[1px]',
+                    activeTab === tab.value
+                      ? 'text-[#2563EB] border-[#2563EB] bg-white dark:bg-[#1F2937]'
+                      : 'text-[#6B7280] dark:text-[#9CA3AF] border-transparent hover:text-[#111827] dark:hover:text-[#F9FAFB] hover:border-[#D1D5DB]',
+                  )}
+                >
+                  {tab.text}
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Card Grid */}
           {activeTab !== 'mcp' && (
             <div className={cn(
-              'relative grid shrink-0 grid-cols-1 content-start gap-4 px-12 pb-4 pt-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+              'relative grid shrink-0 grid-cols-1 content-start gap-6 px-4 md:px-8 pb-8 pt-4',
+              'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
               !filteredCollectionList.length && activeTab === 'workflow' && 'grow',
             )}
             >
-              {activeTab === 'api' && <CustomCreateCard onRefreshData={refetch} />}
               {filteredCollectionList.map(collection => (
                 <div
                   key={collection.id}
@@ -172,8 +208,10 @@ const ProviderList = () => {
                 >
                   <Card
                     className={cn(
-                      'cursor-pointer border-[1.5px] border-transparent',
-                      currentProviderId === collection.id && 'border-components-option-card-option-selected-border',
+                      'cursor-pointer !bg-[#FFFFFF] dark:!bg-[#1F2937] !border-[#E5E7EB] dark:!border-[#374151] !shadow-none',
+                      'hover:!border-[#93C5FD] dark:hover:!border-[#1D4ED8] hover:!shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05),0_2px_4px_-1px_rgba(0,0,0,0.03)]',
+                      'transition-all',
+                      currentProviderId === collection.id && '!border-[#2563EB] dark:!border-[#2563EB]',
                     )}
                     hideCornerMark
                     payload={{
@@ -190,13 +228,29 @@ const ProviderList = () => {
                   />
                 </div>
               ))}
-              {!filteredCollectionList.length && activeTab === 'workflow' && <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"><WorkflowToolEmpty type={getToolType(activeTab)} /></div>}
+              {!filteredCollectionList.length && activeTab === 'workflow' && (
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <WorkflowToolEmpty type={getToolType(activeTab)} />
+                </div>
+              )}
             </div>
           )}
+
           {!filteredCollectionList.length && activeTab === 'builtin' && (
-            <Empty lightCard text={t('noTools', { ns: 'tools' })} className="h-[224px] shrink-0 px-12" />
+            <Empty lightCard text={t('noTools', { ns: 'tools' })} className="h-[224px] shrink-0 px-4 md:px-8" />
           )}
+
+          {/* Custom create modal - triggered from header button (card UI hidden, modal uses portal) */}
+          <div className="hidden">
+            <CustomCreateCard
+              onRefreshData={refetch}
+              externalOpen={showCreateCustomTool}
+              onExternalOpenChange={setShowCreateCustomTool}
+            />
+          </div>
+
           <div ref={toolListTailRef} />
+
           {enable_marketplace && activeTab === 'builtin' && (
             <Marketplace
               searchPluginText={keywords}
@@ -206,11 +260,13 @@ const ProviderList = () => {
               marketplaceContext={marketplaceContext}
             />
           )}
+
           {activeTab === 'mcp' && (
             <MCPList searchText={keywords} />
           )}
         </div>
       </div>
+
       {currentProvider && !currentProvider.plugin_id && (
         <ProviderDetail
           collection={currentProvider}
@@ -226,5 +282,6 @@ const ProviderList = () => {
     </>
   )
 }
+
 ProviderList.displayName = 'ToolProviderList'
 export default ProviderList

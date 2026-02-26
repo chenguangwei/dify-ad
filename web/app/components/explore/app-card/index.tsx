@@ -37,8 +37,23 @@ const AppCard = ({
     }
   }, [setShowTryAppPanel, app])
 
+  const modeBadgeConfig: Record<string, { label: string; className: string }> = {
+    [AppModeEnum.WORKFLOW]: { label: t('types.workflow', { ns: 'app' }), className: 'bg-orange-50 text-orange-600 border-orange-200' },
+    [AppModeEnum.ADVANCED_CHAT]: { label: t('types.advanced', { ns: 'app' }), className: 'bg-blue-50 text-blue-600 border-blue-200' },
+    [AppModeEnum.CHAT]: { label: t('types.chatbot', { ns: 'app' }), className: 'bg-green-50 text-green-600 border-green-200' },
+    [AppModeEnum.AGENT_CHAT]: { label: t('types.agent', { ns: 'app' }), className: 'bg-violet-50 text-violet-600 border-violet-200' },
+    [AppModeEnum.COMPLETION]: { label: t('types.completion', { ns: 'app' }), className: 'bg-teal-50 text-teal-600 border-teal-200' },
+  }
+  const badge = modeBadgeConfig[appBasicInfo.mode]
+
   return (
     <div className={cn('group relative col-span-1 flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-components-panel-on-panel-item-bg pb-2 shadow-md transition-all duration-200 ease-in-out hover:bg-components-panel-on-panel-item-bg-hover hover:shadow-xl')}>
+      {/* 类型徽章 */}
+      {badge && (
+        <div className={cn('absolute right-2 top-2 z-10 rounded border px-1.5 py-0.5 text-[10px] font-medium', badge.className)}>
+          {badge.label}
+        </div>
+      )}
       <div className="flex h-[66px] shrink-0 grow-0 items-center gap-3 px-[14px] pb-3 pt-[14px]">
         <div className="relative shrink-0">
           <AppIcon
@@ -56,14 +71,7 @@ const AppCard = ({
         </div>
         <div className="w-0 grow py-[1px]">
           <div className="flex items-center text-sm font-semibold leading-5 text-text-secondary">
-            <div className="truncate" title={appBasicInfo.name}>{appBasicInfo.name}</div>
-          </div>
-          <div className="flex items-center text-[10px] font-medium leading-[18px] text-text-tertiary">
-            {appBasicInfo.mode === AppModeEnum.ADVANCED_CHAT && <div className="truncate">{t('types.advanced', { ns: 'app' }).toUpperCase()}</div>}
-            {appBasicInfo.mode === AppModeEnum.CHAT && <div className="truncate">{t('types.chatbot', { ns: 'app' }).toUpperCase()}</div>}
-            {appBasicInfo.mode === AppModeEnum.AGENT_CHAT && <div className="truncate">{t('types.agent', { ns: 'app' }).toUpperCase()}</div>}
-            {appBasicInfo.mode === AppModeEnum.WORKFLOW && <div className="truncate">{t('types.workflow', { ns: 'app' }).toUpperCase()}</div>}
-            {appBasicInfo.mode === AppModeEnum.COMPLETION && <div className="truncate">{t('types.completion', { ns: 'app' }).toUpperCase()}</div>}
+            <div className="truncate pr-14" title={appBasicInfo.name}>{appBasicInfo.name}</div>
           </div>
         </div>
       </div>

@@ -750,6 +750,8 @@ services:
     volumes:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
+    ports:
+      - "5001:5001"
     networks:
       - ssrf_proxy_network
       - default

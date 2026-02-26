@@ -1,12 +1,6 @@
 'use client'
-import type { Locale } from '@/i18n-config'
 import dynamic from 'next/dynamic'
-import Divider from '@/app/components/base/divider'
-import LocaleSigninSelect from '@/app/components/base/select/locale-signin'
 import { useGlobalPublicStore } from '@/context/global-public-context'
-import { useLocale } from '@/context/i18n'
-import { setLocaleOnClient } from '@/i18n-config'
-import { languages } from '@/i18n-config/language'
 
 // Avoid rendering the logo and theme selector on the server
 const DifyLogo = dynamic(() => import('@/app/components/base/logo/dify-logo'), {
@@ -19,7 +13,6 @@ const ThemeSelector = dynamic(() => import('@/app/components/base/theme-selector
 })
 
 const Header = () => {
-  const locale = useLocale()
   const systemFeatures = useGlobalPublicStore(s => s.systemFeatures)
 
   return (
@@ -34,14 +27,6 @@ const Header = () => {
           )
         : <DifyLogo size="large" />}
       <div className="flex items-center gap-1">
-        <LocaleSigninSelect
-          value={locale}
-          items={languages.filter(item => item.supported)}
-          onChange={(value) => {
-            setLocaleOnClient(value as Locale)
-          }}
-        />
-        <Divider type="vertical" className="mx-0 ml-2 h-4" />
         <ThemeSelector />
       </div>
     </div>

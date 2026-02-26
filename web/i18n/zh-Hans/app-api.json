@@ -51,7 +51,7 @@
   "completionMode.queryTips": "用户输入的文本正文。",
   "completionMode.ratingTip": "like 或 dislike，空值为撤销",
   "completionMode.streaming": "streaming 流式返回。基于 SSE（**[Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)**）实现流式返回。",
-  "completionMode.title": "文本生成型应用 API",
+  "completionMode.title": "智能撰稿型应用 API",
   "copied": "已复制",
   "copy": "复制",
   "develop.noContent": "暂无内容",

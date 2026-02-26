@@ -12,13 +12,22 @@ import { createCustomCollection } from '@/service/tools'
 
 type Props = {
   onRefreshData: () => void
+  externalOpen?: boolean
+  onExternalOpenChange?: (open: boolean) => void
 }
 
-const Contribute = ({ onRefreshData }: Props) => {
+const Contribute = ({ onRefreshData, externalOpen, onExternalOpenChange }: Props) => {
   const { t } = useTranslation()
   const { isCurrentWorkspaceManager } = useAppContext()
 
-  const [isShowEditCollectionToolModal, setIsShowEditCustomCollectionModal] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isShowEditCollectionToolModal = externalOpen !== undefined ? externalOpen : internalOpen
+  const setIsShowEditCustomCollectionModal = (open: boolean) => {
+    if (onExternalOpenChange)
+      onExternalOpenChange(open)
+    else
+      setInternalOpen(open)
+  }
   const doCreateCustomToolCollection = async (data: CustomCollectionBackend) => {
     await createCustomCollection(data)
     Toast.notify({

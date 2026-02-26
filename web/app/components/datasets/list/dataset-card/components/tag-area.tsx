@@ -22,7 +22,7 @@ const TagArea = React.forwardRef<HTMLDivElement, TagAreaProps>(({
   onClick,
 }, ref) => (
   <div
-    className={cn('relative w-full px-3', !dataset.embedding_available && 'opacity-30')}
+    className={cn('relative w-full px-4 py-1', !dataset.embedding_available && 'opacity-30')}
     onClick={onClick}
   >
     <div

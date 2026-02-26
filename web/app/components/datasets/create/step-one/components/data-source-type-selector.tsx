@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ENABLE_WEBSITE_FIRECRAWL, ENABLE_WEBSITE_JINAREADER, ENABLE_WEBSITE_WATERCRAWL } from '@/config'
 import { DataSourceType } from '@/models/datasets'
 import { cn } from '@/utils/classnames'
 import s from '../index.module.css'
@@ -30,20 +29,10 @@ const DATA_SOURCE_OPTIONS: DataSourceOption[] = [
     type: DataSourceType.FILE,
     labelKey: 'stepOne.dataSourceType.file',
   },
-  {
-    type: DataSourceType.NOTION,
-    iconClass: s.notion,
-    labelKey: 'stepOne.dataSourceType.notion',
-  },
-  {
-    type: DataSourceType.WEB,
-    iconClass: s.web,
-    labelKey: 'stepOne.dataSourceType.web',
-  },
 ]
 
 /**
- * Data source type selector component for choosing between file, notion, and web sources.
+ * Data source type selector component for choosing file source.
  */
 function DataSourceTypeSelector({
   currentType,
@@ -53,8 +42,6 @@ function DataSourceTypeSelector({
 }: DataSourceTypeSelectorProps) {
   const { t } = useTranslation()
 
-  const isWebEnabled = ENABLE_WEBSITE_FIRECRAWL || ENABLE_WEBSITE_JINAREADER || ENABLE_WEBSITE_WATERCRAWL
-
   const handleTypeChange = useCallback((type: DataSourceType) => {
     if (disabled)
       return
@@ -62,14 +49,10 @@ function DataSourceTypeSelector({
     onClearPreviews(type)
   }, [disabled, onChange, onClearPreviews])
 
-  const visibleOptions = useMemo(() => DATA_SOURCE_OPTIONS.filter((option) => {
-    if (option.type === DataSourceType.WEB)
-      return isWebEnabled
-    return true
-  }), [isWebEnabled])
+  const visibleOptions = useMemo(() => DATA_SOURCE_OPTIONS, [])
 
   return (
-    <div className="mb-8 grid grid-cols-3 gap-4">
+    <div className="mb-8 grid grid-cols-1 gap-4">
       {visibleOptions.map(option => (
         <div
           key={option.type}

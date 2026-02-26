@@ -1,8 +1,8 @@
 'use client'
 
 import {
-  RiPlanetFill,
-  RiPlanetLine,
+  RiCompass3Fill,
+  RiCompass3Line,
 } from '@remixicon/react'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
@@ -27,8 +27,8 @@ const ExploreNav = ({
     >
       {
         activated
-          ? <RiPlanetFill className="h-4 w-4" />
-          : <RiPlanetLine className="h-4 w-4" />
+          ? <RiCompass3Fill className="h-4 w-4" />
+          : <RiCompass3Line className="h-4 w-4" />
       }
       <div className="ml-2 max-[1024px]:hidden">
         {t('menus.explore', { ns: 'common' })}

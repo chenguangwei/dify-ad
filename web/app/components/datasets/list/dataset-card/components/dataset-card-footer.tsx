@@ -35,26 +35,25 @@ const DatasetCardFooter = ({ dataset }: DatasetCardFooterProps) => {
   return (
     <div
       className={cn(
-        'flex items-center gap-x-3 px-4 pb-3 pt-2 text-text-tertiary',
+        'mt-auto flex items-center gap-x-3 px-4 py-3 border-t border-[#E5E7EB] dark:border-[#374151] text-xs text-[#6B7280] dark:text-[#9CA3AF]',
         !dataset.embedding_available && 'opacity-30',
       )}
     >
       <Tooltip popupContent={documentCountTooltip}>
         <div className="flex items-center gap-x-1">
-          <RiFileTextFill className="size-3 text-text-quaternary" />
-          <span className="system-xs-medium">{documentCount}</span>
+          <RiFileTextFill className="size-3.5 text-text-quaternary" />
+          <span>{documentCount}</span>
         </div>
       </Tooltip>
       {!isExternalProvider && (
         <Tooltip popupContent={`${dataset.app_count} ${t('appCount', { ns: 'dataset' })}`}>
           <div className="flex items-center gap-x-1">
-            <RiRobot2Fill className="size-3 text-text-quaternary" />
-            <span className="system-xs-medium">{dataset.app_count}</span>
+            <RiRobot2Fill className="size-3.5 text-text-quaternary" />
+            <span>{dataset.app_count}</span>
           </div>
         </Tooltip>
       )}
-      <span className="text-divider-deep system-xs-regular">/</span>
-      <span className="system-xs-regular">{`${t('updated', { ns: 'dataset' })} ${formatTimeFromNow(dataset.updated_at * 1000)}`}</span>
+      <span className="ml-auto truncate">{`${t('updated', { ns: 'dataset' })} ${formatTimeFromNow(dataset.updated_at * 1000)}`}</span>
     </div>
   )
 }

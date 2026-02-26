@@ -105,7 +105,7 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
   return (
     <form onSubmit={noop}>
       <div className="mb-3">
-        <label htmlFor="email" className="my-2 text-text-secondary system-md-semibold">
+        <label htmlFor="email" className="my-2 signin-text-body system-md-semibold">
           {t('email', { ns: 'login' })}
         </label>
         <div className="mt-1">
@@ -118,16 +118,17 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
             autoComplete="email"
             placeholder={t('emailPlaceholder', { ns: 'login' }) || ''}
             tabIndex={1}
+            className="signin-input"
           />
         </div>
       </div>
 
-      <div className="mb-3">
+      <div className="mb-3 mt-5">
         <label htmlFor="password" className="my-2 flex items-center justify-between">
-          <span className="text-text-secondary system-md-semibold">{t('password', { ns: 'login' })}</span>
+          <span className="signin-text-body system-md-semibold">{t('password', { ns: 'login' })}</span>
           <Link
             href={`/reset-password?${searchParams.toString()}`}
-            className={`system-xs-regular ${isEmailSetup ? 'text-components-button-secondary-accent-text' : 'pointer-events-none text-components-button-secondary-accent-text-disabled'}`}
+            className={`system-xs-regular ${isEmailSetup ? 'signin-link' : 'pointer-events-none signin-text-caption'}`}
             tabIndex={isEmailSetup ? 0 : -1}
             aria-disabled={!isEmailSetup}
           >
@@ -147,6 +148,7 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
             autoComplete="current-password"
             placeholder={t('passwordPlaceholder', { ns: 'login' }) || ''}
             tabIndex={2}
+            className="signin-input"
           />
           <div className="absolute inset-y-0 right-0 flex items-center">
             <Button
@@ -154,19 +156,19 @@ export default function MailAndPasswordAuth({ isInvite, isEmailSetup, allowRegis
               variant="ghost"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? '👀' : '😝'}
+              {showPassword ? '隐藏' : '显示'}
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="mb-2">
+      <div className="mb-2 mt-8">
         <Button
           tabIndex={2}
           variant="primary"
           onClick={handleEmailPasswordLogin}
           disabled={isLoading || !email || !password}
-          className="w-full"
+          className="w-full bg-[#3b82f6] hover:bg-[#2563eb] text-white border-0 py-5 text-base rounded-lg"
         >
           {t('signBtn', { ns: 'login' })}
         </Button>

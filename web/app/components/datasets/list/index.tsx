@@ -6,9 +6,17 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import Button from '@/app/components/base/button'
-import { ApiConnectionMod } from '@/app/components/base/icons/src/vender/solid/development'
-import Input from '@/app/components/base/input'
+import {
+  RiAddLine,
+  RiArrowDownSLine,
+  RiBookOpenLine,
+  RiDatabase2Line,
+  RiFileTextLine,
+  RiGlobalLine,
+  RiLinksLine,
+  RiSearchLine,
+  RiSettingsLine,
+} from '@remixicon/react'
 import TagManagementModal from '@/app/components/base/tag-management'
 import TagFilter from '@/app/components/base/tag-management/filter'
 // Hooks
@@ -16,23 +24,24 @@ import { useStore as useTagStore } from '@/app/components/base/tag-management/st
 import CheckboxWithLabel from '@/app/components/datasets/create/website/base/checkbox-with-label'
 import { useAppContext, useSelector as useAppContextSelector } from '@/context/app-context'
 import { useExternalApiPanel } from '@/context/external-api-panel-context'
-import { useGlobalPublicStore } from '@/context/global-public-context'
 import useDocumentTitle from '@/hooks/use-document-title'
 import { useDatasetApiBaseUrl } from '@/service/knowledge/use-dataset'
+import { cn } from '@/utils/classnames'
 // Components
 import ExternalAPIPanel from '../external-api/external-api-panel'
 import ServiceApi from '../extra-info/service-api'
-import DatasetFooter from './dataset-footer'
 import Datasets from './datasets'
+
+type DatasetTypeFilter = 'all' | 'general' | 'qa' | 'parentChild' | 'graph' | 'external'
 
 const List = () => {
   const { t } = useTranslation()
-  const { systemFeatures } = useGlobalPublicStore()
   const router = useRouter()
   const { currentWorkspace, isCurrentWorkspaceOwner } = useAppContext()
   const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
   const { showExternalApiPanel, setShowExternalApiPanel } = useExternalApiPanel()
   const [includeAll, { toggle: toggleIncludeAll }] = useBoolean(false)
+  const [activeType, setActiveType] = useState<DatasetTypeFilter>('all')
   useDocumentTitle(t('knowledge', { ns: 'dataset' }))
 
   const [keywords, setKeywords] = useState('')
@@ -62,50 +71,173 @@ const List = () => {
   const isCurrentWorkspaceManager = useAppContextSelector(state => state.isCurrentWorkspaceManager)
   const { data: apiBaseInfo } = useDatasetApiBaseUrl()
 
+  const sidebarCategories = [
+    {
+      label: t('chunkingMode.general', { ns: 'dataset', defaultValue: '文档类型' }),
+      items: [
+        { value: 'general' as DatasetTypeFilter, text: t('chunkingMode.general', { ns: 'dataset', defaultValue: '通用' }), icon: <RiFileTextLine className="h-[14px] w-[14px]" /> },
+        { value: 'qa' as DatasetTypeFilter, text: t('chunkingMode.qa', { ns: 'dataset', defaultValue: '问答' }), icon: <RiBookOpenLine className="h-[14px] w-[14px]" /> },
+        { value: 'parentChild' as DatasetTypeFilter, text: t('chunkingMode.parentChild', { ns: 'dataset', defaultValue: '父子' }), icon: <RiDatabase2Line className="h-[14px] w-[14px]" /> },
+      ],
+    },
+    {
+      label: t('externalKnowledgeBase', { ns: 'dataset', defaultValue: '外部知识库' }),
+      items: [
+        { value: 'external' as DatasetTypeFilter, text: t('externalKnowledgeBase', { ns: 'dataset', defaultValue: '外部 API' }), icon: <RiLinksLine className="h-[14px] w-[14px]" /> },
+      ],
+    },
+  ]
+
   return (
-    <div className="scroll-container relative flex grow flex-col overflow-y-auto bg-background-body">
-      <div className="sticky top-0 z-10 flex items-center justify-end gap-x-1 bg-background-body px-12 pb-2 pt-4">
-        <div className="flex items-center justify-center gap-2">
-          {isCurrentWorkspaceOwner && (
-            <CheckboxWithLabel
-              isChecked={includeAll}
-              onChange={toggleIncludeAll}
-              label={t('allKnowledge', { ns: 'dataset' })}
-              labelClassName="system-md-regular text-text-secondary"
-              className="mr-2"
-              tooltip={t('allKnowledgeDescription', { ns: 'dataset' }) as string}
-            />
+    <div className="relative flex h-full shrink-0 grow flex-row overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
+
+      {/* Left Sidebar */}
+      <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-[#F3F4F6] dark:bg-[#111827]">
+        <div className="flex-1 overflow-y-auto p-4">
+          {/* 全部 */}
+          <div className="mb-6">
+            <button
+              onClick={() => setActiveType('all')}
+              className={cn(
+                'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                activeType === 'all'
+                  ? 'bg-primary-50 text-primary-600'
+                  : 'text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
+              )}
+            >
+              <span className={cn(activeType === 'all' ? 'text-primary-600' : 'text-text-tertiary')}>
+                <RiDatabase2Line className="h-[14px] w-[14px]" />
+              </span>
+              {t('datasets', { ns: 'dataset', defaultValue: '全部知识库' })}
+            </button>
+          </div>
+
+          {/* 分组导航 */}
+          {sidebarCategories.map(section => (
+            <div key={section.label} className="mb-2">
+              <div className="mb-2 mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
+                {section.label}
+              </div>
+              {section.items.map((option) => {
+                const isActive = activeType === option.value
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => setActiveType(option.value)}
+                    className={cn(
+                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                      isActive
+                        ? 'font-medium text-primary-600 bg-primary-50'
+                        : 'font-normal text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
+                    )}
+                  >
+                    <span className={cn(isActive ? 'text-primary-600' : 'text-text-tertiary')}>
+                      {option.icon}
+                    </span>
+                    {option.text}
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
+
+        {/* Sidebar Footer */}
+        <div className="border-t border-divider-subtle p-4">
+          {isCurrentWorkspaceManager && (
+            <button
+              onClick={() => setShowExternalApiPanel(true)}
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-state-base-hover hover:text-text-primary"
+            >
+              <RiSettingsLine className="h-4 w-4 text-text-tertiary" />
+              {t('datasetsApi', { ns: 'dataset', defaultValue: 'API 访问' })}
+            </button>
           )}
-          <TagFilter type="knowledge" value={tagFilterValue} onChange={handleTagsChange} />
-          <Input
-            showLeftIcon
-            showClearIcon
-            wrapperClassName="w-[200px]"
-            value={keywords}
-            onChange={e => handleKeywordsChange(e.target.value)}
-            onClear={() => handleKeywordsChange('')}
-          />
-          {
-            isCurrentWorkspaceManager && (
-              <ServiceApi apiBaseUrl={apiBaseInfo?.api_base_url ?? ''} />
-            )
-          }
-          <div className="h-4 w-[1px] bg-divider-regular" />
-          <Button
-            className="shadows-shadow-xs gap-0.5"
-            onClick={() => setShowExternalApiPanel(true)}
-          >
-            <ApiConnectionMod className="h-4 w-4 text-components-button-secondary-text" />
-            <div className="flex items-center justify-center gap-1 px-0.5 text-components-button-secondary-text system-sm-medium">{t('externalAPIPanelTitle', { ns: 'dataset' })}</div>
-          </Button>
         </div>
       </div>
-      <Datasets tags={tagIDs} keywords={searchKeywords} includeAll={includeAll} />
-      {!systemFeatures.branding.enabled && <DatasetFooter />}
-      {showTagManagementModal && (
-        <TagManagementModal type="knowledge" show={showTagManagementModal} />
-      )}
-      {showExternalApiPanel && <ExternalAPIPanel onClose={() => setShowExternalApiPanel(false)} />}
+
+      {/* Main Content */}
+      <div className="relative flex h-full grow flex-col overflow-y-auto bg-transparent">
+
+        {/* Top Header */}
+        <div className="px-4 md:px-8 pt-6 mb-6 mt-2">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-[#111827] dark:text-[#F9FAFB] mb-2">
+                {t('knowledge', { ns: 'dataset', defaultValue: '知识库' })}
+              </h1>
+              <p className="text-[#6B7280] dark:text-[#9CA3AF]">
+                {t('createDatasetIntro', { ns: 'dataset', defaultValue: '管理您的企业知识源和向量嵌入。' })}
+              </p>
+            </div>
+            <div className="relative w-full md:w-96 flex flex-col md:flex-row md:items-center gap-4">
+              <div className="relative w-full">
+                <RiSearchLine className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6B7280] dark:text-[#9CA3AF] h-5 w-5" />
+                <input
+                  className="w-full pl-10 pr-4 py-2 bg-[#FFFFFF] dark:bg-[#1F2937] border border-[#E5E7EB] dark:border-[#374151] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:border-transparent shadow-sm dark:placeholder-gray-500 text-[#111827] dark:text-[#F9FAFB]"
+                  placeholder={t('search', { ns: 'common', defaultValue: '搜索知识库...' })}
+                  type="text"
+                  value={keywords}
+                  onChange={e => handleKeywordsChange(e.target.value)}
+                />
+              </div>
+              {isCurrentWorkspaceManager && (
+                <div className="shrink-0 flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => router.push('/datasets/create')}
+                    className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-blue-700 h-[38px]"
+                  >
+                    <RiAddLine className="h-5 w-5" />
+                    {t('createDataset', { ns: 'dataset', defaultValue: '创建知识库' })}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="flex items-center gap-3 pb-4 border-b border-[#E5E7EB] dark:border-[#374151] overflow-x-auto no-scrollbar">
+            <TagFilter type="knowledge" value={tagFilterValue} onChange={handleTagsChange} />
+            {isCurrentWorkspaceOwner && (
+              <CheckboxWithLabel
+                isChecked={includeAll}
+                onChange={toggleIncludeAll}
+                label={t('allKnowledge', { ns: 'dataset' })}
+                labelClassName="system-md-regular text-text-secondary"
+                tooltip={t('allKnowledgeDescription', { ns: 'dataset' }) as string}
+              />
+            )}
+            {isCurrentWorkspaceManager && (
+              <ServiceApi apiBaseUrl={apiBaseInfo?.api_base_url ?? ''} />
+            )}
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                onClick={() => router.push('/datasets/create')}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] text-[#6B7280] dark:text-[#9CA3AF] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors"
+              >
+                <RiFileTextLine className="h-4 w-4" />
+                {t('chunkingMode.general', { ns: 'dataset', defaultValue: '从文档创建' })}
+              </button>
+              <button
+                onClick={() => setShowExternalApiPanel(true)}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] text-[#6B7280] dark:text-[#9CA3AF] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors"
+              >
+                <RiGlobalLine className="h-4 w-4" />
+                {t('connectDataset', { ns: 'dataset', defaultValue: '连接数据源' })}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dataset Grid */}
+        <Datasets tags={tagIDs} keywords={searchKeywords} includeAll={includeAll} />
+
+        {showTagManagementModal && (
+          <TagManagementModal type="knowledge" show={showTagManagementModal} />
+        )}
+        {showExternalApiPanel && <ExternalAPIPanel onClose={() => setShowExternalApiPanel(false)} />}
+      </div>
     </div>
   )
 }

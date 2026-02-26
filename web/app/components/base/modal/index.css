@@ -3,9 +3,9 @@
 }
 
 .modal-panel {
-  @apply w-full max-w-[480px] transform rounded-[20px] bg-components-panel-bg p-6 text-left shadow-xl backdrop-blur-[20px] transition-all duration-300 ease-out;
+  @apply w-full max-w-[480px] transform rounded-[24px] bg-components-panel-bg p-6 text-left shadow-2xl backdrop-blur-[40px] border border-gray-100 dark:border-gray-800 transition-all duration-300 ease-out;
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ease-out;
+  @apply fixed inset-0 bg-black/40 backdrop-blur-sm transition-all duration-300 ease-out;
 }

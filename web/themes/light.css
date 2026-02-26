@@ -18,7 +18,7 @@ html[data-theme="light"] {
   --color-components-kbd-bg-gray: rgb(16 24 40 / 0.04);
   --color-components-kbd-bg-white: rgb(255 255 255 / 0.12);
 
-  --color-components-tooltip-bg: rgb(255 255 255 / 0.95);
+  --color-components-tooltip-bg: #ffffff;
 
   --color-components-button-primary-text: #ffffff;
   --color-components-button-primary-bg: #007AFF;

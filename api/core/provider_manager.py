@@ -305,9 +305,13 @@ class ProviderManager:
             available_models = provider_configurations.get_models(model_type=model_type, only_active=True)
 
             if available_models:
+                # 星渊定制: 优先使用 qwen 模型
                 available_model = next(
-                    (model for model in available_models if model.model == "gpt-4"), available_models[0]
+                    (model for model in available_models if model.model.lower().startswith("qwen")), None
                 )
+                # 如果没有 qwen，则使用第一个可用的模型
+                if not available_model:
+                    available_model = available_models[0]
 
                 default_model = TenantDefaultModel(
                     tenant_id=tenant_id,

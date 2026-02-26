@@ -157,7 +157,12 @@ export const useMarketplacePlugins = () => {
           page_size,
         }
       }
-      catch {
+      catch (e) {
+        if ((e as Error).name === 'AbortError') {
+          console.warn('Marketplace search advanced request aborted')
+        } else {
+          console.warn('Marketplace search request failed (Marketplace offline)', e)
+        }
         return {
           plugins: [],
           total: 0,

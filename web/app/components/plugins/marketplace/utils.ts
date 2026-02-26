@@ -18,6 +18,10 @@ type MarketplaceFetchOptions = {
 }
 
 export const getPluginIconInMarketplace = (plugin: Plugin) => {
+  // 离线环境时返回空
+  if (!MARKETPLACE_API_PREFIX) {
+    return ''
+  }
   if (plugin.type === 'bundle')
     return `${MARKETPLACE_API_PREFIX}/bundles/${plugin.org}/${plugin.name}/icon`
   return `${MARKETPLACE_API_PREFIX}/plugins/${plugin.org}/${plugin.name}/icon`
@@ -58,6 +62,11 @@ export const getMarketplacePluginsByCollectionId = async (
 ) => {
   let plugins: Plugin[] = []
 
+  // 离线环境时跳过请求
+  if (!MARKETPLACE_API_PREFIX) {
+    return plugins
+  }
+
   try {
     const marketplaceCollectionPluginsDataJson = await marketplaceClient.collectionPlugins({
       params: {
@@ -69,8 +78,12 @@ export const getMarketplacePluginsByCollectionId = async (
     })
     plugins = (marketplaceCollectionPluginsDataJson.data?.plugins || []).map(plugin => getFormattedPlugin(plugin))
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
   catch (e) {
+    if ((e as Error).name === 'AbortError') {
+      console.warn('Marketplace plugin fetch aborted')
+    } else {
+      console.warn('Failed to fetch marketplace plugins (Marketplace offline):', e)
+    }
     plugins = []
   }
 
@@ -83,6 +96,12 @@ export const getMarketplaceCollectionsAndPlugins = async (
 ) => {
   let marketplaceCollections: MarketplaceCollection[] = []
   let marketplaceCollectionPluginsMap: Record<string, Plugin[]> = {}
+
+  // 离线环境时跳过请求
+  if (!MARKETPLACE_API_PREFIX) {
+    return { marketplaceCollections, marketplaceCollectionPluginsMap }
+  }
+
   try {
     const marketplaceCollectionsDataJson = await marketplaceClient.collections({
       query: {
@@ -100,8 +119,12 @@ export const getMarketplaceCollectionsAndPlugins = async (
       marketplaceCollectionPluginsMap[collection.name] = plugins
     }))
   }
-  // eslint-disable-next-line unused-imports/no-unused-vars
   catch (e) {
+    if ((e as Error).name === 'AbortError') {
+      console.warn('Marketplace plugin fetch aborted')
+    } else {
+      console.error('Failed to fetch marketplace collections:', e)
+    }
     marketplaceCollections = []
     marketplaceCollectionPluginsMap = {}
   }
@@ -160,7 +183,12 @@ export const getMarketplacePlugins = async (
       page_size,
     }
   }
-  catch {
+  catch (e) {
+    if ((e as Error).name === 'AbortError') {
+      console.warn('Marketplace plugin fetch aborted')
+    } else {
+      console.warn('Failed to fetch marketplace plugins (Marketplace offline):', e)
+    }
     return {
       plugins: [],
       total: 0,

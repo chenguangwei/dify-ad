@@ -121,7 +121,7 @@ const ChangePasswordForm = () => {
                       variant="ghost"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? '👀' : '😝'}
+                      {showPassword ? '隐藏' : '显示'}
                     </Button>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ const ChangePasswordForm = () => {
                       variant="ghost"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? '👀' : '😝'}
+                      {showConfirmPassword ? '隐藏' : '显示'}
                     </Button>
                   </div>
                 </div>

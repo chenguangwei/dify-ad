@@ -49,12 +49,12 @@ const Header = () => {
         {isBrandingEnabled && systemFeatures.branding.application_title ? systemFeatures.branding.application_title : '星渊智能体平台'}
         {systemFeatures.branding.enabled && systemFeatures.branding.workspace_logo
           ? (
-              <img
-                src={systemFeatures.branding.workspace_logo}
-                className="block h-[22px] w-auto object-contain"
-                alt="logo"
-              />
-            )
+            <img
+              src={systemFeatures.branding.workspace_logo}
+              className="block h-[22px] w-auto object-contain"
+              alt="logo"
+            />
+          )
           : <DifyLogo />}
       </Link>
     </h1>
@@ -90,7 +90,7 @@ const Header = () => {
   }
 
   return (
-    <div className="flex h-[56px] items-center">
+    <div className="flex h-16 items-center">
       <div className="flex min-w-0 flex-[1] items-center pl-3 pr-2 min-[1280px]:pr-3">
         {renderLogo()}
         <div className="mx-1.5 shrink-0 font-light text-divider-deep">/</div>
