@@ -71,10 +71,23 @@ const Apps = ({
     isError,
   } = useExploreAppList()
 
+  // 保留的应用名称列表
+  const allowedAppNames = [
+    '文件翻译',
+    '客户评价处理工作流',
+    '会议纪要',
+    '知识库 + 聊天机器人',
+    '问题分类 + 知识库 + 聊天机器人',
+  ]
+
   const filteredList = useMemo(() => {
     if (!data)
       return []
-    return data.allList.filter(item => currCategory === allCategoriesEn || item.category === currCategory)
+    return data.allList.filter(item => {
+      const categoryMatch = currCategory === allCategoriesEn || item.category === currCategory
+      const nameMatch = allowedAppNames.includes(item.app?.name || '')
+      return categoryMatch && nameMatch
+    })
   }, [data, currCategory, allCategoriesEn])
 
   const searchFilteredList = useMemo(() => {
