@@ -16,6 +16,8 @@ import {
   RiLinksLine,
   RiSearchLine,
   RiSettingsLine,
+  RiFileZipLine,
+  RiFilePaperLine,
 } from '@remixicon/react'
 import TagManagementModal from '@/app/components/base/tag-management'
 import TagFilter from '@/app/components/base/tag-management/filter'
@@ -92,7 +94,7 @@ const List = () => {
     <div className="relative flex h-full shrink-0 grow flex-row overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
 
       {/* Left Sidebar */}
-      <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-[#F3F4F6] dark:bg-[#111827]">
+      <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
         <div className="flex-1 overflow-y-auto p-4">
           {/* 全部 */}
           <div className="mb-6">
@@ -225,6 +227,42 @@ const List = () => {
               >
                 <RiGlobalLine className="h-4 w-4" />
                 {t('connectDataset', { ns: 'dataset', defaultValue: '连接数据源' })}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="px-4 md:px-8 mb-6">
+          <div className="bg-white dark:bg-[#1F2937] rounded-xl border border-[#E5E7EB] dark:border-[#374151] p-6">
+            <h3 className="text-lg font-semibold text-[#111827] dark:text-[#F9FAFB] mb-4">快速操作</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Blank Knowledge Base */}
+              <button
+                onClick={() => router.push('/datasets/create')}
+                className="flex items-center space-x-3 p-3 rounded-lg border border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-[#E5E7EB] dark:hover:border-[#374151] transition text-left group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-[#2563EB] flex items-center justify-center group-hover:bg-[#2563EB] group-hover:text-white transition-colors">
+                  <RiFilePaperLine className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-[#111827] dark:text-[#F9FAFB]">空白知识库</div>
+                  <div className="text-xs text-[#6B7280] dark:text-[#9CA3AF]">从零开始创建</div>
+                </div>
+              </button>
+
+              {/* From Document */}
+              <button
+                onClick={() => router.push('/datasets/create')}
+                className="flex items-center space-x-3 p-3 rounded-lg border border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-[#E5E7EB] dark:hover:border-[#374151] transition text-left group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors">
+                  <RiFileZipLine className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-[#111827] dark:text-[#F9FAFB]">从文档创建</div>
+                  <div className="text-xs text-[#6B7280] dark:text-[#9CA3AF]">支持 PDF, Word, CSV, MD</div>
+                </div>
               </button>
             </div>
           </div>

@@ -53,7 +53,7 @@ const Explore: FC<IExploreProps> = ({
   }
 
   return (
-    <div className="flex h-full overflow-hidden border-t border-divider-regular bg-background-body">
+    <div className="flex h-full overflow-hidden border-t border-divider-regular bg-[#F3F4F6] dark:bg-[#111827]">
       <ExploreContext.Provider
         value={
           {

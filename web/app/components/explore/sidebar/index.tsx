@@ -78,7 +78,7 @@ const SideBar: FC<IExploreSideBarProps> = ({
 
   const pinnedAppsCount = installedApps.filter(({ is_pinned }) => is_pinned).length
   return (
-    <div className={cn('relative w-fit shrink-0 cursor-pointer px-3 pt-6 sm:w-[240px]', isFold && 'sm:w-[56px]')}>
+    <div className={cn('relative w-fit shrink-0 cursor-pointer px-3 pt-6 sm:w-[240px]', isFold && 'sm:w-[56px]', 'bg-white dark:bg-[#1F2937] shadow-[0_1px_3px_rgba(0,0,0,0.05)]')}>
       <div className={cn(isDiscoverySelected ? 'text-text-accent' : 'text-text-tertiary')}>
         <Link
           href="/explore/apps"

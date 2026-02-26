@@ -240,7 +240,7 @@ const List: FC<Props> = ({
       <div ref={containerRef} className="relative flex h-full shrink-0 grow flex-row overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
 
         {/* Left Sidebar for App Types Navigation */}
-        <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-[#F3F4F6] dark:bg-[#111827]">
+        <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
           <div className="flex-1 overflow-y-auto p-4">
             {/* 全部 */}
             <div className="mb-6">
