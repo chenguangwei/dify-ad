@@ -74,19 +74,7 @@ const List = ({
   }
 
   if (noFilter) {
-    if (hideFindMoreFooter)
-      return null
-
-    return (
-      <Link
-        className="sticky bottom-0 z-10 flex h-8 cursor-pointer items-center rounded-b-lg border-[0.5px] border-t border-components-panel-border bg-components-panel-bg-blur px-4 py-1 text-text-accent-light-mode-only shadow-lg system-sm-medium"
-        href={getMarketplaceUrl('', { category })}
-        target="_blank"
-      >
-        <span>{t('findMoreInMarketplace', { ns: 'plugin' })}</span>
-        <RiArrowRightUpLine className="ml-0.5 h-3 w-3" />
-      </Link>
-    )
+    return null
   }
 
   const maxWidthClassName = toolContentClassName || 'max-w-[100%]'

@@ -7,7 +7,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TIME_PERIOD_MAPPING as LONG_TIME_PERIOD_MAPPING } from '@/app/components/app/log/filter'
-import { AvgResponseTime, AvgSessionInteractions, AvgUserInteractions, ConversationsChart, CostChart, EndUsersChart, MessagesChart, TokenPerSecond, UserSatisfactionRate, WorkflowCostChart, WorkflowDailyTerminalsChart, WorkflowMessagesChart } from '@/app/components/app/overview/app-chart'
+import { AvgResponseTime, AvgSessionInteractions, AvgUserInteractions, ConversationsChart, EndUsersChart, TokenPerSecond, WorkflowDailyTerminalsChart } from '@/app/components/app/overview/app-chart'
 import { useStore as useAppStore } from '@/app/components/app/store'
 import { IS_CLOUD_EDITION } from '@/config'
 import LongTimeRangePicker from './long-time-range-picker'
@@ -52,19 +52,19 @@ export default function ChartView({ appId, headerRight }: IChartViewProps) {
         <div className="flex items-center justify-between">
           {IS_CLOUD_EDITION
             ? (
-                <TimeRangePicker
-                  ranges={TIME_PERIOD_MAPPING}
-                  onSelect={setPeriod}
-                  queryDateFormat={queryDateFormat}
-                />
-              )
+              <TimeRangePicker
+                ranges={TIME_PERIOD_MAPPING}
+                onSelect={setPeriod}
+                queryDateFormat={queryDateFormat}
+              />
+            )
             : (
-                <LongTimeRangePicker
-                  periodMapping={LONG_TIME_PERIOD_MAPPING}
-                  onSelect={setPeriod}
-                  queryDateFormat={queryDateFormat}
-                />
-              )}
+              <LongTimeRangePicker
+                periodMapping={LONG_TIME_PERIOD_MAPPING}
+                onSelect={setPeriod}
+                queryDateFormat={queryDateFormat}
+              />
+            )}
 
           {headerRight}
         </div>
@@ -79,34 +79,18 @@ export default function ChartView({ appId, headerRight }: IChartViewProps) {
         <div className="mb-6 grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
           {isChatApp
             ? (
-                <AvgSessionInteractions period={period} id={appId} />
-              )
+              <AvgSessionInteractions period={period} id={appId} />
+            )
             : (
-                <AvgResponseTime period={period} id={appId} />
-              )}
+              <AvgResponseTime period={period} id={appId} />
+            )}
           <TokenPerSecond period={period} id={appId} />
         </div>
       )}
-      {!isWorkflow && (
-        <div className="mb-6 grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
-          <UserSatisfactionRate period={period} id={appId} />
-          <CostChart period={period} id={appId} />
-        </div>
-      )}
-      {!isWorkflow && isChatApp && (
-        <div className="mb-6 grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
-          <MessagesChart period={period} id={appId} />
-        </div>
-      )}
+
       {isWorkflow && (
         <div className="mb-6 grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
-          <WorkflowMessagesChart period={period} id={appId} />
           <WorkflowDailyTerminalsChart period={period} id={appId} />
-        </div>
-      )}
-      {isWorkflow && (
-        <div className="mb-6 grid w-full grid-cols-1 gap-6 xl:grid-cols-2">
-          <WorkflowCostChart period={period} id={appId} />
           <AvgUserInteractions period={period} id={appId} />
         </div>
       )}

@@ -298,16 +298,8 @@ const AllTools = ({
             </div>
           )}
         </div>
-        {shouldShowMarketplaceFooter && (
-          <Link
-            className={marketplaceFooterClassName}
-            href={getMarketplaceUrl('', { category: PluginCategoryEnum.tool })}
-            target="_blank"
-          >
-            <span>{t('findMoreInMarketplace', { ns: 'plugin' })}</span>
-            <RiArrowRightUpLine className="ml-0.5 h-3 w-3" />
-          </Link>
-        )}
+
+
       </div>
     </div>
   )

@@ -146,9 +146,7 @@ const FeaturedTools = ({
 
           {showEmptyState && (
             <p className="py-2 text-text-tertiary system-xs-regular">
-              <Link className="text-text-accent" href={getMarketplaceUrl('', { category: 'tool' })} target="_blank" rel="noopener noreferrer">
-                {t('tabs.noFeaturedPlugins', { ns: 'workflow' })}
-              </Link>
+              {t('tabs.noFeaturedPlugins', { ns: 'workflow' })}
             </p>
           )}
 
@@ -201,11 +199,11 @@ const FeaturedTools = ({
                 <RiMoreLine className="size-4 group-hover:hidden" />
                 {isExpanded
                   ? (
-                      <ArrowUpDoubleLine className="hidden size-4 group-hover:block" />
-                    )
+                    <ArrowUpDoubleLine className="hidden size-4 group-hover:block" />
+                  )
                   : (
-                      <ArrowDownDoubleLine className="hidden size-4 group-hover:block" />
-                    )}
+                    <ArrowDownDoubleLine className="hidden size-4 group-hover:block" />
+                  )}
               </div>
               <div className="system-xs-regular">
                 {t(isExpanded ? 'tabs.showLessFeatured' : 'tabs.showMoreFeatured', { ns: 'workflow' })}
