@@ -23,7 +23,7 @@ const ExploreNav = ({
   return (
     <Link
       href="/explore/apps"
-      className={cn(className, 'group', activated && 'bg-components-main-nav-nav-button-bg-active shadow-md', activated ? 'text-components-main-nav-nav-button-text-active' : 'text-components-main-nav-nav-button-text hover:bg-components-main-nav-nav-button-bg-hover')}
+      className={cn(className, 'group', activated && 'bg-white dark:bg-[#374151] shadow-sm', activated ? 'text-[#2563EB] dark:text-white' : 'text-[#6B7280] dark:text-[#9CA3AF] hover:text-[#111827] dark:hover:text-white hover:bg-white dark:hover:bg-[#374151]')}
     >
       {
         activated

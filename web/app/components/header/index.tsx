@@ -22,9 +22,9 @@ import PluginsNav from './plugins-nav'
 import ToolsNav from './tools-nav'
 
 const navClassName = `
-  flex items-center relative px-3 h-8 rounded-xl
+  flex items-center relative px-4 h-8 rounded-md
   font-medium text-sm
-  cursor-pointer
+  cursor-pointer transition-all duration-200
 `
 
 const Header = () => {
@@ -79,11 +79,13 @@ const Header = () => {
             <AccountDropdown />
           </div>
         </div>
-        <div className="my-1 flex items-center justify-center space-x-1">
-          {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-          {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-          {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-          {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+        <div className="my-1 flex items-center justify-center">
+          <nav className="flex items-center bg-[#F3F4F6] dark:bg-[#1F2937] p-1 rounded-lg">
+            {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
+            {!isCurrentWorkspaceDatasetOperator && <AppNav />}
+            {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
+            {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+          </nav>
         </div>
       </div>
     )
@@ -99,11 +101,13 @@ const Header = () => {
         </WorkspaceProvider>
         {enableBilling ? <PlanBadge allowHover sandboxAsUpgrade plan={plan.type} onClick={handlePlanClick} /> : <LicenseNav />}
       </div>
-      <div className="flex items-center space-x-2">
-        {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
-        {!isCurrentWorkspaceDatasetOperator && <AppNav />}
-        {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
-        {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+      <div className="flex items-center">
+        <nav className="flex items-center bg-[#F3F4F6] dark:bg-[#1F2937] p-1 rounded-lg">
+          {!isCurrentWorkspaceDatasetOperator && <ExploreNav className={navClassName} />}
+          {!isCurrentWorkspaceDatasetOperator && <AppNav />}
+          {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && <DatasetNav />}
+          {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
+        </nav>
       </div>
       <div className="flex min-w-0 flex-[1] items-center justify-end pl-2 pr-3 min-[1280px]:pl-3">
         <EnvNav />

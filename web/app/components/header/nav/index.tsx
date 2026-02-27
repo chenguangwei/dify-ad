@@ -40,9 +40,9 @@ const Nav = ({
 
   return (
     <div className={`
-      flex h-8 max-w-[670px] shrink-0 items-center rounded-xl px-0.5 text-sm font-medium max-[1024px]:max-w-[400px]
-      ${isActivated && 'bg-components-main-nav-nav-button-bg-active font-semibold shadow-md'}
-      ${!curNav && !isActivated && 'hover:bg-components-main-nav-nav-button-bg-hover'}
+      flex h-8 max-w-[670px] shrink-0 items-center rounded-md px-0.5 text-sm font-medium max-[1024px]:max-w-[400px]
+      ${isActivated && 'bg-white dark:bg-[#374151] shadow-sm'}
+      ${!curNav && !isActivated && 'hover:bg-white dark:hover:bg-[#374151]'}
     `}
     >
       <Link href={link}>
@@ -53,7 +53,7 @@ const Nav = ({
               return
             setAppDetail()
           }}
-          className={cn('flex h-7 cursor-pointer items-center rounded-[10px] px-2.5', isActivated ? 'text-components-main-nav-nav-button-text-active' : 'text-components-main-nav-nav-button-text', curNav && isActivated && 'hover:bg-components-main-nav-nav-button-bg-active-hover')}
+          className={cn('flex h-7 cursor-pointer items-center rounded-[10px] px-2.5', isActivated ? 'text-[#2563EB] dark:text-white' : 'text-[#6B7280] dark:text-[#9CA3AF] hover:text-[#111827] dark:hover:text-white', curNav && isActivated && 'hover:bg-white/50 dark:hover:bg-[#374151]')}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
