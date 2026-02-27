@@ -14,7 +14,7 @@ export default function SignInLayout({ children }: any) {
         __html: `
         /* Light mode styles */
         html[data-theme="light"] .signin-bg {
-          background: url("https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=3000&auto=format&fit=crop") center/cover no-repeat;
+          background: url("/login/photo-1677442136019-21780ecad995.avif") center/cover no-repeat;
         }
         html[data-theme="light"] .signin-card {
           background: rgba(255, 255, 255, 0.6);

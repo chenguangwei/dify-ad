@@ -6,15 +6,10 @@ import {
   RiCloseLine,
   RiColorFilterFill,
   RiColorFilterLine,
-  RiDatabase2Fill,
-  RiDatabase2Line,
   RiGroup2Fill,
   RiGroup2Line,
   RiMoneyDollarCircleFill,
   RiMoneyDollarCircleLine,
-  RiPuzzle2Fill,
-  RiPuzzle2Line,
-  RiTranslate2,
 } from '@remixicon/react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +18,6 @@ import BillingPage from '@/app/components/billing/billing-page'
 import CustomPage from '@/app/components/custom/custom-page'
 import {
   ACCOUNT_SETTING_TAB,
-
 } from '@/app/components/header/account-setting/constants'
 import MenuDialog from '@/app/components/header/account-setting/menu-dialog'
 import { useAppContext } from '@/context/app-context'
@@ -31,14 +25,11 @@ import { useProviderContext } from '@/context/provider-context'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import { cn } from '@/utils/classnames'
 import Button from '../../base/button'
-import ApiBasedExtensionPage from './api-based-extension-page'
-import DataSourcePage from './data-source-page-new'
-import LanguagePage from './language-page'
 import MembersPage from './members-page'
 import ModelProviderPage from './model-provider-page'
 
 const iconClassName = `
-  w-5 h-5 mr-2
+  w-5 h-5 mr-2 shrink-0
 `
 
 type IAccountSettingProps = {
@@ -97,21 +88,6 @@ export default function AccountSetting({
       })
     }
 
-    items.push(
-      {
-        key: ACCOUNT_SETTING_TAB.DATA_SOURCE,
-        name: t('settings.dataSource', { ns: 'common' }),
-        icon: <RiDatabase2Line className={iconClassName} />,
-        activeIcon: <RiDatabase2Fill className={iconClassName} />,
-      },
-      {
-        key: ACCOUNT_SETTING_TAB.API_BASED_EXTENSION,
-        name: t('settings.apiBasedExtension', { ns: 'common' }),
-        icon: <RiPuzzle2Line className={iconClassName} />,
-        activeIcon: <RiPuzzle2Fill className={iconClassName} />,
-      },
-    )
-
     if (enableReplaceWebAppLogo || enableBilling) {
       items.push({
         key: ACCOUNT_SETTING_TAB.CUSTOM,
@@ -133,19 +109,8 @@ export default function AccountSetting({
       name: t('settings.workplaceGroup', { ns: 'common' }),
       items: workplaceGroupItems,
     },
-    {
-      key: 'account-group',
-      name: t('settings.generalGroup', { ns: 'common' }),
-      items: [
-        {
-          key: ACCOUNT_SETTING_TAB.LANGUAGE,
-          name: t('settings.language', { ns: 'common' }),
-          icon: <RiTranslate2 className={iconClassName} />,
-          activeIcon: <RiTranslate2 className={iconClassName} />,
-        },
-      ],
-    },
   ]
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
@@ -160,7 +125,7 @@ export default function AccountSetting({
     }
   }, [])
 
-  const activeItem = [...menuItems[0].items, ...menuItems[1].items].find(item => item.key === activeMenu)
+  const activeItem = menuItems[0].items.find(item => item.key === activeMenu)
 
   const [searchValue, setSearchValue] = useState<string>('')
 
@@ -170,42 +135,66 @@ export default function AccountSetting({
       onClose={onCancel}
     >
       <div className="mx-auto flex h-[100vh] max-w-[1048px]">
-        <div className="flex w-[44px] flex-col border-r border-divider-burn pl-4 pr-6 sm:w-[224px]">
-          <div className="mb-8 mt-6 px-3 py-2 text-text-primary title-2xl-semi-bold">{t('userProfile.settings', { ns: 'common' })}</div>
-          <div className="w-full">
-            {
-              menuItems.map(menuItem => (
-                <div key={menuItem.key} className="mb-2">
-                  {!isCurrentWorkspaceDatasetOperator && (
-                    <div className="mb-0.5 py-2 pb-1 pl-3 text-text-tertiary system-xs-medium-uppercase">{menuItem.name}</div>
-                  )}
-                  <div>
-                    {
-                      menuItem.items.map(item => (
-                        <div
-                          key={item.key}
-                          className={cn(
-                            'mb-0.5 flex h-[37px] cursor-pointer items-center rounded-lg p-1 pl-3 text-sm',
-                            activeMenu === item.key ? 'bg-state-base-active text-components-menu-item-text-active system-sm-semibold' : 'text-components-menu-item-text system-sm-medium',
-                          )}
-                          title={item.name}
-                          onClick={() => {
-                            setActiveMenu(item.key)
-                            onTabChange?.(item.key)
-                          }}
-                        >
-                          {activeMenu === item.key ? item.activeIcon : item.icon}
-                          {!isMobile && <div className="truncate">{item.name}</div>}
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-              ))
-            }
+        {/* ── Sidebar ── */}
+        <aside className={cn(
+          'flex flex-col border-r border-slate-200 dark:border-slate-800',
+          'bg-white dark:bg-slate-900',
+          isMobile ? 'w-[56px]' : 'w-[224px]',
+        )}>
+          {/* Logo / title */}
+          <div className="px-6 pb-4 pt-6">
+            {!isMobile && (
+              <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                {t('userProfile.settings', { ns: 'common' })}
+              </h1>
+            )}
           </div>
-        </div>
-        <div className="relative flex w-[824px]">
+
+          {/* Nav */}
+          <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
+            {menuItems.map(menuItem => (
+              <div key={menuItem.key} className="mb-4">
+                {!isCurrentWorkspaceDatasetOperator && !isMobile && (
+                  <p className="px-3 mb-2 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                    {menuItem.name}
+                  </p>
+                )}
+                <div className="space-y-0.5">
+                  {menuItem.items.map(item => {
+                    const isActive = activeMenu === item.key
+                    return (
+                      <div
+                        key={item.key}
+                        title={item.name}
+                        className={cn(
+                          'flex items-center rounded-lg px-3 py-2 text-sm font-medium cursor-pointer transition-colors',
+                          isActive
+                            ? 'bg-blue-50 text-blue-700 dark:bg-slate-800 dark:text-blue-400'
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200',
+                        )}
+                        onClick={() => {
+                          setActiveMenu(item.key)
+                          onTabChange?.(item.key)
+                        }}
+                      >
+                        <span className={cn(
+                          isActive ? 'text-blue-700 dark:text-blue-400' : 'text-slate-500 dark:text-slate-500',
+                        )}>
+                          {isActive ? item.activeIcon : item.icon}
+                        </span>
+                        {!isMobile && <span className="truncate">{item.name}</span>}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </nav>
+        </aside>
+
+        {/* ── Content ── */}
+        <div className="relative flex flex-1 flex-col min-w-0">
+          {/* Close button */}
           <div className="fixed right-6 top-6 z-[9999] flex flex-col items-center">
             <Button
               variant="tertiary"
@@ -217,35 +206,53 @@ export default function AccountSetting({
             </Button>
             <div className="mt-1 text-text-tertiary system-2xs-medium-uppercase">ESC</div>
           </div>
-          <div ref={scrollRef} className="w-full overflow-y-auto bg-components-panel-bg pb-4">
-            <div className={cn('sticky top-0 z-20 mx-8 mb-[18px] flex items-center bg-components-panel-bg pb-2 pt-[27px]', scrolled && 'border-b border-divider-regular')}>
-              <div className="shrink-0 text-text-primary title-2xl-semi-bold">
-                {activeItem?.name}
-                {activeItem?.description && (
-                  <div className="mt-1 text-text-tertiary system-sm-regular">{activeItem?.description}</div>
+
+          {/* Scrollable body */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto bg-white dark:bg-slate-900">
+            {/* Sticky header */}
+            <header className={cn(
+              'sticky top-0 z-20 bg-white dark:bg-slate-900 px-8 py-4',
+              'border-b border-slate-200 dark:border-slate-800',
+              scrolled ? 'shadow-sm' : '',
+            )}>
+              <div className="flex items-center justify-between">
+                <div>
+                  {/* Breadcrumb */}
+                  <nav className="mb-1 flex items-center space-x-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                    <span>{t('userProfile.settings', { ns: 'common' })}</span>
+                    <span className="mx-1">›</span>
+                    <span className="text-slate-900 dark:text-white">{activeItem?.name}</span>
+                  </nav>
+                  {/* Title */}
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                    {activeItem?.name}
+                  </h2>
+                  {activeItem?.description && (
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{activeItem.description}</p>
+                  )}
+                </div>
+                {activeItem?.key === 'provider' && (
+                  <div className="ml-4">
+                    <Input
+                      showLeftIcon
+                      wrapperClassName="!w-[200px]"
+                      className="!h-9 !text-sm !border-slate-200 dark:!border-slate-700 !bg-slate-50 dark:!bg-slate-800"
+                      onChange={e => setSearchValue(e.target.value)}
+                      value={searchValue}
+                    />
+                  </div>
                 )}
               </div>
-              {activeItem?.key === 'provider' && (
-                <div className="flex grow justify-end">
-                  <Input
-                    showLeftIcon
-                    wrapperClassName="!w-[200px]"
-                    className="!h-8 !text-[13px]"
-                    onChange={e => setSearchValue(e.target.value)}
-                    value={searchValue}
-                  />
-                </div>
-              )}
-            </div>
-            <div className="px-4 pt-2 sm:px-8">
+            </header>
+
+            {/* Page content */}
+            <div className="px-8 py-8">
               {activeMenu === 'provider' && <ModelProviderPage searchText={searchValue} />}
               {activeMenu === 'members' && <MembersPage />}
               {activeMenu === 'billing' && <BillingPage />}
-              {activeMenu === 'data-source' && <DataSourcePage />}
-              {activeMenu === 'api-based-extension' && <ApiBasedExtensionPage />}
               {activeMenu === 'custom' && <CustomPage />}
-              {activeMenu === 'language' && <LanguagePage />}
             </div>
+
           </div>
         </div>
       </div>

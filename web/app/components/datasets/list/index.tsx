@@ -8,14 +8,9 @@ import { useTranslation } from 'react-i18next'
 
 import {
   RiAddLine,
-  RiArrowDownSLine,
-  RiBookOpenLine,
-  RiDatabase2Line,
   RiFileTextLine,
   RiGlobalLine,
-  RiLinksLine,
   RiSearchLine,
-  RiSettingsLine,
   RiFileZipLine,
   RiFilePaperLine,
 } from '@remixicon/react'
@@ -28,13 +23,10 @@ import { useAppContext, useSelector as useAppContextSelector } from '@/context/a
 import { useExternalApiPanel } from '@/context/external-api-panel-context'
 import useDocumentTitle from '@/hooks/use-document-title'
 import { useDatasetApiBaseUrl } from '@/service/knowledge/use-dataset'
-import { cn } from '@/utils/classnames'
 // Components
 import ExternalAPIPanel from '../external-api/external-api-panel'
 import ServiceApi from '../extra-info/service-api'
 import Datasets from './datasets'
-
-type DatasetTypeFilter = 'all' | 'general' | 'qa' | 'parentChild' | 'graph' | 'external'
 
 const List = () => {
   const { t } = useTranslation()
@@ -43,7 +35,6 @@ const List = () => {
   const showTagManagementModal = useTagStore(s => s.showTagManagementModal)
   const { showExternalApiPanel, setShowExternalApiPanel } = useExternalApiPanel()
   const [includeAll, { toggle: toggleIncludeAll }] = useBoolean(false)
-  const [activeType, setActiveType] = useState<DatasetTypeFilter>('all')
   useDocumentTitle(t('knowledge', { ns: 'dataset' }))
 
   const [keywords, setKeywords] = useState('')
@@ -73,90 +64,8 @@ const List = () => {
   const isCurrentWorkspaceManager = useAppContextSelector(state => state.isCurrentWorkspaceManager)
   const { data: apiBaseInfo } = useDatasetApiBaseUrl()
 
-  const sidebarCategories = [
-    {
-      label: t('chunkingMode.general', { ns: 'dataset', defaultValue: '文档类型' }),
-      items: [
-        { value: 'general' as DatasetTypeFilter, text: t('chunkingMode.general', { ns: 'dataset', defaultValue: '通用' }), icon: <RiFileTextLine className="h-[14px] w-[14px]" /> },
-        { value: 'qa' as DatasetTypeFilter, text: t('chunkingMode.qa', { ns: 'dataset', defaultValue: '问答' }), icon: <RiBookOpenLine className="h-[14px] w-[14px]" /> },
-        { value: 'parentChild' as DatasetTypeFilter, text: t('chunkingMode.parentChild', { ns: 'dataset', defaultValue: '父子' }), icon: <RiDatabase2Line className="h-[14px] w-[14px]" /> },
-      ],
-    },
-    {
-      label: t('externalKnowledgeBase', { ns: 'dataset', defaultValue: '外部知识库' }),
-      items: [
-        { value: 'external' as DatasetTypeFilter, text: t('externalKnowledgeBase', { ns: 'dataset', defaultValue: '外部 API' }), icon: <RiLinksLine className="h-[14px] w-[14px]" /> },
-      ],
-    },
-  ]
-
   return (
-    <div className="relative flex h-full shrink-0 grow flex-row overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
-
-      {/* Left Sidebar */}
-      <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-        <div className="flex-1 overflow-y-auto p-4">
-          {/* 全部 */}
-          <div className="mb-6">
-            <button
-              onClick={() => setActiveType('all')}
-              className={cn(
-                'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                activeType === 'all'
-                  ? 'bg-primary-50 text-primary-600'
-                  : 'text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
-              )}
-            >
-              <span className={cn(activeType === 'all' ? 'text-primary-600' : 'text-text-tertiary')}>
-                <RiDatabase2Line className="h-[14px] w-[14px]" />
-              </span>
-              {t('datasets', { ns: 'dataset', defaultValue: '全部知识库' })}
-            </button>
-          </div>
-
-          {/* 分组导航 */}
-          {sidebarCategories.map(section => (
-            <div key={section.label} className="mb-2">
-              <div className="mb-2 mt-4 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
-                {section.label}
-              </div>
-              {section.items.map((option) => {
-                const isActive = activeType === option.value
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => setActiveType(option.value)}
-                    className={cn(
-                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                      isActive
-                        ? 'font-medium text-primary-600 bg-primary-50'
-                        : 'font-normal text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
-                    )}
-                  >
-                    <span className={cn(isActive ? 'text-primary-600' : 'text-text-tertiary')}>
-                      {option.icon}
-                    </span>
-                    {option.text}
-                  </button>
-                )
-              })}
-            </div>
-          ))}
-        </div>
-
-        {/* Sidebar Footer */}
-        <div className="border-t border-divider-subtle p-4">
-          {isCurrentWorkspaceManager && (
-            <button
-              onClick={() => setShowExternalApiPanel(true)}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-state-base-hover hover:text-text-primary"
-            >
-              <RiSettingsLine className="h-4 w-4 text-text-tertiary" />
-              {t('datasetsApi', { ns: 'dataset', defaultValue: 'API 访问' })}
-            </button>
-          )}
-        </div>
-      </div>
+    <div className="relative flex h-full shrink-0 grow flex-col overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
 
       {/* Main Content */}
       <div className="relative flex h-full grow flex-col overflow-y-auto bg-transparent">

@@ -71,23 +71,27 @@ const Apps = ({
     isError,
   } = useExploreAppList()
 
-  // 保留的应用名称列表
-  const allowedAppNames = [
+  // 精选展示的应用：同时支持远程中文名和 builtin 英文名（remote/builtin 模式 app_id 不同）
+  const ALLOWED_APP_NAMES = new Set([
+    // 中文（remote zh-Hans）
     '文件翻译',
-    '客户评价处理工作流',
     '会议纪要',
     '知识库 + 聊天机器人',
     '问题分类 + 知识库 + 聊天机器人',
-  ]
+    // 英文（builtin fallback）
+    'Book Translation',
+    'Knowledge Retrieval + Chatbot',
+    'Question Classifier + Knowledge + Chatbot',
+    'Customer Review Analysis Workflow',
+  ])
 
   const filteredList = useMemo(() => {
     if (!data)
       return []
-    return data.allList.filter(item => {
-      const categoryMatch = currCategory === allCategoriesEn || item.category === currCategory
-      const nameMatch = allowedAppNames.includes(item.app?.name || '')
-      return categoryMatch && nameMatch
-    })
+    return data.allList.filter(item =>
+      ALLOWED_APP_NAMES.has(item.app?.name?.trim() ?? '')
+      && (currCategory === allCategoriesEn || item.app?.mode === currCategory),
+    )
   }, [data, currCategory, allCategoriesEn])
 
   const searchFilteredList = useMemo(() => {
@@ -176,16 +180,16 @@ const Apps = ({
   // Options for sidebar
   const options = [
     { value: allCategoriesEn, text: t('types.all', { ns: 'app' }), icon: <RiApps2Line className="h-[14px] w-[14px]" /> },
-    { value: 'Workflow', text: t('types.workflow', { ns: 'app' }), icon: <RiOrganizationChart className="h-[14px] w-[14px]" /> },
-    { value: 'advanced', text: t('types.advanced', { ns: 'app' }), icon: <RiMindMap className="h-[14px] w-[14px]" /> },
-    { value: 'chat', text: t('types.chatbot', { ns: 'app' }), icon: <RiMentalHealthLine className="h-[14px] w-[14px]" /> },
-    { value: 'agent', text: t('types.agent', { ns: 'app' }), icon: <RiRobot2Line className="h-[14px] w-[14px]" /> },
-    { value: 'completion', text: t('types.completion', { ns: 'app' }), icon: <RiFileEditLine className="h-[14px] w-[14px]" /> },
+    { value: AppModeEnum.WORKFLOW, text: '业务编排', icon: <RiOrganizationChart className="h-[14px] w-[14px]" /> },
+    { value: AppModeEnum.ADVANCED_CHAT, text: '协作引擎', icon: <RiMindMap className="h-[14px] w-[14px]" /> },
+    { value: AppModeEnum.CHAT, text: '知识助手', icon: <RiMentalHealthLine className="h-[14px] w-[14px]" /> },
+    { value: AppModeEnum.AGENT_CHAT, text: '数字员工', icon: <RiRobot2Line className="h-[14px] w-[14px]" /> },
+    { value: AppModeEnum.COMPLETION, text: '智能撰稿', icon: <RiFileEditLine className="h-[14px] w-[14px]" /> },
   ]
 
   const sectionedOptions = [
     {
-      label: t('sectionLabels.businessOrchestration', { ns: 'app', defaultValue: '业务编排' }),
+      label: t('sectionLabels.businessOrchestration', { ns: 'app', defaultValue: '流程与协作' }),
       items: [options[1], options[2]],
     },
     {

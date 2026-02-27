@@ -2,17 +2,11 @@
 
 import type { FC } from 'react'
 import {
-  RiApps2Line,
   RiDragDropLine,
-  RiSettingsLine,
   RiAddLine,
-  RiOrganizationChart,
-  RiMindMap,
-  RiMentalHealthLine,
-  RiRobot2Line,
-  RiFileEditLine,
   RiSearchLine,
   RiArrowDownSLine,
+  RiFlashlightLine,
 } from '@remixicon/react'
 import { useDebounceFn, useMount } from 'ahooks'
 import dynamic from 'next/dynamic'
@@ -58,6 +52,17 @@ const TagManagementModal = dynamic(() => import('@/app/components/base/tag-manag
 const CreateFromDSLModal = dynamic(() => import('@/app/components/app/create-from-dsl-modal'), {
   ssr: false,
 })
+const CreateAppModal = dynamic(() => import('@/app/components/app/create-app-modal'), {
+  ssr: false,
+})
+
+const CATEGORY_META: Partial<Record<string, { label: string; desc: string }>> = {
+  [AppModeEnum.WORKFLOW]: { label: '业务编排', desc: '通过可视化方式设计并自动化您的业务工作流程' },
+  [AppModeEnum.ADVANCED_CHAT]: { label: '协作引擎', desc: '构建多智能体协同的高级对话应用' },
+  [AppModeEnum.CHAT]: { label: '知识助手', desc: '创建知识库驱动的智能问答助手' },
+  [AppModeEnum.AGENT_CHAT]: { label: '数字员工', desc: '打造具备工具调用和自主决策能力的数字员工' },
+  [AppModeEnum.COMPLETION]: { label: '智能撰稿', desc: '搭建专业内容生成与写作辅助应用' },
+}
 
 type Props = {
   controlRefreshList?: number
@@ -100,6 +105,7 @@ const List: FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [showCreateFromDSLModal, setShowCreateFromDSLModal] = useState(false)
   const [droppedDSLFile, setDroppedDSLFile] = useState<File | undefined>()
+  const [quickCreateMode, setQuickCreateMode] = useState<AppModeEnum | null>(null)
   const setKeywords = useCallback((keywords: string) => {
     setQuery(prev => ({ ...prev, keywords }))
   }, [setQuery])
@@ -146,25 +152,6 @@ const List: FC<Props> = ({
   }, [controlRefreshList])
 
   const anchorRef = useRef<HTMLDivElement>(null)
-  const options = [
-    { value: 'all', text: t('types.all', { ns: 'app' }), icon: <RiApps2Line className="h-[14px] w-[14px]" /> },
-    { value: AppModeEnum.WORKFLOW, text: t('types.workflow', { ns: 'app' }), icon: <RiOrganizationChart className="h-[14px] w-[14px]" /> },
-    { value: AppModeEnum.ADVANCED_CHAT, text: t('types.advanced', { ns: 'app' }), icon: <RiMindMap className="h-[14px] w-[14px]" /> },
-    { value: AppModeEnum.CHAT, text: t('types.chatbot', { ns: 'app' }), icon: <RiMentalHealthLine className="h-[14px] w-[14px]" /> },
-    { value: AppModeEnum.AGENT_CHAT, text: t('types.agent', { ns: 'app' }), icon: <RiRobot2Line className="h-[14px] w-[14px]" /> },
-    { value: AppModeEnum.COMPLETION, text: t('types.completion', { ns: 'app' }), icon: <RiFileEditLine className="h-[14px] w-[14px]" /> },
-  ]
-
-  const sectionedOptions = [
-    {
-      label: t('sectionLabels.businessOrchestration', { ns: 'app', defaultValue: '业务编排' }),
-      items: [options[1], options[2]],
-    },
-    {
-      label: t('sectionLabels.intelligentAssistant', { ns: 'app', defaultValue: '智能助理' }),
-      items: [options[3], options[4], options[5]],
-    },
-  ]
 
   useEffect(() => {
     if (localStorage.getItem(NEED_REFRESH_APP_LIST_KEY) === '1') {
@@ -237,77 +224,7 @@ const List: FC<Props> = ({
 
   return (
     <>
-      <div ref={containerRef} className="relative flex h-full shrink-0 grow flex-row overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
-
-        {/* Left Sidebar for App Types Navigation */}
-        <div className="flex w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <div className="flex-1 overflow-y-auto p-4">
-            {/* 全部 */}
-            <div className="mb-6">
-              {(() => {
-                const option = options[0]
-                const isActive = activeTab === option.value
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => setActiveTab(option.value as string)}
-                    className={cn(
-                      'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                      isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
-                    )}
-                  >
-                    <span className={cn(isActive ? 'text-primary-600' : 'text-text-tertiary')}>
-                      {option.icon}
-                    </span>
-                    {option.text}
-                  </button>
-                )
-              })()}
-            </div>
-
-            {/* 分组导航 */}
-            {sectionedOptions.map(section => (
-              <div key={section.label} className="mb-2">
-                <div className="mb-2 mt-6 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
-                  {section.label}
-                </div>
-                {section.items.map((option) => {
-                  const isActive = activeTab === option.value
-                  return (
-                    <button
-                      key={option.value}
-                      onClick={() => setActiveTab(option.value as string)}
-                      className={cn(
-                        'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
-                        isActive
-                          ? 'font-medium text-primary-600 bg-primary-50'
-                          : 'font-normal text-text-secondary hover:bg-state-base-hover hover:text-text-primary',
-                      )}
-                    >
-                      <span className={cn(isActive ? 'text-primary-600' : 'text-text-tertiary')}>
-                        {option.icon}
-                      </span>
-                      {option.text}
-                    </button>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-
-          {/* Sidebar Footer: Settings */}
-          <div className="border-t border-divider-subtle p-4">
-            <button
-              onClick={() => { }}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-state-base-hover hover:text-text-primary"
-            >
-              <RiSettingsLine className="h-4 w-4 text-text-tertiary" />
-              {t('operation.settings', { ns: 'common', defaultValue: '设置' })}
-            </button>
-          </div>
-        </div>
+      <div ref={containerRef} className="relative flex h-full shrink-0 grow flex-col overflow-hidden bg-[#F3F4F6] dark:bg-[#111827] text-[#111827] dark:text-[#F9FAFB] transition-colors duration-200 antialiased">
 
         {/* Main Content Area */}
         <div className="relative flex h-full grow flex-col overflow-y-auto bg-transparent">
@@ -397,6 +314,34 @@ const List: FC<Props> = ({
               )}
             </div>
           </div>
+          {/* Quick Create Card */}
+          {activeTab !== 'all' && isCurrentWorkspaceEditor && CATEGORY_META[activeTab] && (
+            <div className="px-4 md:px-8 pb-2">
+              <button
+                type="button"
+                onClick={() => setQuickCreateMode(activeTab as AppModeEnum)}
+                className="group flex w-full items-center gap-4 rounded-xl border-2 border-dashed border-[#2563EB]/25 bg-white dark:bg-[#1F2937] px-6 py-4 text-left shadow-sm transition-all hover:border-[#2563EB]/60 hover:shadow-md dark:border-blue-700/25 dark:hover:border-blue-500/60"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition-colors group-hover:bg-[#2563EB] group-hover:text-white dark:bg-blue-900/20 dark:text-blue-400">
+                  <RiFlashlightLine className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-semibold text-[#111827] dark:text-[#F9FAFB]">
+                    创建空白{CATEGORY_META[activeTab]!.label}
+                  </div>
+                  <div className="mt-0.5 truncate text-xs text-[#6B7280] dark:text-[#9CA3AF]">
+                    {CATEGORY_META[activeTab]!.desc}
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#F3F4F6] text-[#6B7280] transition-colors group-hover:bg-[#2563EB] group-hover:text-white dark:bg-[#374151] dark:text-[#9CA3AF]">
+                    <RiAddLine className="h-4 w-4" />
+                  </div>
+                </div>
+              </button>
+            </div>
+          )}
+
           <div className={cn(
             'relative grid grow grid-cols-1 content-start gap-6 px-4 md:px-8 pb-8 pt-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
             !hasAnyApp && 'overflow-hidden',
@@ -454,6 +399,15 @@ const List: FC<Props> = ({
           )}
         </div>
       </div >
+
+      {quickCreateMode !== null && (
+        <CreateAppModal
+          show={true}
+          defaultAppMode={quickCreateMode}
+          onClose={() => setQuickCreateMode(null)}
+          onSuccess={() => { setQuickCreateMode(null); refetch() }}
+        />
+      )}
 
       {showCreateFromDSLModal && (
         <CreateFromDSLModal

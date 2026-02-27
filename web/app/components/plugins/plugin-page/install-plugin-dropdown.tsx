@@ -2,42 +2,31 @@
 
 import { RiAddLine, RiArrowDownSLine } from '@remixicon/react'
 import { noop } from 'es-toolkit/function'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
 import { FileZip } from '@/app/components/base/icons/src/vender/solid/files'
-import { Github } from '@/app/components/base/icons/src/vender/solid/general'
-import { MagicBox } from '@/app/components/base/icons/src/vender/solid/mediaAndDevices'
 import {
   PortalToFollowElem,
   PortalToFollowElemContent,
   PortalToFollowElemTrigger,
 } from '@/app/components/base/portal-to-follow-elem'
-import InstallFromGitHub from '@/app/components/plugins/install-plugin/install-from-github'
 import InstallFromLocalPackage from '@/app/components/plugins/install-plugin/install-from-local-package'
 import { SUPPORT_INSTALL_LOCAL_FILE_EXTENSIONS } from '@/config'
-import { useGlobalPublicStore } from '@/context/global-public-context'
 import { cn } from '@/utils/classnames'
 
 type Props = {
   onSwitchToMarketplaceTab: () => void
 }
 
-type InstallMethod = {
-  icon: React.FC<{ className?: string }>
-  text: string
-  action: string
-}
-
 const InstallPluginDropdown = ({
-  onSwitchToMarketplaceTab,
+  onSwitchToMarketplaceTab: _onSwitchToMarketplaceTab,
 }: Props) => {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [selectedAction, setSelectedAction] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const { enable_marketplace, plugin_installation_permission } = useGlobalPublicStore(s => s.systemFeatures)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -61,21 +50,9 @@ const InstallPluginDropdown = ({
   //   console.log(res)
   // }
 
-  const [installMethods, setInstallMethods] = useState<InstallMethod[]>([])
-  useEffect(() => {
-    const methods = []
-    if (enable_marketplace)
-      methods.push({ icon: MagicBox, text: t('source.marketplace', { ns: 'plugin' }), action: 'marketplace' })
-
-    if (plugin_installation_permission.restrict_to_marketplace_only) {
-      setInstallMethods(methods)
-    }
-    else {
-      methods.push({ icon: Github, text: t('source.github', { ns: 'plugin' }), action: 'github' })
-      methods.push({ icon: FileZip, text: t('source.local', { ns: 'plugin' }), action: 'local' })
-      setInstallMethods(methods)
-    }
-  }, [plugin_installation_permission, enable_marketplace, t])
+  const installMethods = [
+    { icon: FileZip, text: t('source.local', { ns: 'plugin' }), action: 'local' },
+  ]
 
   return (
     <PortalToFollowElem
@@ -112,17 +89,7 @@ const InstallPluginDropdown = ({
                   key={action}
                   className="flex w-full !cursor-pointer items-center gap-1 rounded-lg px-2 py-1.5 hover:bg-state-base-hover"
                   onClick={() => {
-                    if (action === 'local') {
-                      fileInputRef.current?.click()
-                    }
-                    else if (action === 'marketplace') {
-                      onSwitchToMarketplaceTab()
-                      setIsMenuOpen(false)
-                    }
-                    else {
-                      setSelectedAction(action)
-                      setIsMenuOpen(false)
-                    }
+                    fileInputRef.current?.click()
                   }}
                 >
                   <Icon className="h-4 w-4 text-text-tertiary" />
@@ -133,12 +100,6 @@ const InstallPluginDropdown = ({
           </div>
         </PortalToFollowElemContent>
       </div>
-      {selectedAction === 'github' && (
-        <InstallFromGitHub
-          onSuccess={noop}
-          onClose={() => setSelectedAction(null)}
-        />
-      )}
       {selectedAction === 'local' && selectedFile
         && (
           <InstallFromLocalPackage

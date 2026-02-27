@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Sidebar from '@/app/components/explore/sidebar'
 import { useAppContext } from '@/context/app-context'
 import ExploreContext from '@/context/explore-context'
 import useDocumentTitle from '@/hooks/use-document-title'
@@ -20,7 +19,6 @@ const Explore: FC<IExploreProps> = ({
   children,
 }) => {
   const router = useRouter()
-  const [controlUpdateInstalledApps, setControlUpdateInstalledApps] = useState(0)
   const { userProfile, isCurrentWorkspaceDatasetOperator } = useAppContext()
   const [hasEditPermission, setHasEditPermission] = useState(false)
   const [installedApps, setInstalledApps] = useState<InstalledApp[]>([])
@@ -57,8 +55,8 @@ const Explore: FC<IExploreProps> = ({
       <ExploreContext.Provider
         value={
           {
-            controlUpdateInstalledApps,
-            setControlUpdateInstalledApps,
+            controlUpdateInstalledApps: 0,
+            setControlUpdateInstalledApps: () => {},
             hasEditPermission,
             installedApps,
             setInstalledApps,
@@ -70,7 +68,6 @@ const Explore: FC<IExploreProps> = ({
           }
         }
       >
-        <Sidebar controlUpdateInstalledApps={controlUpdateInstalledApps} />
         <div className="h-full min-h-0 w-0 grow overflow-y-auto">
           {children}
         </div>

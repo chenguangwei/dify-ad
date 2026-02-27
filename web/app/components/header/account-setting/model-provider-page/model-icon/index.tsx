@@ -5,11 +5,15 @@ import type {
 } from '../declarations'
 import { OpenaiYellow } from '@/app/components/base/icons/src/public/llm'
 import { Group } from '@/app/components/base/icons/src/vender/other'
+import { API_PREFIX } from '@/config'
 import useTheme from '@/hooks/use-theme'
 import { renderI18nObject } from '@/i18n-config'
 import { Theme } from '@/types/app'
 import { cn } from '@/utils/classnames'
 import { useLanguage } from '../hooks'
+
+const apiOrigin = new URL(API_PREFIX).origin
+const fixIconUrl = (url: string) => (url?.startsWith('/') ? `${apiOrigin}${url}` : url)
 
 type ModelIconProps = {
   provider?: Model | ModelProvider
@@ -35,12 +39,12 @@ const ModelIcon: FC<ModelIconProps> = ({
       <div className={cn('flex h-5 w-5 items-center justify-center', isDeprecated && 'opacity-50', className)}>
         <img
           alt="model-icon"
-          src={renderI18nObject(
+          src={fixIconUrl(renderI18nObject(
             theme === Theme.dark && provider.icon_small_dark
               ? provider.icon_small_dark
               : provider.icon_small,
             language,
-          )}
+          ))}
           className={iconClassName}
         />
       </div>
