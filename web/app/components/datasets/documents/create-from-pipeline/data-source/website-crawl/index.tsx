@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 import { ACCOUNT_SETTING_TAB } from '@/app/components/header/account-setting/constants'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
-import { useDocLink } from '@/context/i18n'
 import { useModalContextSelector } from '@/context/modal-context'
 import { CrawlStep } from '@/models/datasets'
 import { DatasourceType } from '@/models/pipeline'
@@ -47,7 +46,6 @@ const WebsiteCrawl = ({
   onCredentialChange,
 }: WebsiteCrawlProps) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const [totalNum, setTotalNum] = useState(0)
   const [crawledNum, setCrawledNum] = useState(0)
   const [crawlErrorMessage, setCrawlErrorMessage] = useState('')
@@ -158,7 +156,6 @@ const WebsiteCrawl = ({
     <div className="flex flex-col">
       <Header
         docTitle="Docs"
-        docLink={docLink('/use-dify/knowledge/knowledge-pipeline/authorize-data-source')}
         onClickConfiguration={handleSetting}
         pluginName={nodeData.datasource_label}
         currentCredentialId={currentCredentialId}

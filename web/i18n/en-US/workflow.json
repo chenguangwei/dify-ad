@@ -141,6 +141,7 @@
   "common.exportJPEG": "Export as JPEG",
   "common.exportPNG": "Export as PNG",
   "common.exportSVG": "Export as SVG",
+  "common.exportDSL": "Export DSL",
   "common.features": "Features",
   "common.featuresDescription": "Enhance web app user experience",
   "common.featuresDocLink": "Learn more",

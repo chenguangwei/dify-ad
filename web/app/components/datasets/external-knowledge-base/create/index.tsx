@@ -7,7 +7,6 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
 import Divider from '@/app/components/base/divider'
-import { useDocLink } from '@/context/i18n'
 import ExternalApiSelection from './ExternalApiSelection'
 import InfoPanel from './InfoPanel'
 import KnowledgeBaseInfo from './KnowledgeBaseInfo'
@@ -20,7 +19,6 @@ type ExternalKnowledgeBaseCreateProps = {
 
 const ExternalKnowledgeBaseCreate: React.FC<ExternalKnowledgeBaseCreateProps> = ({ onConnect, loading }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const router = useRouter()
   const [formData, setFormData] = useState<CreateKnowledgeBaseReq>({
     name: '',
@@ -61,9 +59,6 @@ const ExternalKnowledgeBaseCreate: React.FC<ExternalKnowledgeBaseCreateProps> = 
                 <span>{t('connectHelper.helper1', { ns: 'dataset' })}</span>
                 <span className="text-text-secondary system-sm-medium">{t('connectHelper.helper2', { ns: 'dataset' })}</span>
                 <span>{t('connectHelper.helper3', { ns: 'dataset' })}</span>
-                <a className="self-stretch text-text-accent system-sm-regular" href={docLink('/use-dify/knowledge/connect-external-knowledge-base')} target="_blank" rel="noopener noreferrer">
-                  {t('connectHelper.helper4', { ns: 'dataset' })}
-                </a>
                 <span>
                   {t('connectHelper.helper5', { ns: 'dataset' })}
                   {' '}

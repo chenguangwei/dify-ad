@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
 import Modal from '@/app/components/base/modal'
 import Tag from '@/app/components/base/tag'
-import { useDocLink } from '@/context/i18n'
 
 type IShareLinkProps = {
   isShow: boolean
@@ -31,7 +30,6 @@ const CustomizeModal: FC<IShareLinkProps> = ({
   api_base_url,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
 
   return (
     <Modal
@@ -100,14 +98,7 @@ const CustomizeModal: FC<IShareLinkProps> = ({
           2
         </Tag>
         <p className="my-2 text-text-secondary system-sm-medium">{t(`${prefixCustomize}.way2.name`, { ns: 'appOverview' })}</p>
-        <Button
-          className="mt-2"
-          onClick={() =>
-            window.open(
-              docLink('/use-dify/publish/developing-with-apis'),
-              '_blank',
-            )}
-        >
+        <Button className="mt-2" disabled>
           <span className="text-sm text-text-secondary">{t(`${prefixCustomize}.way2.operation`, { ns: 'appOverview' })}</span>
           <ArrowTopRightOnSquareIcon className="ml-1 h-4 w-4 shrink-0 text-text-secondary" />
         </Button>

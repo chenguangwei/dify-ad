@@ -24,18 +24,17 @@ import { NEED_REFRESH_APP_LIST_KEY } from '@/config'
 import { useAppContext } from '@/context/app-context'
 import { useGlobalPublicStore } from '@/context/global-public-context'
 import { useProviderContext } from '@/context/provider-context'
-import { useAsyncWindowOpen } from '@/hooks/use-async-window-open'
+
 import { AccessMode } from '@/models/access-control'
 import { useGetUserCanAccessApp } from '@/service/access-control'
 import { copyApp, deleteApp, exportAppConfig, updateAppInfo } from '@/service/apps'
-import { fetchInstalledAppList } from '@/service/explore'
 import { fetchWorkflowDraft } from '@/service/workflow'
 import { AppModeEnum } from '@/types/app'
 import { getRedirection } from '@/utils/app-redirection'
 import { cn } from '@/utils/classnames'
 import { downloadBlob } from '@/utils/download'
 import { formatTime } from '@/utils/time'
-import { basePath } from '@/utils/var'
+
 
 const EditAppModal = dynamic(() => import('@/app/components/explore/create-app-modal'), {
   ssr: false,
@@ -68,7 +67,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
   const { isCurrentWorkspaceEditor } = useAppContext()
   const { onPlanInfoChanged } = useProviderContext()
   const { push } = useRouter()
-  const openAsyncWindow = useAsyncWindowOpen()
+
 
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDuplicateModal, setShowDuplicateModal] = useState(false)
@@ -242,26 +241,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
       e.preventDefault()
       setShowAccessControl(true)
     }
-    const onClickInstalledApp = async (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation()
-      props.onClick?.()
-      e.preventDefault()
-      try {
-        await openAsyncWindow(async () => {
-          const { installed_apps }: any = await fetchInstalledAppList(app.id) || {}
-          if (installed_apps?.length > 0)
-            return `${basePath}/explore/installed/${installed_apps[0].id}`
-          throw new Error('No app found in Explore')
-        }, {
-          onError: (err) => {
-            Toast.notify({ type: 'error', message: `${err.message || err}` })
-          },
-        })
-      }
-      catch (e: any) {
-        Toast.notify({ type: 'error', message: `${e.message || e}` })
-      }
-    }
+
     return (
       <div className="relative flex w-full flex-col py-1" onMouseLeave={onMouseLeave}>
         <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickSettings}>
@@ -286,27 +266,7 @@ const AppCard = ({ app, onRefresh }: AppCardProps) => {
             </button>
           </>
         )}
-        {
-          !app.has_draft_trigger && (
-            (!systemFeatures.webapp_auth.enabled)
-              ? (
-                <>
-                  <Divider className="my-1" />
-                  <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                    <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
-                  </button>
-                </>
-              )
-              : !(isGettingUserCanAccessApp || !userCanAccessApp?.result) && (
-                <>
-                  <Divider className="my-1" />
-                  <button type="button" className="mx-1 flex h-8 cursor-pointer items-center gap-2 rounded-lg px-3 hover:bg-state-base-hover" onClick={onClickInstalledApp}>
-                    <span className="text-text-secondary system-sm-regular">{t('openInExplore', { ns: 'app' })}</span>
-                  </button>
-                </>
-              )
-          )
-        }
+
         <Divider className="my-1" />
         {
           systemFeatures.webapp_auth.enabled && isCurrentWorkspaceEditor && (

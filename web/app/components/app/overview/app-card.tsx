@@ -32,7 +32,6 @@ import Indicator from '@/app/components/header/indicator'
 import { BlockEnum } from '@/app/components/workflow/types'
 import { useAppContext } from '@/context/app-context'
 import { useGlobalPublicStore } from '@/context/global-public-context'
-import { useDocLink } from '@/context/i18n'
 import { AccessMode } from '@/models/access-control'
 import { useAppWhiteListSubjects } from '@/service/access-control'
 import { fetchAppDetailDirect } from '@/service/apps'
@@ -75,7 +74,6 @@ function AppCard({
   const pathname = usePathname()
   const { isCurrentWorkspaceManager, isCurrentWorkspaceEditor } = useAppContext()
   const { data: currentWorkflow } = useAppWorkflow(appInfo.mode === AppModeEnum.WORKFLOW ? appInfo.id : '')
-  const docLink = useDocLink()
   const appDetail = useAppStore(state => state.appDetail)
   const setAppDetail = useAppStore(state => state.setAppDetail)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
@@ -239,17 +237,9 @@ function AppCard({
                         ? triggerModeMessage
                         : (appUnpublished || missingStartNode)
                             ? (
-                                <>
-                                  <div className="mb-1 text-xs font-normal text-text-secondary">
-                                    {t('overview.appInfo.enableTooltip.description', { ns: 'appOverview' })}
-                                  </div>
-                                  <div
-                                    className="cursor-pointer text-xs font-normal text-text-accent hover:underline"
-                                    onClick={() => window.open(docLink('/use-dify/nodes/user-input'), '_blank')}
-                                  >
-                                    {t('overview.appInfo.enableTooltip.learnMore', { ns: 'appOverview' })}
-                                  </div>
-                                </>
+                                <div className="mb-1 text-xs font-normal text-text-secondary">
+                                  {t('overview.appInfo.enableTooltip.description', { ns: 'appOverview' })}
+                                </div>
                               )
                             : ''
                     )

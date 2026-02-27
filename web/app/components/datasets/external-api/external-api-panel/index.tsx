@@ -1,6 +1,5 @@
 import {
   RiAddLine,
-  RiBookOpenLine,
   RiCloseLine,
 } from '@remixicon/react'
 import * as React from 'react'
@@ -9,7 +8,6 @@ import ActionButton from '@/app/components/base/action-button'
 import Button from '@/app/components/base/button'
 import Loading from '@/app/components/base/loading'
 import { useExternalKnowledgeApi } from '@/context/external-knowledge-api-context'
-import { useDocLink } from '@/context/i18n'
 import { useModalContext } from '@/context/modal-context'
 import { cn } from '@/utils/classnames'
 import ExternalKnowledgeAPICard from '../external-knowledge-api-card'
@@ -20,7 +18,6 @@ type ExternalAPIPanelProps = {
 
 const ExternalAPIPanel: React.FC<ExternalAPIPanelProps> = ({ onClose }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const { setShowExternalKnowledgeAPIModal } = useModalContext()
   const { externalKnowledgeApiList, mutateExternalKnowledgeApis, isLoading } = useExternalKnowledgeApi()
 
@@ -52,14 +49,6 @@ const ExternalAPIPanel: React.FC<ExternalAPIPanelProps> = ({ onClose }) => {
           <div className="flex grow flex-col items-start gap-1">
             <div className="self-stretch text-text-primary system-xl-semibold">{t('externalAPIPanelTitle', { ns: 'dataset' })}</div>
             <div className="self-stretch text-text-tertiary body-xs-regular">{t('externalAPIPanelDescription', { ns: 'dataset' })}</div>
-            <a
-              className="flex cursor-pointer items-center justify-center gap-1 self-stretch"
-              href={docLink('/use-dify/knowledge/external-knowledge-api')}
-              target="_blank"
-            >
-              <RiBookOpenLine className="h-3 w-3 text-text-accent" />
-              <div className="grow text-text-accent body-xs-regular">{t('externalAPIPanelDocumentation', { ns: 'dataset' })}</div>
-            </a>
           </div>
           <div className="flex items-center">
             <ActionButton onClick={() => onClose()}>

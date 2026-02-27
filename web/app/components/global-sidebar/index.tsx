@@ -3,30 +3,17 @@
 import {
   RiAddLine,
   RiApps2Line,
-  RiBrain2Line,
-  RiBrain2Fill,
-  RiChat3Line,
-  RiChat3Fill,
-  RiCompass3Line,
-  RiCompass3Fill,
-  RiDatabase2Line,
-  RiDatabase2Fill,
-  RiFileEditLine,
-  RiFileEditFill,
-  RiHammerLine,
-  RiHammerFill,
-  RiHome5Line,
-  RiHome5Fill,
-  RiMentalHealthLine,
-  RiMentalHealthFill,
-  RiMindMap,
-  RiOrganizationChart,
-  RiPuzzle2Line,
-  RiPuzzle2Fill,
-  RiRobot2Line,
-  RiRobot2Fill,
   RiArrowDownSLine,
   RiArrowRightSLine,
+  RiChat3Line,
+  RiCompass3Line,
+  RiDatabase2Line,
+  RiFileEditLine,
+  RiHammerLine,
+  RiMentalHealthLine,
+  RiMindMap,
+  RiOrganizationChart,
+  RiRobot2Line,
 } from '@remixicon/react'
 import { flatten } from 'es-toolkit/compat'
 import Link from 'next/link'
@@ -40,38 +27,38 @@ import { useInfiniteAppList } from '@/service/use-apps'
 import { AppModeEnum } from '@/types/app'
 import { cn } from '@/utils/classnames'
 
-// Routes where the sidebar should be hidden
 const HIDDEN_ROUTES = ['/workflow', '/pipeline']
 
-type SidebarItemProps = {
+// ── Reusable leaf item ──────────────────────────────────────────────────
+type ItemProps = {
   icon: React.ReactNode
-  activeIcon?: React.ReactNode
   label: string
   href?: string
   isActive?: boolean
   onClick?: () => void
-  className?: string
-  indent?: number
   onQuickCreate?: () => void
+  /** visual depth: 0 = section header, 1 = group, 2 = leaf */
+  depth?: 0 | 1 | 2
+  className?: string
 }
 
-const SidebarItem = ({ icon, activeIcon, label, href, isActive, onClick, className, indent = 0, onQuickCreate }: SidebarItemProps) => {
-  const baseClass = cn(
-    'group flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
-    indent === 1 && 'pl-5',
-    indent === 2 && 'pl-7',
-    indent === 3 && 'pl-9',
+const Item = ({ icon, label, href, isActive, onClick, onQuickCreate, depth = 1, className }: ItemProps) => {
+  const cls = cn(
+    'group flex w-full items-center gap-2 rounded-md transition-colors duration-100',
+    // depths
+    depth === 0 && 'px-2 py-1.5 text-sm font-semibold',
+    depth === 1 && 'px-2 py-1.5 pl-7 text-sm font-normal',
+    depth === 2 && 'px-2 py-1.5 pl-10 text-[13px] font-normal',
+    // colours
     isActive
-      ? 'bg-primary-50 text-primary-600 font-medium dark:bg-blue-900/30 dark:text-blue-400'
-      : 'text-text-secondary hover:bg-state-base-hover hover:text-text-primary font-normal',
+      ? 'bg-state-accent-active text-text-accent'
+      : 'text-text-secondary hover:bg-state-base-hover',
     className,
   )
 
-  const content = (
+  const inner = (
     <>
-      <span className={cn('shrink-0', isActive ? 'text-primary-600 dark:text-blue-400' : 'text-text-tertiary')}>
-        {isActive && activeIcon ? activeIcon : icon}
-      </span>
+      <span className={cn('shrink-0', depth === 2 ? '[&>svg]:h-3.5 [&>svg]:w-3.5' : '[&>svg]:h-4 [&>svg]:w-4')}>{icon}</span>
       <span className="flex-1 truncate">{label}</span>
       {onQuickCreate && (
         <span
@@ -79,77 +66,64 @@ const SidebarItem = ({ icon, activeIcon, label, href, isActive, onClick, classNa
           tabIndex={0}
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); onQuickCreate() }}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onQuickCreate() } }}
-          className="hidden shrink-0 rounded p-0.5 text-text-quaternary hover:bg-state-base-hover hover:text-text-secondary group-hover:flex"
+          className="hidden shrink-0 rounded p-0.5 text-text-quaternary hover:text-text-secondary group-hover:flex"
         >
-          <RiAddLine className="h-3.5 w-3.5" />
+          <RiAddLine className="h-3 w-3" />
         </span>
       )}
     </>
   )
 
-  if (href) {
-    return (
-      <Link href={href} className={baseClass}>
-        {content}
-      </Link>
-    )
-  }
-
-  return (
-    <button onClick={onClick} className={baseClass}>
-      {content}
-    </button>
-  )
+  if (href) return <Link href={href} className={cls}>{inner}</Link>
+  return <button onClick={onClick} className={cls}>{inner}</button>
 }
 
-type CollapsibleSectionProps = {
+// ── Collapsible group ───────────────────────────────────────────────────
+type GroupProps = {
   icon: React.ReactNode
-  activeIcon?: React.ReactNode
   label: string
   isActive?: boolean
   defaultOpen?: boolean
   children: React.ReactNode
-  indent?: number
+  depth?: 0 | 1 | 2
 }
 
-const CollapsibleSection = ({ icon, activeIcon, label, isActive, defaultOpen = false, children, indent = 0 }: CollapsibleSectionProps) => {
+const Group = ({ icon, label, isActive, defaultOpen = false, children, depth = 0 }: GroupProps) => {
   const [open, setOpen] = useState(defaultOpen)
 
-  useEffect(() => {
-    if (isActive)
-      setOpen(true)
-  }, [isActive])
+  useEffect(() => { if (isActive) setOpen(true) }, [isActive])
 
   return (
     <div>
       <button
-        onClick={() => setOpen(prev => !prev)}
+        onClick={() => setOpen(p => !p)}
         className={cn(
-          'flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
-          indent === 1 && 'pl-5',
-          indent === 2 && 'pl-7',
-          isActive
-            ? 'text-primary-600 font-medium dark:text-blue-400'
-            : 'text-text-secondary hover:bg-state-base-hover hover:text-text-primary font-normal',
+          'flex w-full items-center gap-2 rounded-md transition-colors duration-100',
+          depth === 0 && 'px-2 py-1.5 text-sm font-semibold',
+          depth === 1 && 'px-2 py-1.5 pl-7 text-sm font-medium',
+          depth === 2 && 'px-2 py-1.5 pl-10 text-[13px] font-medium',
+          isActive ? 'text-text-accent' : 'text-text-secondary hover:bg-state-base-hover',
         )}
       >
-        <span className={cn('shrink-0', isActive ? 'text-primary-600 dark:text-blue-400' : 'text-text-tertiary')}>
-          {isActive && activeIcon ? activeIcon : icon}
-        </span>
+        <span className={cn('shrink-0', depth === 2 ? '[&>svg]:h-3.5 [&>svg]:w-3.5' : '[&>svg]:h-4 [&>svg]:w-4')}>{icon}</span>
         <span className="flex-1 truncate text-left">{label}</span>
         {open
-          ? <RiArrowDownSLine className="h-3.5 w-3.5 shrink-0 text-text-quaternary" />
-          : <RiArrowRightSLine className="h-3.5 w-3.5 shrink-0 text-text-quaternary" />}
+          ? <RiArrowDownSLine className="h-3 w-3 shrink-0 text-text-quaternary" />
+          : <RiArrowRightSLine className="h-3 w-3 shrink-0 text-text-quaternary" />}
       </button>
-      {open && (
-        <div className="mt-0.5">
-          {children}
-        </div>
-      )}
+      {open && <div className="mt-px">{children}</div>}
     </div>
   )
 }
 
+// ── Section label (tiny uppercase divider) ──────────────────────────────
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <div className="px-3 pb-1.5 pt-5 text-xs font-bold tracking-wide text-text-tertiary">
+    {children}
+  </div>
+)
+
+// ── Main sidebar ────────────────────────────────────────────────────────
 const GlobalSidebar = () => {
   const { t } = useTranslation()
   const pathname = usePathname()
@@ -158,23 +132,15 @@ const GlobalSidebar = () => {
   const [createMode, setCreateMode] = useState<AppModeEnum | null>(null)
 
   const activeCategory = searchParams.get('category') || 'all'
-
-  // Hide sidebar on workflow/pipeline canvas pages
   const isHidden = HIDDEN_ROUTES.some(route => pathname.endsWith(route))
 
-  // Load user apps for "My Agents" section
   const isOnAppPage = pathname.includes('/app/')
   const {
     data: appsData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteAppList({
-    page: 1,
-    limit: 20,
-    name: '',
-    is_created_by_me: true,
-  }, { enabled: isCurrentWorkspaceEditor })
+  } = useInfiniteAppList({ page: 1, limit: 20, name: '', is_created_by_me: true }, { enabled: isCurrentWorkspaceEditor })
 
   const myApps = useMemo(() => {
     if (!appsData) return []
@@ -182,16 +148,13 @@ const GlobalSidebar = () => {
   }, [appsData])
 
   const getAppLink = useCallback((app: typeof myApps[number]) => {
-    if (!isCurrentWorkspaceEditor)
-      return `/app/${app.id}/overview`
-    if (app.mode === AppModeEnum.WORKFLOW || app.mode === AppModeEnum.ADVANCED_CHAT)
-      return `/app/${app.id}/workflow`
+    if (!isCurrentWorkspaceEditor) return `/app/${app.id}/overview`
+    if (app.mode === AppModeEnum.WORKFLOW || app.mode === AppModeEnum.ADVANCED_CHAT) return `/app/${app.id}/workflow`
     return `/app/${app.id}/configuration`
   }, [isCurrentWorkspaceEditor])
 
-  // Active state checks
+  // Active states
   const isExploreActive = pathname.startsWith('/explore')
-  const isMyAgentActive = isOnAppPage
   const isAppsActive = pathname.startsWith('/apps') || isOnAppPage
   const isDatasetsActive = pathname.startsWith('/datasets')
   const isToolsActive = pathname.startsWith('/tools')
@@ -202,189 +165,156 @@ const GlobalSidebar = () => {
   const isAgentActive = isAppsActive && activeCategory === AppModeEnum.AGENT_CHAT
   const isCompletionActive = isAppsActive && activeCategory === AppModeEnum.COMPLETION
 
-  const isAgentCenterActive = isExploreActive || isAppsActive
-  const isComponentLibActive = isDatasetsActive || isToolsActive
-  const isAgentManageActive = isAppsActive
-  const isBusinessOrchActive = isWorkflowActive || isAdvancedActive
-  const isIntelAssistActive = isChatActive || isAgentActive || isCompletionActive
-
-  if (isHidden)
-    return null
+  if (isHidden) return null
 
   return (
-    <div className="flex h-full w-56 shrink-0 flex-col border-r border-[#E5E7EB] dark:border-[#374151] bg-white dark:bg-[#1F2937] overflow-y-auto">
-      <nav className="flex-1 p-2 space-y-0.5">
+    <div className="flex h-full w-52 shrink-0 flex-col border-r border-divider-subtle bg-background-default-subtle overflow-y-auto">
+      <nav className="flex-1 space-y-px px-2 pb-2 pt-4">
 
-        {/* ── 智能体中心 ── */}
-        <CollapsibleSection
-          icon={<RiHome5Line className="h-4 w-4" />}
-          activeIcon={<RiHome5Fill className="h-4 w-4" />}
-          label={t('menus.agentCenter', { ns: 'common' })}
-          isActive={isAgentCenterActive}
-          defaultOpen={isAgentCenterActive || true}
-        >
-          {/* 智能体广场 */}
-          {!isCurrentWorkspaceDatasetOperator && (
-            <SidebarItem
-              icon={<RiCompass3Line className="h-4 w-4" />}
-              activeIcon={<RiCompass3Fill className="h-4 w-4" />}
+        {/* ── 智能体广场 ── */}
+        {!isCurrentWorkspaceDatasetOperator && (
+          <div className="mb-1">
+            <Item
+              icon={<RiCompass3Line />}
               label={t('menus.explore', { ns: 'common' })}
               href="/explore/apps"
               isActive={isExploreActive}
-              indent={1}
+              depth={0}
             />
-          )}
+          </div>
+        )}
 
-          {/* 我的智能体 */}
-          {!isCurrentWorkspaceDatasetOperator && (
-            <CollapsibleSection
-              icon={<RiApps2Line className="h-4 w-4" />}
-              label={t('menus.myAgents', { ns: 'common' })}
-              isActive={isMyAgentActive}
-              defaultOpen={isMyAgentActive}
-              indent={1}
-            >
-              {myApps.map(app => (
-                <SidebarItem
-                  key={app.id}
-                  icon={
-                    <div className="h-4 w-4 shrink-0 overflow-hidden rounded">
-                      <AppIcon
-                        size="tiny"
-                        iconType={app.icon_type}
-                        icon={app.icon}
-                        background={app.icon_background}
-                        imageUrl={app.icon_url}
-                      />
-                    </div>
-                  }
-                  label={app.name}
-                  href={getAppLink(app)}
-                  isActive={pathname.includes(`/app/${app.id}`)}
-                  indent={2}
-                />
-              ))}
-              {hasNextPage && (
-                <button
-                  onClick={() => fetchNextPage()}
-                  disabled={isFetchingNextPage}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs text-text-quaternary hover:text-text-secondary transition-colors"
-                >
-                  {isFetchingNextPage ? '加载中...' : '加载更多'}
-                </button>
-              )}
-            </CollapsibleSection>
-          )}
-
-          {/* 智能体管理 */}
-          {!isCurrentWorkspaceDatasetOperator && (
-            <CollapsibleSection
-              icon={<RiBrain2Line className="h-4 w-4" />}
-              activeIcon={<RiBrain2Fill className="h-4 w-4" />}
-              label={t('menus.agentManage', { ns: 'common' })}
-              isActive={isAgentManageActive}
-              defaultOpen={isAgentManageActive}
-              indent={1}
-            >
-              {/* 流程与协作 */}
-              <CollapsibleSection
-                icon={<RiOrganizationChart className="h-4 w-4" />}
-                label={t('menus.processAndCollaboration', { ns: 'common' })}
-                isActive={isBusinessOrchActive}
-                defaultOpen={isBusinessOrchActive}
-                indent={2}
+        {/* ── 我的智能体 ── */}
+        {!isCurrentWorkspaceDatasetOperator && (
+          <Group
+            icon={<RiApps2Line />}
+            label={t('menus.myAgents', { ns: 'common' })}
+            isActive={isOnAppPage}
+            defaultOpen={isOnAppPage}
+            depth={0}
+          >
+            {myApps.map(app => (
+              <Item
+                key={app.id}
+                icon={
+                  <div className="h-4 w-4 shrink-0 overflow-hidden rounded">
+                    <AppIcon
+                      size="tiny"
+                      iconType={app.icon_type}
+                      icon={app.icon}
+                      background={app.icon_background}
+                      imageUrl={app.icon_url}
+                    />
+                  </div>
+                }
+                label={app.name}
+                href={getAppLink(app)}
+                isActive={pathname.includes(`/app/${app.id}`)}
+                depth={1}
+              />
+            ))}
+            {hasNextPage && (
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="w-full py-1 pl-7 pr-2 text-[11px] text-text-quaternary hover:text-text-secondary transition-colors"
               >
-                <SidebarItem
-                  icon={<RiOrganizationChart className="h-4 w-4" />}
-                  label={t('menus.businessOrchestration', { ns: 'common' })}
-                  href={`/apps?category=${AppModeEnum.WORKFLOW}`}
-                  isActive={isWorkflowActive}
-                  indent={3}
-                  onQuickCreate={() => setCreateMode(AppModeEnum.WORKFLOW)}
-                />
-                <SidebarItem
-                  icon={<RiMindMap className="h-4 w-4" />}
-                  label={t('menus.collaborationEngine', { ns: 'common' })}
-                  href={`/apps?category=${AppModeEnum.ADVANCED_CHAT}`}
-                  isActive={isAdvancedActive}
-                  indent={3}
-                  onQuickCreate={() => setCreateMode(AppModeEnum.ADVANCED_CHAT)}
-                />
-              </CollapsibleSection>
+                {isFetchingNextPage ? '加载中...' : '加载更多'}
+              </button>
+            )}
+          </Group>
+        )}
 
-              {/* 智能助理 */}
-              <CollapsibleSection
-                icon={<RiChat3Line className="h-4 w-4" />}
-                activeIcon={<RiChat3Fill className="h-4 w-4" />}
-                label={t('menus.intelligentAssistant', { ns: 'common' })}
-                isActive={isIntelAssistActive}
-                defaultOpen={isIntelAssistActive}
-                indent={2}
-              >
-                <SidebarItem
-                  icon={<RiMentalHealthLine className="h-4 w-4" />}
-                  activeIcon={<RiMentalHealthFill className="h-4 w-4" />}
-                  label={t('menus.knowledgeAssistant', { ns: 'common' })}
-                  href={`/apps?category=${AppModeEnum.CHAT}`}
-                  isActive={isChatActive}
-                  indent={3}
-                  onQuickCreate={() => setCreateMode(AppModeEnum.CHAT)}
-                />
-                <SidebarItem
-                  icon={<RiRobot2Line className="h-4 w-4" />}
-                  activeIcon={<RiRobot2Fill className="h-4 w-4" />}
-                  label={t('menus.digitalEmployee', { ns: 'common' })}
-                  href={`/apps?category=${AppModeEnum.AGENT_CHAT}`}
-                  isActive={isAgentActive}
-                  indent={3}
-                  onQuickCreate={() => setCreateMode(AppModeEnum.AGENT_CHAT)}
-                />
-                <SidebarItem
-                  icon={<RiFileEditLine className="h-4 w-4" />}
-                  activeIcon={<RiFileEditFill className="h-4 w-4" />}
-                  label={t('menus.intelligentWriting', { ns: 'common' })}
-                  href={`/apps?category=${AppModeEnum.COMPLETION}`}
-                  isActive={isCompletionActive}
-                  indent={3}
-                  onQuickCreate={() => setCreateMode(AppModeEnum.COMPLETION)}
-                />
-              </CollapsibleSection>
-            </CollapsibleSection>
-          )}
-        </CollapsibleSection>
+        {/* ── 分隔线 ── */}
+        <SectionLabel>{t('menus.agentManage', { ns: 'common' })}</SectionLabel>
 
-        <div className="my-1 border-t border-divider-subtle" />
-
-        {/* ── 组件库管理 ── */}
-        <CollapsibleSection
-          icon={<RiPuzzle2Line className="h-4 w-4" />}
-          activeIcon={<RiPuzzle2Fill className="h-4 w-4" />}
-          label={t('menus.componentLib', { ns: 'common' })}
-          isActive={isComponentLibActive}
-          defaultOpen={isComponentLibActive || true}
-        >
-          {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && (
-            <SidebarItem
-              icon={<RiDatabase2Line className="h-4 w-4" />}
-              activeIcon={<RiDatabase2Fill className="h-4 w-4" />}
-              label={t('menus.datasets', { ns: 'common' })}
-              href="/datasets"
-              isActive={isDatasetsActive}
-              indent={1}
+        {/* 流程与协作 */}
+        {!isCurrentWorkspaceDatasetOperator && (
+          <Group
+            icon={<RiChat3Line />}
+            label={t('menus.processAndCollaboration', { ns: 'common' })}
+            isActive={isWorkflowActive || isAdvancedActive}
+            defaultOpen={isWorkflowActive || isAdvancedActive}
+            depth={0}
+          >
+            <Item
+              icon={<RiOrganizationChart />}
+              label={t('menus.businessOrchestration', { ns: 'common' })}
+              href={`/apps?category=${AppModeEnum.WORKFLOW}`}
+              isActive={isWorkflowActive}
+              depth={1}
+              onQuickCreate={() => setCreateMode(AppModeEnum.WORKFLOW)}
             />
-          )}
-          {!isCurrentWorkspaceDatasetOperator && (
-            <SidebarItem
-              icon={<RiHammerLine className="h-4 w-4" />}
-              activeIcon={<RiHammerFill className="h-4 w-4" />}
-              label={t('menus.tools', { ns: 'common' })}
-              href="/tools"
-              isActive={isToolsActive}
-              indent={1}
+            <Item
+              icon={<RiMindMap />}
+              label={t('menus.collaborationEngine', { ns: 'common' })}
+              href={`/apps?category=${AppModeEnum.ADVANCED_CHAT}`}
+              isActive={isAdvancedActive}
+              depth={1}
+              onQuickCreate={() => setCreateMode(AppModeEnum.ADVANCED_CHAT)}
             />
-          )}
-        </CollapsibleSection>
+          </Group>
+        )}
+
+        {/* 智能助理 */}
+        {!isCurrentWorkspaceDatasetOperator && (
+          <Group
+            icon={<RiRobot2Line />}
+            label={t('menus.intelligentAssistant', { ns: 'common' })}
+            isActive={isChatActive || isAgentActive || isCompletionActive}
+            defaultOpen={isChatActive || isAgentActive || isCompletionActive}
+            depth={0}
+          >
+            <Item
+              icon={<RiMentalHealthLine />}
+              label={t('menus.knowledgeAssistant', { ns: 'common' })}
+              href={`/apps?category=${AppModeEnum.CHAT}`}
+              isActive={isChatActive}
+              depth={1}
+              onQuickCreate={() => setCreateMode(AppModeEnum.CHAT)}
+            />
+            <Item
+              icon={<RiRobot2Line />}
+              label={t('menus.digitalEmployee', { ns: 'common' })}
+              href={`/apps?category=${AppModeEnum.AGENT_CHAT}`}
+              isActive={isAgentActive}
+              depth={1}
+              onQuickCreate={() => setCreateMode(AppModeEnum.AGENT_CHAT)}
+            />
+            <Item
+              icon={<RiFileEditLine />}
+              label={t('menus.intelligentWriting', { ns: 'common' })}
+              href={`/apps?category=${AppModeEnum.COMPLETION}`}
+              isActive={isCompletionActive}
+              depth={1}
+              onQuickCreate={() => setCreateMode(AppModeEnum.COMPLETION)}
+            />
+          </Group>
+        )}
+
+        {/* ── 分隔线 ── */}
+        <SectionLabel>{t('menus.componentLib', { ns: 'common' })}</SectionLabel>
+
+        {(isCurrentWorkspaceEditor || isCurrentWorkspaceDatasetOperator) && (
+          <Item
+            icon={<RiDatabase2Line />}
+            label={t('menus.datasets', { ns: 'common' })}
+            href="/datasets"
+            isActive={isDatasetsActive}
+            depth={0}
+          />
+        )}
+        {!isCurrentWorkspaceDatasetOperator && (
+          <Item
+            icon={<RiHammerLine />}
+            label={t('menus.tools', { ns: 'common' })}
+            href="/tools"
+            isActive={isToolsActive}
+            depth={0}
+          />
+        )}
       </nav>
+
       {createMode !== null && (
         <CreateAppModal
           show={true}

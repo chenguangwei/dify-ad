@@ -15,7 +15,6 @@ import Tooltip from '@/app/components/base/tooltip'
 import EconomicalRetrievalMethodConfig from '@/app/components/datasets/common/economical-retrieval-method-config'
 import RetrievalMethodConfig from '@/app/components/datasets/common/retrieval-method-config'
 import ModelSelector from '@/app/components/header/account-setting/model-provider-page/model-selector'
-import { useDocLink } from '@/context/i18n'
 import { ChunkingMode } from '@/models/datasets'
 import { cn } from '@/utils/classnames'
 import { indexMethodIcon } from '../../icons'
@@ -63,7 +62,6 @@ export const IndexingModeSection: FC<IndexingModeSectionProps> = ({
   onQAConfirmDialogConfirm,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
 
   const getIndexingTechnique = () => indexType
 
@@ -211,14 +209,6 @@ export const IndexingModeSection: FC<IndexingModeSectionProps> = ({
                   {t('form.retrievalSetting.title', { ns: 'datasetSettings' })}
                 </div>
                 <div className="text-text-tertiary body-xs-regular">
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={docLink('/use-dify/knowledge/create-knowledge/setting-indexing-methods')}
-                    className="text-text-accent"
-                  >
-                    {t('form.retrievalSetting.learnMore', { ns: 'datasetSettings' })}
-                  </a>
                   {t('form.retrievalSetting.longDescription', { ns: 'datasetSettings' })}
                 </div>
               </div>

@@ -7,7 +7,6 @@ import { useShallow } from 'zustand/react/shallow'
 import Toast from '@/app/components/base/toast'
 import { ACCOUNT_SETTING_TAB } from '@/app/components/header/account-setting/constants'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
-import { useDocLink } from '@/context/i18n'
 import { useModalContextSelector } from '@/context/modal-context'
 import { DatasourceType, OnlineDriveFileType } from '@/models/pipeline'
 import { ssePost } from '@/service/base'
@@ -32,7 +31,6 @@ const OnlineDrive = ({
   supportBatchUpload = true,
   onCredentialChange,
 }: OnlineDriveProps) => {
-  const docLink = useDocLink()
   const [isInitialMount, setIsInitialMount] = useState(true)
   const pipelineId = useDatasetDetailContextWithSelector(s => s.dataset?.pipeline_id)
   const setShowAccountSettingModal = useModalContextSelector(s => s.setShowAccountSettingModal)
@@ -196,7 +194,6 @@ const OnlineDrive = ({
     <div className="flex flex-col gap-y-2">
       <Header
         docTitle="Docs"
-        docLink={docLink('/use-dify/knowledge/knowledge-pipeline/authorize-data-source')}
         onClickConfiguration={handleSetting}
         pluginName={nodeData.datasource_label}
         currentCredentialId={currentCredentialId}

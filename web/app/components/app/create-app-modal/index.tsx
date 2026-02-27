@@ -1,20 +1,30 @@
 'use client'
 
 import type { AppIconSelection } from '../../base/app-icon-picker'
-import { RiArrowRightLine, RiArrowRightSLine, RiExchange2Fill } from '@remixicon/react'
+import type { RemixiconComponentType } from '@remixicon/react'
+import {
+  RiAddLine,
+  RiArrowRightLine,
+  RiCheckLine,
+  RiFileEditLine,
+  RiMentalHealthLine,
+  RiMindMap,
+  RiOrganizationChart,
+  RiRobot2Line,
+  RiSparklingFill,
+} from '@remixicon/react'
 
 import { useDebounceFn, useKeyPress } from 'ahooks'
+import { useQueryClient } from '@tanstack/react-query'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useContext } from 'use-context-selector'
 import { trackEvent } from '@/app/components/base/amplitude'
 import AppIcon from '@/app/components/base/app-icon'
 import Button from '@/app/components/base/button'
-import Divider from '@/app/components/base/divider'
 import FullScreenModal from '@/app/components/base/fullscreen-modal'
-import { BubbleTextMod, ChatBot, ListSparkle, Logic } from '@/app/components/base/icons/src/vender/solid/communication'
 import Input from '@/app/components/base/input'
 import Textarea from '@/app/components/base/textarea'
 import { ToastContext } from '@/app/components/base/toast'
@@ -22,14 +32,61 @@ import AppsFull from '@/app/components/billing/apps-full-in-dialog'
 import { NEED_REFRESH_APP_LIST_KEY } from '@/config'
 import { useAppContext } from '@/context/app-context'
 import { useProviderContext } from '@/context/provider-context'
-import useTheme from '@/hooks/use-theme'
 import { createApp } from '@/service/apps'
 import { AppModeEnum } from '@/types/app'
 import { getRedirection } from '@/utils/app-redirection'
-import { cn } from '@/utils/classnames'
-import { basePath } from '@/utils/var'
 import AppIconPicker from '../../base/app-icon-picker'
-import ShortcutsName from '../../workflow/shortcuts-name'
+
+// ── Per-app-type visual config ──────────────────────────────────────────
+type AppTypeConfig = {
+  icon: RemixiconComponentType
+  /** bg colour of the icon badge */
+  iconBg: string
+  /** i18n key for the display title (ns: app) */
+  titleKey: string
+  /** i18n key for the description (ns: app) */
+  descKey: string
+}
+
+const APP_TYPE_CONFIG: Record<AppModeEnum, AppTypeConfig> = {
+  [AppModeEnum.WORKFLOW]: {
+    icon: RiOrganizationChart,
+    iconBg: 'bg-util-colors-blue-brand-blue-brand-600',
+    titleKey: 'types.workflow',
+    descKey: 'newApp.workflowUserDescription',
+  },
+  [AppModeEnum.ADVANCED_CHAT]: {
+    icon: RiMindMap,
+    iconBg: 'bg-util-colors-blue-brand-blue-brand-600',
+    titleKey: 'types.advanced',
+    descKey: 'newApp.advancedUserDescription',
+  },
+  [AppModeEnum.CHAT]: {
+    icon: RiMentalHealthLine,
+    iconBg: 'bg-[#0EA5E9]',
+    titleKey: 'types.chatbot',
+    descKey: 'newApp.chatbotUserDescription',
+  },
+  [AppModeEnum.AGENT_CHAT]: {
+    icon: RiRobot2Line,
+    iconBg: 'bg-[#7C3AED]',
+    titleKey: 'types.agent',
+    descKey: 'newApp.agentUserDescription',
+  },
+  [AppModeEnum.COMPLETION]: {
+    icon: RiFileEditLine,
+    iconBg: 'bg-[#F59E0B]',
+    titleKey: 'types.completion',
+    descKey: 'newApp.completionUserDescription',
+  },
+}
+
+// Recommended icon presets (clicking sets the emoji quickly)
+const RECOMMENDED_ICONS = [
+  { src: '/recommended-icons/robot.png', alt: 'Robot' },
+  { src: '/recommended-icons/brain.png', alt: 'Brain' },
+  { src: '/recommended-icons/sparkle.png', alt: 'Sparkle' },
+]
 
 type CreateAppProps = {
   onSuccess: () => void
@@ -38,28 +95,29 @@ type CreateAppProps = {
   defaultAppMode?: AppModeEnum
 }
 
-function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode }: CreateAppProps) {
+function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode: _defaultAppMode }: CreateAppProps) {
   const { t } = useTranslation()
   const { push } = useRouter()
   const { notify } = useContext(ToastContext)
+  const queryClient = useQueryClient()
 
-  const [appMode, setAppMode] = useState<AppModeEnum>(defaultAppMode || AppModeEnum.ADVANCED_CHAT)
+  // Use the passed mode, fallback to ADVANCED_CHAT
+  const appMode = _defaultAppMode ?? AppModeEnum.ADVANCED_CHAT
+
+  // Resolve the visual config for the current app type
+  const typeConfig = useMemo(() => APP_TYPE_CONFIG[appMode], [appMode])
+  const TypeIcon = typeConfig.icon
+
   const [appIcon, setAppIcon] = useState<AppIconSelection>({ type: 'emoji', icon: '🤖', background: '#FFEAD5' })
   const [showAppIconPicker, setShowAppIconPicker] = useState(false)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [isAppTypeExpanded, setIsAppTypeExpanded] = useState(false)
 
   const { plan, enableBilling } = useProviderContext()
   const isAppsFull = (enableBilling && plan.usage.buildApps >= plan.total.buildApps)
   const { isCurrentWorkspaceEditor } = useAppContext()
 
   const isCreatingRef = useRef(false)
-
-  useEffect(() => {
-    if (appMode === AppModeEnum.CHAT || appMode === AppModeEnum.AGENT_CHAT || appMode === AppModeEnum.COMPLETION)
-      setIsAppTypeExpanded(true)
-  }, [appMode])
 
   const onCreate = useCallback(async () => {
     if (!appMode) {
@@ -83,7 +141,6 @@ function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode }:
         mode: appMode,
       })
 
-      // Track app creation success
       trackEvent('create_app', {
         app_mode: appMode,
         description,
@@ -93,6 +150,8 @@ function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode }:
       onSuccess()
       onClose()
       localStorage.setItem(NEED_REFRESH_APP_LIST_KEY, '1')
+      // Invalidate explore caches so 智能体广场 picks up the new app
+      queryClient.invalidateQueries({ queryKey: ['explore'] })
       getRedirection(isCurrentWorkspaceEditor, app, push)
     }
     catch (e: any) {
@@ -102,7 +161,7 @@ function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode }:
       })
     }
     isCreatingRef.current = false
-  }, [name, notify, t, appMode, appIcon, description, onSuccess, onClose, push, isCurrentWorkspaceEditor])
+  }, [name, notify, t, appMode, appIcon, description, onSuccess, onClose, push, isCurrentWorkspaceEditor, queryClient])
 
   const { run: handleCreateApp } = useDebounceFn(onCreate, { wait: 300 })
   useKeyPress(['meta.enter', 'ctrl.enter'], () => {
@@ -110,192 +169,187 @@ function CreateApp({ onClose, onSuccess, onCreateFromTemplate, defaultAppMode }:
       return
     handleCreateApp()
   })
+
   return (
-    <>
-      <div className="flex h-full justify-center overflow-y-auto overflow-x-hidden">
-        <div className="flex flex-1 shrink-0 justify-end">
-          <div className="px-10">
-            <div className="h-6 w-full 2xl:h-[139px]" />
-            <div className="pb-6 pt-1">
-              <span className="text-text-primary title-2xl-semi-bold">{t('newApp.startFromBlank', { ns: 'app' })}</span>
-            </div>
-            <div className="mb-2 leading-6">
-              <span className="text-text-secondary system-sm-semibold">{t('newApp.chooseAppType', { ns: 'app' })}</span>
-            </div>
-            <div className="flex w-[660px] flex-col gap-4">
-              <div>
-                <div className="flex flex-row gap-2">
-                  <AppTypeCard
-                    active={appMode === AppModeEnum.WORKFLOW}
-                    title={t('types.workflow', { ns: 'app' })}
-                    description={t('newApp.workflowShortDescription', { ns: 'app' })}
-                    icon={(
-                      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-components-icon-bg-indigo-solid">
-                        <RiExchange2Fill className="h-4 w-4 text-components-avatar-shape-fill-stop-100" />
-                      </div>
-                    )}
-                    onClick={() => {
-                      setAppMode(AppModeEnum.WORKFLOW)
-                    }}
-                  />
-                  <AppTypeCard
-                    active={appMode === AppModeEnum.ADVANCED_CHAT}
-                    title={t('types.advanced', { ns: 'app' })}
-                    description={t('newApp.advancedShortDescription', { ns: 'app' })}
-                    icon={(
-                      <div className="flex h-6 w-6 items-center justify-center rounded-md bg-components-icon-bg-blue-light-solid">
-                        <BubbleTextMod className="h-4 w-4 text-components-avatar-shape-fill-stop-100" />
-                      </div>
-                    )}
-                    onClick={() => {
-                      setAppMode(AppModeEnum.ADVANCED_CHAT)
-                    }}
-                  />
-                </div>
+    <div className="flex h-full justify-center overflow-y-auto overflow-x-hidden">
+      <div className="w-full max-w-[720px] px-6 py-10">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-text-primary title-2xl-semi-bold">
+            {t('newApp.startFromBlank', { ns: 'app' })}
+          </h1>
+          <p className="mt-2 text-text-tertiary system-sm-regular">
+            {t('newApp.startFromBlankSubtitle', { ns: 'app' })}
+          </p>
+        </div>
+
+        {/* Section: 选择应用类型 */}
+        <div className="mb-8">
+          <div className="mb-3 flex items-center gap-1.5">
+            <div className="h-4 w-1 rounded-sm bg-util-colors-blue-brand-blue-brand-600" />
+            <span className="text-text-primary system-md-semibold">
+              {t('newApp.chooseAppType', { ns: 'app' })}
+            </span>
+          </div>
+          <div className="rounded-xl border-2 border-util-colors-blue-brand-blue-brand-600 bg-components-panel-bg p-4">
+            <div className="flex items-start gap-4">
+              {/* Dynamic App Type Icon */}
+              <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl ${typeConfig.iconBg}`}>
+                <TypeIcon className="h-7 w-7 text-white" />
               </div>
-              <div>
-                <div className="mb-2 flex items-center">
-                  <button
-                    type="button"
-                    className="flex cursor-pointer items-center border-0 bg-transparent p-0"
-                    onClick={() => setIsAppTypeExpanded(!isAppTypeExpanded)}
-                  >
-                    <span className="text-text-tertiary system-2xs-medium-uppercase">{t('newApp.forBeginners', { ns: 'app' })}</span>
-                    <RiArrowRightSLine className={`ml-1 h-4 w-4 text-text-tertiary transition-transform ${isAppTypeExpanded ? 'rotate-90' : ''}`} />
-                  </button>
+              {/* Dynamic App Type Info */}
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-text-primary system-md-semibold">
+                    {t(typeConfig.titleKey, { ns: 'app' })}
+                  </span>
+                  <span className="rounded-md bg-util-colors-blue-brand-blue-brand-100 px-1.5 py-0.5 text-util-colors-blue-brand-blue-brand-600 system-2xs-medium-uppercase">
+                    {t('newApp.recommended', { ns: 'app' })}
+                  </span>
                 </div>
-                {isAppTypeExpanded && (
-                  <div className="flex flex-row gap-2">
-                    <AppTypeCard
-                      active={appMode === AppModeEnum.CHAT}
-                      title={t('types.chatbot', { ns: 'app' })}
-                      description={t('newApp.chatbotShortDescription', { ns: 'app' })}
-                      icon={(
-                        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-components-icon-bg-blue-solid">
-                          <ChatBot className="h-4 w-4 text-components-avatar-shape-fill-stop-100" />
-                        </div>
-                      )}
-                      onClick={() => {
-                        setAppMode(AppModeEnum.CHAT)
-                      }}
-                    />
-                    <AppTypeCard
-                      active={appMode === AppModeEnum.AGENT_CHAT}
-                      title={t('types.agent', { ns: 'app' })}
-                      description={t('newApp.agentShortDescription', { ns: 'app' })}
-                      icon={(
-                        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-components-icon-bg-violet-solid">
-                          <Logic className="h-4 w-4 text-components-avatar-shape-fill-stop-100" />
-                        </div>
-                      )}
-                      onClick={() => {
-                        setAppMode(AppModeEnum.AGENT_CHAT)
-                      }}
-                    />
-                    <AppTypeCard
-                      active={appMode === AppModeEnum.COMPLETION}
-                      title={t('newApp.completeApp', { ns: 'app' })}
-                      description={t('newApp.completionShortDescription', { ns: 'app' })}
-                      icon={(
-                        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-components-icon-bg-teal-solid">
-                          <ListSparkle className="h-4 w-4 text-components-avatar-shape-fill-stop-100" />
-                        </div>
-                      )}
-                      onClick={() => {
-                        setAppMode(AppModeEnum.COMPLETION)
-                      }}
-                    />
-                  </div>
-                )}
+                <p className="mt-1 text-text-tertiary system-xs-regular leading-5">
+                  {t(typeConfig.descKey, { ns: 'app' })}
+                </p>
               </div>
-              <Divider style={{ margin: 0 }} />
-              <div className="flex items-center space-x-3">
-                <div className="flex-1">
-                  <div className="mb-1 flex h-6 items-center">
-                    <label className="text-text-secondary system-sm-semibold">{t('newApp.captionName', { ns: 'app' })}</label>
-                  </div>
-                  <Input
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder={t('newApp.appNamePlaceholder', { ns: 'app' }) || ''}
-                  />
-                </div>
+              {/* Checkmark */}
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-util-colors-blue-brand-blue-brand-600">
+                <RiCheckLine className="h-4 w-4 text-white" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section: 基础信息配置 */}
+        <div className="mb-6">
+          <div className="mb-4 flex items-center gap-1.5">
+            <div className="h-4 w-1 rounded-sm bg-util-colors-blue-brand-blue-brand-600" />
+            <span className="text-text-primary system-md-semibold">
+              {t('newApp.basicInfoConfig', { ns: 'app' })}
+            </span>
+          </div>
+
+          {/* Name & Icon Row */}
+          <div className="mb-4">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-text-secondary system-sm-semibold">
+                {t('newApp.captionName', { ns: 'app' })}
+              </label>
+              <label className="text-text-secondary system-sm-semibold">
+                {t('newApp.recommendedIcons', { ns: 'app' })}
+              </label>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex flex-1 items-center gap-2">
+                <Input
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder={t('newApp.appNamePlaceholder', { ns: 'app' }) || ''}
+                  className="h-10 flex-1"
+                />
                 <AppIcon
                   iconType={appIcon.type}
                   icon={appIcon.type === 'emoji' ? appIcon.icon : appIcon.fileId}
                   background={appIcon.type === 'emoji' ? appIcon.background : undefined}
                   imageUrl={appIcon.type === 'image' ? appIcon.url : undefined}
-                  size="xxl"
-                  className="cursor-pointer rounded-2xl"
+                  size="large"
+                  className="cursor-pointer rounded-lg"
                   onClick={() => { setShowAppIconPicker(true) }}
                 />
-                {showAppIconPicker && (
-                  <AppIconPicker
-                    onSelect={(payload) => {
-                      setAppIcon(payload)
-                      setShowAppIconPicker(false)
-                    }}
-                    onClose={() => {
-                      setShowAppIconPicker(false)
-                    }}
-                  />
-                )}
               </div>
-              <div>
-                <div className="mb-1 flex h-6 items-center">
-                  <label className="text-text-secondary system-sm-semibold">{t('newApp.captionDescription', { ns: 'app' })}</label>
-                  <span className="ml-1 text-text-tertiary system-xs-regular">
-                    (
-                    {t('newApp.optional', { ns: 'app' })}
-                    )
-                  </span>
-                </div>
-                <Textarea
-                  className="resize-none"
-                  placeholder={t('newApp.appDescriptionPlaceholder', { ns: 'app' }) || ''}
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
+              <div className="flex items-center gap-2">
+                {RECOMMENDED_ICONS.map((icon, index) => (
+                  <button
+                    key={index}
+                    className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-divider-subtle transition-all hover:border-util-colors-blue-brand-blue-brand-600 hover:shadow-sm"
+                    onClick={() => {
+                      setAppIcon({
+                        type: 'emoji',
+                        icon: ['🤖', '🧠', '✨'][index],
+                        background: ['#FFEAD5', '#D1FAE5', '#EDE9FE'][index],
+                      })
+                    }}
+                  >
+                    <Image
+                      src={icon.src}
+                      alt={icon.alt}
+                      width={36}
+                      height={36}
+                      className="h-full w-full object-cover"
+                    />
+                  </button>
+                ))}
+                <button
+                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-dashed border-divider-regular text-text-quaternary transition-all hover:border-util-colors-blue-brand-blue-brand-600 hover:text-util-colors-blue-brand-blue-brand-600"
+                  onClick={() => { setShowAppIconPicker(true) }}
+                >
+                  <RiAddLine className="h-4 w-4" />
+                </button>
+              </div>
+              {showAppIconPicker && (
+                <AppIconPicker
+                  onSelect={(payload) => {
+                    setAppIcon(payload)
+                    setShowAppIconPicker(false)
+                  }}
+                  onClose={() => {
+                    setShowAppIconPicker(false)
+                  }}
                 />
-              </div>
-            </div>
-            {isAppsFull && <AppsFull className="mt-4" loc="app-create" />}
-            <div className="flex items-center justify-between pb-10 pt-5">
-              <div className="flex cursor-pointer items-center gap-1 text-text-tertiary system-xs-regular" onClick={onCreateFromTemplate}>
-                <span>{t('newApp.noIdeaTip', { ns: 'app' })}</span>
-                <div className="p-[1px]">
-                  <RiArrowRightLine className="h-3.5 w-3.5" />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={onClose}>{t('newApp.Cancel', { ns: 'app' })}</Button>
-                <Button disabled={isAppsFull || !name} className="gap-1" variant="primary" onClick={handleCreateApp}>
-                  <span>{t('newApp.Create', { ns: 'app' })}</span>
-                  <ShortcutsName keys={['ctrl', '↵']} bgColor="white" />
-                </Button>
-              </div>
+              )}
             </div>
           </div>
-        </div>
-        <div className="relative flex h-full flex-1 shrink justify-start overflow-hidden">
-          <div className="absolute left-0 right-0 top-0 h-6 border-b border-b-divider-subtle 2xl:h-[139px]"></div>
-          <div className="max-w-[760px] border-x border-x-divider-subtle">
-            <div className="h-6 2xl:h-[139px]" />
-            <AppPreview mode={appMode} />
-            <div className="absolute left-0 right-0 border-b border-b-divider-subtle"></div>
-            <div className="flex h-[448px] w-[664px] items-center justify-center" style={{ background: 'repeating-linear-gradient(135deg, transparent, transparent 2px, rgba(16,24,40,0.04) 4px,transparent 3px, transparent 6px)' }}>
-              <AppScreenShot show={appMode === AppModeEnum.CHAT} mode={AppModeEnum.CHAT} />
-              <AppScreenShot show={appMode === AppModeEnum.ADVANCED_CHAT} mode={AppModeEnum.ADVANCED_CHAT} />
-              <AppScreenShot show={appMode === AppModeEnum.AGENT_CHAT} mode={AppModeEnum.AGENT_CHAT} />
-              <AppScreenShot show={appMode === AppModeEnum.COMPLETION} mode={AppModeEnum.COMPLETION} />
-              <AppScreenShot show={appMode === AppModeEnum.WORKFLOW} mode={AppModeEnum.WORKFLOW} />
+
+          {/* Description */}
+          <div>
+            <div className="mb-2 flex items-center gap-1">
+              <label className="text-text-secondary system-sm-semibold">
+                {t('newApp.appDescription', { ns: 'app' })}
+              </label>
+              <span className="text-text-tertiary system-xs-regular">
+                ({t('newApp.optional', { ns: 'app' })})
+              </span>
             </div>
-            <div className="absolute left-0 right-0 border-b border-b-divider-subtle"></div>
+            <Textarea
+              className="resize-none"
+              placeholder={t('newApp.appDescriptionPlaceholder', { ns: 'app' }) || ''}
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              rows={5}
+            />
+          </div>
+        </div>
+
+        {isAppsFull && <AppsFull className="mt-4" loc="app-create" />}
+
+        {/* Footer */}
+        <div className="flex items-center justify-between border-t border-divider-subtle pt-6">
+          <div
+            className="flex cursor-pointer items-center gap-1 text-text-tertiary system-xs-regular transition-colors hover:text-text-secondary"
+            onClick={onCreateFromTemplate}
+          >
+            <span>{t('newApp.noIdeaTip', { ns: 'app' })}</span>
+            <RiArrowRightLine className="h-3.5 w-3.5" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button onClick={onClose}>
+              {t('newApp.Cancel', { ns: 'app' })}
+            </Button>
+            <Button
+              disabled={isAppsFull || !name}
+              variant="primary"
+              onClick={handleCreateApp}
+              className="gap-1"
+            >
+              <span>{t('newApp.nextStepConfig', { ns: 'app' })}</span>
+              <RiArrowRightLine className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
+
 type CreateAppDialogProps = CreateAppProps & {
   show: boolean
 }
@@ -313,89 +367,3 @@ const CreateAppModal = ({ show, onClose, onSuccess, onCreateFromTemplate, defaul
 }
 
 export default CreateAppModal
-
-type AppTypeCardProps = {
-  icon: React.JSX.Element
-  title: string
-  description: string
-  active: boolean
-  onClick: () => void
-}
-function AppTypeCard({ icon, title, description, active, onClick }: AppTypeCardProps) {
-  return (
-    <div
-      className={
-        cn(`relative box-content h-[84px] w-[191px] cursor-pointer rounded-xl
-      border-[0.5px] border-components-option-card-option-border
-      bg-components-panel-on-panel-item-bg p-3 shadow-xs hover:shadow-md`, active
-          ? 'shadow-md outline outline-[1.5px] outline-components-option-card-option-selected-border'
-          : '')
-      }
-      onClick={onClick}
-    >
-      {icon}
-      <div className="mb-0.5 mt-2 text-text-secondary system-sm-semibold">{title}</div>
-      <div className="line-clamp-2 text-text-tertiary system-xs-regular" title={description}>{description}</div>
-    </div>
-  )
-}
-
-function AppPreview({ mode }: { mode: AppModeEnum }) {
-  const { t } = useTranslation()
-  const modeToPreviewInfoMap = {
-    [AppModeEnum.CHAT]: {
-      title: t('types.chatbot', { ns: 'app' }),
-      description: t('newApp.chatbotUserDescription', { ns: 'app' }),
-    },
-    [AppModeEnum.ADVANCED_CHAT]: {
-      title: t('types.advanced', { ns: 'app' }),
-      description: t('newApp.advancedUserDescription', { ns: 'app' }),
-    },
-    [AppModeEnum.AGENT_CHAT]: {
-      title: t('types.agent', { ns: 'app' }),
-      description: t('newApp.agentUserDescription', { ns: 'app' }),
-    },
-    [AppModeEnum.COMPLETION]: {
-      title: t('newApp.completeApp', { ns: 'app' }),
-      description: t('newApp.completionUserDescription', { ns: 'app' }),
-    },
-    [AppModeEnum.WORKFLOW]: {
-      title: t('types.workflow', { ns: 'app' }),
-      description: t('newApp.workflowUserDescription', { ns: 'app' }),
-    },
-  }
-  const previewInfo = modeToPreviewInfoMap[mode]
-  return (
-    <div className="px-8 py-4">
-      <h4 className="text-text-secondary system-sm-semibold-uppercase">{previewInfo.title}</h4>
-      <div className="mt-1 min-h-8 max-w-96 text-text-tertiary system-xs-regular">
-        <span>{previewInfo.description}</span>
-      </div>
-    </div>
-  )
-}
-
-function AppScreenShot({ mode, show }: { mode: AppModeEnum, show: boolean }) {
-  const { theme } = useTheme()
-  const modeToImageMap = {
-    [AppModeEnum.CHAT]: 'Chatbot',
-    [AppModeEnum.ADVANCED_CHAT]: 'Chatflow',
-    [AppModeEnum.AGENT_CHAT]: 'Agent',
-    [AppModeEnum.COMPLETION]: 'TextGenerator',
-    [AppModeEnum.WORKFLOW]: 'Workflow',
-  }
-  return (
-    <picture>
-      <source media="(resolution: 1x)" srcSet={`${basePath}/screenshots/${theme}/${modeToImageMap[mode]}.png`} />
-      <source media="(resolution: 2x)" srcSet={`${basePath}/screenshots/${theme}/${modeToImageMap[mode]}@2x.png`} />
-      <source media="(resolution: 3x)" srcSet={`${basePath}/screenshots/${theme}/${modeToImageMap[mode]}@3x.png`} />
-      <Image
-        className={show ? '' : 'hidden'}
-        src={`${basePath}/screenshots/${theme}/${modeToImageMap[mode]}.png`}
-        alt="App Screen Shot"
-        width={664}
-        height={448}
-      />
-    </picture>
-  )
-}

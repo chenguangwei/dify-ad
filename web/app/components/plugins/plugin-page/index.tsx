@@ -2,13 +2,11 @@
 
 import type { Dependency, PluginDeclaration, PluginManifestInMarket } from '../types'
 import {
-  RiBookOpenLine,
   RiDragDropLine,
   RiEqualizer2Line,
 } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
 import { noop } from 'es-toolkit/function'
-import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
@@ -17,7 +15,6 @@ import Tooltip from '@/app/components/base/tooltip'
 import ReferenceSettingModal from '@/app/components/plugins/reference-setting-modal'
 import { MARKETPLACE_API_PREFIX, SUPPORT_INSTALL_LOCAL_FILE_EXTENSIONS } from '@/config'
 import { useGlobalPublicStore } from '@/context/global-public-context'
-import { useDocLink } from '@/context/i18n'
 import useDocumentTitle from '@/hooks/use-document-title'
 import { usePluginInstallation } from '@/hooks/use-query-params'
 import { fetchBundleInfoFromMarketPlace, fetchManifestFromMarketPlace } from '@/service/plugins'
@@ -46,7 +43,6 @@ const PluginPage = ({
   marketplace,
 }: PluginPageProps) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   useDocumentTitle(t('metadata.title', { ns: 'plugin' }))
 
   // Use nuqs hook for installation state
@@ -159,25 +155,6 @@ const PluginPage = ({
             />
           </div>
           <div className="flex shrink-0 items-center gap-1">
-            {
-              isExploringMarketplace && (
-                <>
-                  <Link
-                    href={docLink('/develop-plugin/publishing/marketplace-listing/release-to-dify-marketplace')}
-                    target="_blank"
-                  >
-                    <Button
-                      className="px-3"
-                      variant="secondary-accent"
-                    >
-                      <RiBookOpenLine className="mr-1 h-4 w-4" />
-                      {t('publishPlugins', { ns: 'plugin' })}
-                    </Button>
-                  </Link>
-                  <div className="mx-1 h-3.5 w-[1px] shrink-0 bg-divider-regular"></div>
-                </>
-              )
-            }
             <PluginTasks />
             {canManagement && (
               <InstallPluginDropdown

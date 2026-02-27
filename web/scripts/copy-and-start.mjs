@@ -9,19 +9,21 @@ import { cp, mkdir, stat } from 'node:fs/promises'
 import path from 'node:path'
 
 // Configuration for directories to copy
+// Next.js 16 outputs standalone to .next/standalone/web/
+const STANDALONE_BASE = path.join('.next', 'standalone', 'web')
 const DIRS_TO_COPY = [
   {
     src: path.join('.next', 'static'),
-    dest: path.join('.next', 'standalone', '.next', 'static'),
+    dest: path.join(STANDALONE_BASE, '.next', 'static'),
   },
   {
     src: 'public',
-    dest: path.join('.next', 'standalone', 'public'),
+    dest: path.join(STANDALONE_BASE, 'public'),
   },
 ]
 
 // Path to the server script
-const SERVER_SCRIPT_PATH = path.join('.next', 'standalone', 'server.js')
+const SERVER_SCRIPT_PATH = path.join(STANDALONE_BASE, 'server.js')
 
 // Function to check if a path exists
 const pathExists = async (path) => {

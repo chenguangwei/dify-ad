@@ -1,5 +1,5 @@
 import type { AccessMode } from '@/models/access-control'
-import type { Banner } from '@/models/app'
+import type { AppListResponse, Banner } from '@/models/app'
 import type { App, AppCategory } from '@/models/explore'
 import { del, get, patch } from './base'
 
@@ -38,4 +38,14 @@ export const getAppAccessModeByAppId = (appId: string) => {
 export const fetchBanners = (language?: string): Promise<Banner[]> => {
   const url = language ? `/explore/banners?language=${language}` : '/explore/banners'
   return get<Banner[]>(url)
+}
+
+// 获取用户已发布到广场的应用（enable_site: true）
+export const fetchUserPublishedApps = () => {
+  return get<AppListResponse>('/apps', {
+    params: {
+      enable_site: true,
+      limit: 100,
+    },
+  })
 }

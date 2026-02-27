@@ -1,14 +1,12 @@
 'use client'
 import type { FC } from 'react'
 import {
-  RiArrowRightUpLine,
   RiBugLine,
 } from '@remixicon/react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
 import Tooltip from '@/app/components/base/tooltip'
-import { useDocLink } from '@/context/i18n'
 import { useDebugKey } from '@/service/use-plugins'
 import KeyValueItem from '../base/key-value-item'
 
@@ -16,7 +14,6 @@ const i18nPrefix = 'debugInfo'
 
 const DebugInfo: FC = () => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const { data: info, isLoading } = useDebugKey()
 
   // info.key likes 4580bdb7-b878-471c-a8a4-bfd760263a53 mask the middle part using *.
@@ -33,10 +30,6 @@ const DebugInfo: FC = () => {
         <>
           <div className="flex items-center gap-1 self-stretch">
             <span className="flex shrink-0 grow basis-0 flex-col items-start justify-center text-text-secondary system-sm-semibold">{t(`${i18nPrefix}.title`, { ns: 'plugin' })}</span>
-            <a href={docLink('/develop-plugin/features-and-specs/plugin-types/remote-debug-a-plugin')} target="_blank" className="flex cursor-pointer items-center gap-0.5 text-text-accent-light-mode-only">
-              <span className="system-xs-medium">{t(`${i18nPrefix}.viewDocs`, { ns: 'plugin' })}</span>
-              <RiArrowRightUpLine className="h-3 w-3" />
-            </a>
           </div>
           <div className="space-y-0.5">
             <KeyValueItem

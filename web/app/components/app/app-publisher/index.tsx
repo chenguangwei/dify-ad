@@ -6,10 +6,9 @@ import {
   RiArrowDownSLine,
   RiArrowRightSLine,
   RiBuildingLine,
+  RiDownloadLine,
   RiGlobalLine,
   RiLockLine,
-  RiPlanetLine,
-  RiPlayCircleLine,
   RiPlayList2Line,
   RiTerminalBoxLine,
   RiVerifiedBadgeLine,
@@ -37,17 +36,16 @@ import UpgradeBtn from '@/app/components/billing/upgrade-btn'
 import WorkflowToolConfigureButton from '@/app/components/tools/workflow-tool/configure-button'
 import { appDefaultIconBackground } from '@/config'
 import { useGlobalPublicStore } from '@/context/global-public-context'
-import { useAsyncWindowOpen } from '@/hooks/use-async-window-open'
 import { useFormatTimeFromNow } from '@/hooks/use-format-time-from-now'
+import { exportAppConfig } from '@/service/apps'
+import { downloadBlob } from '@/utils/download'
 import { AccessMode } from '@/models/access-control'
 import { useAppWhiteListSubjects, useGetUserCanAccessApp } from '@/service/access-control'
 import { fetchAppDetailDirect } from '@/service/apps'
-import { fetchInstalledAppList } from '@/service/explore'
 import { AppModeEnum } from '@/types/app'
 import { basePath } from '@/utils/var'
 import Divider from '../../base/divider'
 import Loading from '../../base/loading'
-import Toast from '../../base/toast'
 import Tooltip from '../../base/tooltip'
 import ShortcutsName from '../../workflow/shortcuts-name'
 import { getKeyboardKeyCodeBySystem } from '../../workflow/utils'
@@ -153,6 +151,23 @@ const AppPublisher = ({
   const setAppDetail = useAppStore(s => s.setAppDetail)
   const systemFeatures = useGlobalPublicStore(s => s.systemFeatures)
   const { formatTimeFromNow } = useFormatTimeFromNow()
+
+  const handleExportDSL = useCallback(async () => {
+    if (!appDetail)
+      return
+    try {
+      const { data } = await exportAppConfig({
+        appID: appDetail.id,
+        include: false,
+      })
+      const file = new Blob([data], { type: 'application/yaml' })
+      downloadBlob({ data: file, fileName: `${appDetail.name}.yml` })
+    }
+    catch {
+      // Handle error silently
+    }
+  }, [appDetail])
+
   const { app_base_url: appBaseURL = '', access_token: accessToken = '' } = appDetail?.site ?? {}
 
   const appMode = (appDetail?.mode !== AppModeEnum.COMPLETION && appDetail?.mode !== AppModeEnum.WORKFLOW) ? AppModeEnum.CHAT : appDetail.mode
@@ -161,7 +176,6 @@ const AppPublisher = ({
 
   const { data: userCanAccessApp, isLoading: isGettingUserCanAccessApp, refetch } = useGetUserCanAccessApp({ appId: appDetail?.id, enabled: false })
   const { data: appAccessSubjects, isLoading: isGettingAppWhiteListSubjects } = useAppWhiteListSubjects(appDetail?.id, open && systemFeatures.webapp_auth.enabled && appDetail?.access_mode === AccessMode.SPECIFIC_GROUPS_MEMBERS)
-  const openAsyncWindow = useAsyncWindowOpen()
 
   const isAppAccessSet = useMemo(() => {
     if (appDetail && appAccessSubjects) {
@@ -220,21 +234,6 @@ const AppPublisher = ({
     if (state)
       setPublished(false)
   }, [disabled, onToggle, open])
-
-  const handleOpenInExplore = useCallback(async () => {
-    await openAsyncWindow(async () => {
-      if (!appDetail?.id)
-        throw new Error('App not found')
-      const { installed_apps }: any = await fetchInstalledAppList(appDetail?.id) || {}
-      if (installed_apps?.length > 0)
-        return `${basePath}/explore/installed/${installed_apps[0].id}`
-      throw new Error('No app found in Explore')
-    }, {
-      onError: (err) => {
-        Toast.notify({ type: 'error', message: `${err.message || err}` })
-      },
-    })
-  }, [appDetail?.id, openAsyncWindow])
 
   const handleAccessControlUpdate = useCallback(async () => {
     if (!appDetail)
@@ -400,16 +399,6 @@ const AppPublisher = ({
                       // Hide run/batch run app buttons when there is a trigger node.
                       !hasTriggerNode && (
                         <div className="flex flex-col gap-y-1 border-t-[0.5px] border-t-divider-regular p-4 pt-3">
-                          <Tooltip triggerClassName="flex" disabled={!disabledFunctionButton} popupContent={disabledFunctionTooltip} asChild={false}>
-                            <SuggestedAction
-                              className="flex-1"
-                              disabled={disabledFunctionButton}
-                              link={appURL}
-                              icon={<RiPlayCircleLine className="h-4 w-4" />}
-                            >
-                              {t('common.runApp', { ns: 'workflow' })}
-                            </SuggestedAction>
-                          </Tooltip>
                           {appDetail?.mode === AppModeEnum.WORKFLOW || appDetail?.mode === AppModeEnum.COMPLETION
                             ? (
                                 <Tooltip triggerClassName="flex" disabled={!disabledFunctionButton} popupContent={disabledFunctionTooltip} asChild={false}>
@@ -435,19 +424,6 @@ const AppPublisher = ({
                                   {t('common.embedIntoSite', { ns: 'workflow' })}
                                 </SuggestedAction>
                               )}
-                          <Tooltip triggerClassName="flex" disabled={!disabledFunctionButton} popupContent={disabledFunctionTooltip} asChild={false}>
-                            <SuggestedAction
-                              className="flex-1"
-                              onClick={() => {
-                                if (publishedAt)
-                                  handleOpenInExplore()
-                              }}
-                              disabled={disabledFunctionButton}
-                              icon={<RiPlanetLine className="h-4 w-4" />}
-                            >
-                              {t('common.openInExplore', { ns: 'workflow' })}
-                            </SuggestedAction>
-                          </Tooltip>
                           <Tooltip triggerClassName="flex" disabled={!!publishedAt && !missingStartNode} popupContent={!publishedAt ? t('notPublishedYet', { ns: 'app' }) : t('noUserInputNode', { ns: 'app' })} asChild={false}>
                             <SuggestedAction
                               className="flex-1"
@@ -456,6 +432,15 @@ const AppPublisher = ({
                               icon={<RiTerminalBoxLine className="h-4 w-4" />}
                             >
                               {t('common.accessAPIReference', { ns: 'workflow' })}
+                            </SuggestedAction>
+                          </Tooltip>
+                          <Tooltip triggerClassName="flex" asChild={false}>
+                            <SuggestedAction
+                              className="flex-1"
+                              onClick={() => handleExportDSL?.()}
+                              icon={<RiDownloadLine className="h-4 w-4" />}
+                            >
+                              {t('common.exportDSL', { ns: 'workflow' })}
                             </SuggestedAction>
                           </Tooltip>
                           {appDetail?.mode === AppModeEnum.WORKFLOW && !hasHumanInputNode && (

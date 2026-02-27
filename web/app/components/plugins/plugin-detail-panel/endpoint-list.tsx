@@ -2,7 +2,6 @@ import type { PluginDetail } from '@/app/components/plugins/types'
 import {
   RiAddLine,
   RiApps2AddLine,
-  RiBookOpenLine,
 } from '@remixicon/react'
 import { useBoolean } from 'ahooks'
 import * as React from 'react'
@@ -12,7 +11,6 @@ import ActionButton from '@/app/components/base/action-button'
 import Toast from '@/app/components/base/toast'
 import Tooltip from '@/app/components/base/tooltip'
 import { toolCredentialToFormSchemas } from '@/app/components/tools/utils/to-form-schema'
-import { useDocLink } from '@/context/i18n'
 import {
   useCreateEndpoint,
   useEndpointList,
@@ -28,7 +26,6 @@ type Props = {
 }
 const EndpointList = ({ detail }: Props) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const pluginUniqueID = detail.plugin_unique_identifier
   const declaration = detail.declaration.endpoint
   const showTopBorder = detail.declaration.tool
@@ -76,16 +73,6 @@ const EndpointList = ({ detail }: Props) => {
                   <RiApps2AddLine className="h-4 w-4 text-text-tertiary" />
                 </div>
                 <div className="text-text-tertiary system-xs-regular">{t('detailPanel.endpointsTip', { ns: 'plugin' })}</div>
-                <a
-                  href={docLink('/develop-plugin/getting-started/getting-started-dify-plugin')}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <div className="inline-flex cursor-pointer items-center gap-1 text-text-accent system-xs-regular">
-                    <RiBookOpenLine className="h-3 w-3" />
-                    {t('detailPanel.endpointsDocLink', { ns: 'plugin' })}
-                  </div>
-                </a>
               </div>
             )}
           />

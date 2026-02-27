@@ -5,7 +5,6 @@ import type { ToolVarInputs } from '../../tool/types'
 import type { CredentialFormSchema, CredentialFormSchemaNumberInput, CredentialFormSchemaTextInput } from '@/app/components/header/account-setting/model-provider-page/declarations'
 import type { PluginMeta } from '@/app/components/plugins/types'
 import { noop } from 'es-toolkit/function'
-import Link from 'next/link'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Agent } from '@/app/components/base/icons/src/vender/workflow'
@@ -17,7 +16,6 @@ import { useDefaultModel } from '@/app/components/header/account-setting/model-p
 import Form from '@/app/components/header/account-setting/model-provider-page/model-modal/Form'
 import MultipleToolSelector from '@/app/components/plugins/plugin-detail-panel/multiple-tool-selector'
 import ToolSelector from '@/app/components/plugins/plugin-detail-panel/tool-selector'
-import { useDocLink } from '@/context/i18n'
 import { useRenderI18nObject } from '@/hooks/use-i18n'
 import { AppModeEnum } from '@/types/app'
 import { useWorkflowStore } from '../../../store'
@@ -55,7 +53,6 @@ type CustomField = ToolSelectorSchema | MultipleToolSelectorSchema
 export const AgentStrategy = memo((props: AgentStrategyProps) => {
   const { strategy, onStrategyChange, formSchema, formValue, onFormValueChange, nodeOutputVars, availableNodes, nodeId } = props
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const defaultModel = useDefaultModel(ModelTypeEnum.textGeneration)
   const renderI18nObject = useRenderI18nObject()
   const workflowStore = useWorkflowStore()
@@ -248,15 +245,6 @@ export const AgentStrategy = memo((props: AgentStrategyProps) => {
                 description={(
                   <div className="text-xs text-text-tertiary">
                     {t('nodes.agent.strategy.configureTipDesc', { ns: 'workflow' })}
-                    {' '}
-                    <br />
-                    <Link
-                      href={docLink('/use-dify/nodes/agent')}
-                      className="text-text-accent-secondary"
-                      target="_blank"
-                    >
-                      {t('nodes.agent.learnMore', { ns: 'workflow' })}
-                    </Link>
                   </div>
                 )}
               />

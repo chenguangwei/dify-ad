@@ -26,7 +26,6 @@ import { AppModeEnum } from '@/types/app'
 import { getRedirection } from '@/utils/app-redirection'
 import { cn } from '@/utils/classnames'
 import AppCard from '../app-card'
-import Sidebar, { AppCategories, AppCategoryLabel } from './sidebar'
 
 type AppsProps = {
   onSuccess?: () => void
@@ -45,7 +44,6 @@ const Apps = ({
   const { t } = useTranslation()
   const { isCurrentWorkspaceEditor } = useAppContext()
   const { push } = useRouter()
-  const allCategoriesEn = AppCategories.RECOMMENDED
 
   const [keywords, setKeywords] = useState('')
   const [searchKeywords, setSearchKeywords] = useState('')
@@ -60,25 +58,23 @@ const Apps = ({
   }
 
   const [currentType, setCurrentType] = useState<AppModeEnum[]>([])
-  const [currCategory, setCurrCategory] = useState<AppCategories | string>(allCategoriesEn)
 
   const {
     data,
     isLoading,
   } = useExploreAppList()
 
+  // 简化过滤逻辑：只使用类型筛选（currentType），忽略分类（currCategory）
+  // 这样点击某个类型时只会显示该类型的模板
   const filteredList = useMemo(() => {
     if (!data)
       return []
     const { allList } = data
-    const filteredByCategory = allList.filter((item) => {
-      if (currCategory === allCategoriesEn)
-        return true
-      return item.category === currCategory
-    })
+    // 如果没有选择类型，显示所有应用
     if (currentType.length === 0)
-      return filteredByCategory
-    return filteredByCategory.filter((item) => {
+      return allList
+    // 按选中类型过滤
+    return allList.filter((item) => {
       if (currentType.includes(AppModeEnum.CHAT) && item.app.mode === AppModeEnum.CHAT)
         return true
       if (currentType.includes(AppModeEnum.ADVANCED_CHAT) && item.app.mode === AppModeEnum.ADVANCED_CHAT)
@@ -91,7 +87,7 @@ const Apps = ({
         return true
       return false
     })
-  }, [currentType, currCategory, allCategoriesEn, data])
+  }, [currentType, data])
 
   const searchFilteredList = useMemo(() => {
     if (!searchKeywords || !filteredList || filteredList.length === 0)
@@ -185,12 +181,8 @@ const Apps = ({
         <div className="h-8 w-[180px]"></div>
       </div>
       <div className="relative flex flex-1 overflow-y-auto">
-        {!searchKeywords && (
-          <div className="h-full w-[200px] p-4">
-            <Sidebar current={currCategory as AppCategories} categories={data?.categories || []} onClick={(category) => { setCurrCategory(category) }} onCreateFromBlank={onCreateFromBlank} />
-          </div>
-        )}
-        <div className="h-full flex-1 shrink-0 grow overflow-auto border-l border-divider-burn p-6 pt-2">
+        {/* 简化 UI：隐藏左侧边栏分类，只保留顶部类型筛选 */}
+        <div className="h-full flex-1 shrink-0 grow overflow-auto p-6 pt-2">
           {searchFilteredList && searchFilteredList.length > 0 && (
             <>
               <div className="pb-1 pt-4">
@@ -198,7 +190,7 @@ const Apps = ({
                   ? <p className="text-text-tertiary title-md-semi-bold">{searchFilteredList.length > 1 ? t('newApp.foundResults', { ns: 'app', count: searchFilteredList.length }) : t('newApp.foundResult', { ns: 'app', count: searchFilteredList.length })}</p>
                   : (
                       <div className="flex h-[22px] items-center">
-                        <AppCategoryLabel category={currCategory as AppCategories} className="text-text-primary title-md-semi-bold" />
+                        <span className="text-text-primary title-md-semi-bold">{t('newApp.startFromTemplate', { ns: 'app' })}</span>
                       </div>
                     )}
               </div>

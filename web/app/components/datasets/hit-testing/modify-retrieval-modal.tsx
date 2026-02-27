@@ -12,7 +12,6 @@ import EconomicalRetrievalMethodConfig from '@/app/components/datasets/common/ec
 import RetrievalMethodConfig from '@/app/components/datasets/common/retrieval-method-config'
 import { useModelList } from '@/app/components/header/account-setting/model-provider-page/hooks'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
-import { useDocLink } from '@/context/i18n'
 import Toast from '../../base/toast'
 import { ModelTypeEnum } from '../../header/account-setting/model-provider-page/declarations'
 import { checkShowMultiModalTip } from '../settings/utils'
@@ -34,7 +33,6 @@ const ModifyRetrievalModal: FC<Props> = ({
 }) => {
   const ref = useRef(null)
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const [retrievalConfig, setRetrievalConfig] = useState(value)
   const embeddingModel = useDatasetDetailContextWithSelector(state => state.dataset?.embedding_model)
   const embeddingModelProvider = useDatasetDetailContextWithSelector(state => state.dataset?.embedding_model_provider)
@@ -93,14 +91,6 @@ const ModifyRetrievalModal: FC<Props> = ({
         <div className="text-base font-semibold text-text-primary">
           <div>{t('form.retrievalSetting.title', { ns: 'datasetSettings' })}</div>
           <div className="text-xs font-normal leading-[18px] text-text-tertiary">
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href={docLink('/use-dify/knowledge/create-knowledge/setting-indexing-methods')}
-              className="text-text-accent"
-            >
-              {t('form.retrievalSetting.learnMore', { ns: 'datasetSettings' })}
-            </a>
             {t('form.retrievalSetting.description', { ns: 'datasetSettings' })}
           </div>
         </div>

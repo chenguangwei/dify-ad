@@ -85,11 +85,13 @@ const Apps = ({
     'Customer Review Analysis Workflow',
   ])
 
+  // 精选展示的应用：同时支持远程中文名和 builtin 英文名（remote/builtin 模式 app_id 不同）
+  // 用户发布应用（install_count === 0）也显示
   const filteredList = useMemo(() => {
     if (!data)
       return []
     return data.allList.filter(item =>
-      ALLOWED_APP_NAMES.has(item.app?.name?.trim() ?? '')
+      (ALLOWED_APP_NAMES.has(item.app?.name?.trim() ?? '') || item.install_count === 0)
       && (currCategory === allCategoriesEn || item.app?.mode === currCategory),
     )
   }, [data, currCategory, allCategoriesEn])

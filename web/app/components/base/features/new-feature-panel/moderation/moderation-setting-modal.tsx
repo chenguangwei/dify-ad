@@ -7,14 +7,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
 import Divider from '@/app/components/base/divider'
-import { BookOpen01 } from '@/app/components/base/icons/src/vender/line/education'
 import { InfoCircle } from '@/app/components/base/icons/src/vender/line/general'
 import Modal from '@/app/components/base/modal'
 import { useToastContext } from '@/app/components/base/toast'
 import ApiBasedExtensionSelector from '@/app/components/header/account-setting/api-based-extension-page/selector'
 import { ACCOUNT_SETTING_TAB } from '@/app/components/header/account-setting/constants'
 import { CustomConfigurationStatusEnum } from '@/app/components/header/account-setting/model-provider-page/declarations'
-import { useDocLink, useLocale } from '@/context/i18n'
+import { useLocale } from '@/context/i18n'
 import { useModalContext } from '@/context/modal-context'
 import { LanguagesSupported } from '@/i18n-config/language'
 import { useCodeBasedExtensions, useModelProviders } from '@/service/use-common'
@@ -42,7 +41,6 @@ const ModerationSettingModal: FC<ModerationSettingModalProps> = ({
   onSave,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const { notify } = useToastContext()
   const locale = useLocale()
   const { data: modelProviders, isPending: isLoading, refetch: refetchModelProviders } = useModelProviders()
@@ -316,18 +314,7 @@ const ModerationSettingModal: FC<ModerationSettingModalProps> = ({
       {
         localeData.type === 'api' && (
           <div className="py-2">
-            <div className="flex h-9 items-center justify-between">
-              <div className="text-sm font-medium text-text-primary">{t('apiBasedExtension.selector.title', { ns: 'common' })}</div>
-              <a
-                href={docLink('/use-dify/workspace/api-extension/api-extension')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center text-xs text-text-tertiary hover:text-primary-600"
-              >
-                <BookOpen01 className="mr-1 h-3 w-3 text-text-tertiary group-hover:text-primary-600" />
-                {t('apiBasedExtension.link', { ns: 'common' })}
-              </a>
-            </div>
+            <div className="h-9 text-sm font-medium text-text-primary">{t('apiBasedExtension.selector.title', { ns: 'common' })}</div>
             <ApiBasedExtensionSelector
               value={localeData.config?.api_based_extension_id || ''}
               onChange={handleDataApiBasedChange}

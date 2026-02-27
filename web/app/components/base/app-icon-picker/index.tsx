@@ -29,7 +29,12 @@ export type AppIconImageSelection = {
   url: string
 }
 
-export type AppIconSelection = AppIconEmojiSelection | AppIconImageSelection
+export type AppIconLinkSelection = {
+  type: 'link'
+  url: string
+}
+
+export type AppIconSelection = AppIconEmojiSelection | AppIconImageSelection | AppIconLinkSelection
 
 type AppIconPickerProps = {
   onSelect?: (payload: AppIconSelection) => void
@@ -130,7 +135,7 @@ const AppIconPicker: FC<AppIconPickerProps> = ({
               >
                 {tab.icon}
                 {' '}
-&nbsp;
+                &nbsp;
                 {tab.label}
               </button>
             ))}

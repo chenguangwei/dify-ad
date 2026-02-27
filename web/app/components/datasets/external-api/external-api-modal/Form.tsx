@@ -1,10 +1,8 @@
 import type { FC } from 'react'
 import type { CreateExternalAPIReq, FormSchema } from '../declarations'
-import { RiBookOpenLine } from '@remixicon/react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import Input from '@/app/components/base/input'
-import { useDocLink } from '@/context/i18n'
 import { cn } from '@/utils/classnames'
 
 type FormProps = {
@@ -27,7 +25,6 @@ const Form: FC<FormProps> = React.memo(({
   inputClassName,
 }) => {
   const { t, i18n } = useTranslation()
-  const docLink = useDocLink()
 
   const handleFormChange = (key: string, val: string) => {
     if (key === 'name') {
@@ -55,17 +52,6 @@ const Form: FC<FormProps> = React.memo(({
             {label[i18n.language] || label.en_US}
             {required && <span className="ml-1 text-red-500">*</span>}
           </label>
-          {variable === 'endpoint' && (
-            <a
-              href={docLink('/use-dify/knowledge/external-knowledge-api') || '/'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-text-accent body-xs-regular"
-            >
-              <RiBookOpenLine className="mr-1 h-3 w-3 text-text-accent" />
-              {t('externalAPIPanelDocumentation', { ns: 'dataset' })}
-            </a>
-          )}
         </div>
         <Input
           type={type === 'secret' ? 'password' : 'text'}

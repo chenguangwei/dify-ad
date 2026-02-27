@@ -10,12 +10,11 @@ import AppIcon from '@/app/components/base/app-icon'
 import Button from '@/app/components/base/button'
 import EmojiPicker from '@/app/components/base/emoji-picker'
 import FormGeneration from '@/app/components/base/features/new-feature-panel/moderation/form-generation'
-import { BookOpen01 } from '@/app/components/base/icons/src/vender/line/education'
 import Modal from '@/app/components/base/modal'
 import { SimpleSelect } from '@/app/components/base/select'
 import { useToastContext } from '@/app/components/base/toast'
 import ApiBasedExtensionSelector from '@/app/components/header/account-setting/api-based-extension-page/selector'
-import { useDocLink, useLocale } from '@/context/i18n'
+import { useLocale } from '@/context/i18n'
 import { LanguagesSupported } from '@/i18n-config/language'
 import { useCodeBasedExtensions } from '@/service/use-common'
 
@@ -38,7 +37,6 @@ const ExternalDataToolModal: FC<ExternalDataToolModalProps> = ({
   onValidateBeforeSave,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const { notify } = useToastContext()
   const locale = useLocale()
   const [localeData, setLocaleData] = useState(data.type ? data : { ...data, type: 'api' })
@@ -237,17 +235,8 @@ const ExternalDataToolModal: FC<ExternalDataToolModalProps> = ({
       {
         localeData.type === 'api' && (
           <div className="py-2">
-            <div className="flex h-9 items-center justify-between text-sm font-medium text-text-primary">
+            <div className="h-9 text-sm font-medium text-text-primary">
               {t('apiBasedExtension.selector.title', { ns: 'common' })}
-              <a
-                href={docLink('/use-dify/workspace/api-extension/api-extension')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center text-xs font-normal text-text-tertiary hover:text-text-accent"
-              >
-                <BookOpen01 className="mr-1 h-3 w-3 text-text-tertiary group-hover:text-text-accent" />
-                {t('apiBasedExtension.link', { ns: 'common' })}
-              </a>
             </div>
             <ApiBasedExtensionSelector
               value={localeData.config?.api_based_extension_id || ''}

@@ -10,7 +10,6 @@ import {
   useBoolean,
   useKeyPress,
 } from 'ahooks'
-import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import {
   memo,
@@ -35,7 +34,6 @@ import {
 } from '@/app/components/workflow/store'
 import { getKeyboardKeyCodeBySystem } from '@/app/components/workflow/utils'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
-import { useDocLink } from '@/context/i18n'
 import { useModalContextSelector } from '@/context/modal-context'
 import { useProviderContextSelector } from '@/context/provider-context'
 import { useDatasetApiAccessUrl } from '@/hooks/use-api-access-url'
@@ -57,7 +55,6 @@ const Popup = () => {
   const { t } = useTranslation()
   const { datasetId } = useParams()
   const { push } = useRouter()
-  const docLink = useDocLink()
   const publishedAt = useStore(s => s.publishedAt)
   const draftUpdatedAt = useStore(s => s.draftUpdatedAt)
   const pipelineId = useStore(s => s.pipelineId)
@@ -188,13 +185,6 @@ const Popup = () => {
             <span className="text-text-secondary system-xs-regular">
               {t('publishTemplate.success.tip', { ns: 'datasetPipeline' })}
             </span>
-            <Link
-              href={docLink()}
-              target="_blank"
-              className="inline-block text-text-accent system-xs-medium-uppercase"
-            >
-              {t('publishTemplate.success.learnMore', { ns: 'datasetPipeline' })}
-            </Link>
           </div>
         ),
       })

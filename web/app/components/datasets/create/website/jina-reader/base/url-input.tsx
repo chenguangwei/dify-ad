@@ -4,7 +4,6 @@ import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
-import { useDocLink } from '@/context/i18n'
 import Input from '../../base/input'
 
 const I18N_PREFIX = 'stepOne.website'
@@ -19,7 +18,6 @@ const UrlInput: FC<Props> = ({
   onRun,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const [url, setUrl] = useState('')
   const handleUrlChange = useCallback((url: string | number) => {
     setUrl(url as string)
@@ -35,7 +33,7 @@ const UrlInput: FC<Props> = ({
       <Input
         value={url}
         onChange={handleUrlChange}
-        placeholder={docLink()}
+        placeholder={''}
       />
       <Button
         variant="primary"

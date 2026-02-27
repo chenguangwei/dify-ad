@@ -3,7 +3,6 @@ import type { AppDetailResponse } from '@/models/app'
 import type { AppTrigger } from '@/service/use-tools'
 import type { AppSSO } from '@/types/app'
 import type { I18nKeysByPrefix } from '@/types/i18n'
-import Link from 'next/link'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { TriggerAll } from '@/app/components/base/icons/src/vender/workflow'
@@ -12,7 +11,6 @@ import BlockIcon from '@/app/components/workflow/block-icon'
 import { useTriggerStatusStore } from '@/app/components/workflow/store/trigger-status'
 import { BlockEnum } from '@/app/components/workflow/types'
 import { useAppContext } from '@/context/app-context'
-import { useDocLink } from '@/context/i18n'
 import {
 
   useAppTriggers,
@@ -85,7 +83,6 @@ const getTriggerIcon = (trigger: AppTrigger, triggerPlugins: any[]) => {
 
 function TriggerCard({ appInfo, onToggleResult }: ITriggerCardProps) {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const appId = appInfo.id
   const { isCurrentWorkspaceEditor } = useAppContext()
   const { data: triggersResponse, isLoading } = useAppTriggers(appId)
@@ -206,15 +203,6 @@ function TriggerCard({ appInfo, onToggleResult }: ITriggerCardProps) {
           <div className="p-3">
             <div className="leading-4 text-text-tertiary system-xs-regular">
               {t('overview.triggerInfo.triggerStatusDescription', { ns: 'appOverview' })}
-              {' '}
-              <Link
-                href={docLink('/use-dify/nodes/trigger/overview')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-accent hover:underline"
-              >
-                {t('overview.triggerInfo.learnAboutTriggers', { ns: 'appOverview' })}
-              </Link>
             </div>
           </div>
         )}

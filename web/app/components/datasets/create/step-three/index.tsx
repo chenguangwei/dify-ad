@@ -7,7 +7,6 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import AppIcon from '@/app/components/base/app-icon'
 import Divider from '@/app/components/base/divider'
-import { useDocLink } from '@/context/i18n'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import EmbeddingProcess from '../embedding-process'
 
@@ -21,7 +20,6 @@ type StepThreeProps = {
 
 const StepThree = ({ datasetId, datasetName, indexingType, creationCache, retrievalMethod }: StepThreeProps) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
 
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -86,14 +84,6 @@ const StepThree = ({ datasetId, datasetName, indexingType, creationCache, retrie
             </div>
             <div className="text-base font-semibold text-text-secondary">{t('stepThree.sideTipTitle', { ns: 'datasetCreation' })}</div>
             <div className="text-text-tertiary">{t('stepThree.sideTipContent', { ns: 'datasetCreation' })}</div>
-            <a
-              href={docLink('/use-dify/knowledge/integrate-knowledge-within-application')}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-text-accent system-sm-regular"
-            >
-              {t('addDocuments.stepThree.learnMore', { ns: 'datasetPipeline' })}
-            </a>
           </div>
         </div>
       )}

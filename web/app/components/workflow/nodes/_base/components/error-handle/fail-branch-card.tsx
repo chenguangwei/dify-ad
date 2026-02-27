@@ -1,10 +1,8 @@
 import { RiMindMap } from '@remixicon/react'
 import { useTranslation } from 'react-i18next'
-import { useDocLink } from '@/context/i18n'
 
 const FailBranchCard = () => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
 
   return (
     <div className="px-4 pt-2">
@@ -17,14 +15,6 @@ const FailBranchCard = () => {
         </div>
         <div className="text-text-tertiary system-xs-regular">
           {t('nodes.common.errorHandle.failBranch.customizeTip', { ns: 'workflow' })}
-          &nbsp;
-          <a
-            href={docLink('/use-dify/debug/error-type')}
-            target="_blank"
-            className="text-text-accent"
-          >
-            {t('common.learnMore', { ns: 'workflow' })}
-          </a>
         </div>
       </div>
     </div>

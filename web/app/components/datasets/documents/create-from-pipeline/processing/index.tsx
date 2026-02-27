@@ -4,7 +4,6 @@ import { RiBookOpenLine } from '@remixicon/react'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDatasetDetailContextWithSelector } from '@/context/dataset-detail'
-import { useDocLink } from '@/context/i18n'
 import EmbeddingProcess from './embedding-process'
 
 type ProcessingProps = {
@@ -17,7 +16,6 @@ const Processing = ({
   documents,
 }: ProcessingProps) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const datasetId = useDatasetDetailContextWithSelector(s => s.dataset?.id)
   const indexingType = useDatasetDetailContextWithSelector(s => s.dataset?.indexing_technique)
   const retrievalMethod = useDatasetDetailContextWithSelector(s => s.dataset?.retrieval_model_dict?.search_method)
@@ -43,14 +41,6 @@ const Processing = ({
           <div className="flex flex-col gap-y-2">
             <div className="text-text-secondary system-xl-semibold">{t('stepThree.sideTipTitle', { ns: 'datasetCreation' })}</div>
             <div className="text-text-tertiary system-sm-regular">{t('stepThree.sideTipContent', { ns: 'datasetCreation' })}</div>
-            <a
-              href={docLink('/use-dify/knowledge/knowledge-pipeline/authorize-data-source')}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="text-text-accent system-sm-regular"
-            >
-              {t('addDocuments.stepThree.learnMore', { ns: 'datasetPipeline' })}
-            </a>
           </div>
         </div>
       </div>

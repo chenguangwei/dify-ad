@@ -4,10 +4,8 @@ import { noop } from 'es-toolkit/function'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button from '@/app/components/base/button'
-import { BookOpen01 } from '@/app/components/base/icons/src/vender/line/education'
 import Modal from '@/app/components/base/modal'
 import { useToastContext } from '@/app/components/base/toast'
-import { useDocLink } from '@/context/i18n'
 import {
   addApiBasedExtension,
   updateApiBasedExtension,
@@ -30,7 +28,6 @@ const ApiBasedExtensionModal: FC<ApiBasedExtensionModalProps> = ({
   onSave,
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const [localeData, setLocaleData] = useState(data)
   const [loading, setLoading] = useState(false)
   const { notify } = useToastContext()
@@ -99,17 +96,8 @@ const ApiBasedExtensionModal: FC<ApiBasedExtensionModalProps> = ({
         />
       </div>
       <div className="py-2">
-        <div className="flex h-9 items-center justify-between text-sm font-medium text-text-primary">
+        <div className="h-9 text-sm font-medium text-text-primary">
           {t('apiBasedExtension.modal.apiEndpoint.title', { ns: 'common' })}
-          <a
-            href={docLink('/use-dify/workspace/api-extension/api-extension')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center text-xs font-normal text-text-accent"
-          >
-            <BookOpen01 className="mr-1 h-3 w-3" />
-            {t('apiBasedExtension.link', { ns: 'common' })}
-          </a>
         </div>
         <input
           value={localeData.api_endpoint || ''}

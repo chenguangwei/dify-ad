@@ -15,7 +15,6 @@ import Switch from '@/app/components/base/switch'
 import Tooltip from '@/app/components/base/tooltip'
 import Indicator from '@/app/components/header/indicator'
 import MCPServerModal from '@/app/components/tools/mcp/mcp-server-modal'
-import { useDocLink } from '@/context/i18n'
 import { cn } from '@/utils/classnames'
 import { useMCPServiceCardState } from './hooks/use-mcp-service-card'
 
@@ -112,7 +111,6 @@ type TooltipContentParams = {
   missingStartNode: boolean
   triggerModeMessage: ReactNode
   t: TFunction
-  docLink: ReturnType<typeof useDocLink>
 }
 
 function getTooltipContent({
@@ -121,7 +119,6 @@ function getTooltipContent({
   missingStartNode,
   triggerModeMessage,
   t,
-  docLink,
 }: TooltipContentParams): ReactNode {
   if (!toggleDisabled)
     return ''
@@ -134,12 +131,6 @@ function getTooltipContent({
       <>
         <div className="mb-1 text-xs font-normal text-text-secondary">
           {t('overview.appInfo.enableTooltip.description', { ns: 'appOverview' })}
-        </div>
-        <div
-          className="cursor-pointer text-xs font-normal text-text-accent hover:underline"
-          onClick={() => window.open(docLink('/use-dify/nodes/user-input'), '_blank')}
-        >
-          {t('overview.appInfo.enableTooltip.learnMore', { ns: 'appOverview' })}
         </div>
       </>
     )
@@ -161,7 +152,6 @@ const MCPServiceCard: FC<IAppCardProps> = ({
   triggerModeMessage = '',
 }) => {
   const { t } = useTranslation()
-  const docLink = useDocLink()
   const appId = appInfo.id
 
   const {
@@ -220,7 +210,6 @@ const MCPServiceCard: FC<IAppCardProps> = ({
     missingStartNode,
     triggerModeMessage,
     t,
-    docLink,
   })
 
   return (
