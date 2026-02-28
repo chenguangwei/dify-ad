@@ -240,5 +240,7 @@ scripts/stress-test/reports/
 CLAUDE.md
 **/CLAUDE.md
 *.local.yaml
-dify-offline-pack
+*.tar
 package-lock.json
+volumes/
+
