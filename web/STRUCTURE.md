@@ -1,6 +1,6 @@
 # Dify Web 前端代码结构文档
 
-> 本文档为"星渊智能体平台"品牌改造计划的第一阶段输出。
+> 本文档为"兽牙智能体平台"品牌改造计划的第一阶段输出。
 
 ## 1. 前端目录结构树
 
@@ -210,7 +210,7 @@ web/
 
 | 文件路径 | 描述 | 操作 |
 |---------|------|------|
-| `web/public/logo/logo.svg` | SVG 矢量 Logo | 替换为星渊 Logo |
+| `web/public/logo/logo.svg` | SVG 矢量 Logo | 替换为兽牙 Logo |
 | `web/public/logo/logo-site.png` | 网站主 Logo | 替换 |
 | `web/public/logo/logo-site-dark.png` | 深色模式 Logo | 替换 |
 | `web/public/logo/logo-monochrome-white.svg` | 白色单色 Logo | 替换 |
@@ -253,9 +253,9 @@ web/
 | **Manifest** | `web/public/manifest.json` | 修改品牌信息 |
 | **Meta** | `web/app/layout.tsx` | 修改 theme-color, title |
 | **Logo 组件** | `web/app/components/base/logo/dify-logo.tsx` | 重命名 + 更新 |
-| **标题** | `web/app/components/header/index.tsx` | Dify → 星渊智能体平台 |
+| **标题** | `web/app/components/header/index.tsx` | Dify → 兽牙智能体平台 |
 | **版权** | `web/app/signin/layout.tsx` 等6个文件 | 替换版权信息 |
-| **i18n** | `web/i18n/zh-Hans/*.json` | 替换 Dify → 星渊 |
+| **i18n** | `web/i18n/zh-Hans/*.json` | 替换 Dify → 兽牙 |
 | **硬编码颜色** | 多处 `#1C64F2` | 替换为品牌色 |
 | **CSS 变量** | `web/themes/*.css` | 替换 dify 命名 |
 

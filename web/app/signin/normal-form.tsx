@@ -214,7 +214,7 @@ const NormalForm = () => {
             <div className="mb-3 mt-6 text-[13px] font-medium leading-4 signin-text-body text-center">
               <span>如果您还没有账号或想了解产品，请前往我们的官网</span>
               <Link className="signin-link font-bold ml-1" href="/signup">
-                注册星渊账户
+                注册兽牙账户
               </Link>
             </div>
           )}

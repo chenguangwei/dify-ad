@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Xingyuan 离线部署启动脚本
+# Shouya 离线部署启动脚本
 # 用法: ./start.sh
 
 set -e
@@ -8,7 +8,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=========================================="
-echo "  Xingyuan 离线部署启动脚本"
+echo "  Shouya 离线部署启动脚本"
 echo "=========================================="
 echo ""
 
@@ -47,7 +47,7 @@ fi
 
 # 检查核心镜像是否存在
 echo "检查核心镜像..."
-CORE_IMAGES=("xingyuan-api:1.13.0" "xingyuan-web:local" "xingyuan-sandbox:0.2.12" "xingyuan-plugin-daemon:0.5.3-local")
+CORE_IMAGES=("shouya-api:1.13.0" "shouya-web:local" "shouya-sandbox:0.2.12" "shouya-plugin-daemon:0.5.3-local")
 MISSING_IMAGES=()
 
 for image in "${CORE_IMAGES[@]}"; do

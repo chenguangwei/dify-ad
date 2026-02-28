@@ -1,4 +1,4 @@
-# 离线部署操作手册
+# Shouya 离线部署操作手册
 
 ## 一、环境准备
 
@@ -28,12 +28,12 @@
 
 ### 2.1 拷贝离线包
 
-将整个 `xingyuan-offline-pack` 目录拷贝到目标服务器：
+将整个 `shouya-offline-pack` 目录拷贝到目标服务器：
 
 ```bash
 # 例如拷贝到 /opt 目录
-cp -r xingyuan-offline-pack /opt/
-cd /opt/xingyuan-offline-pack
+cp -r shouya-offline-pack /opt/
+cd /opt/shouya-offline-pack
 ```
 
 ### 2.2 加载镜像
@@ -41,7 +41,7 @@ cd /opt/xingyuan-offline-pack
 **方式一：使用脚本自动加载（推荐）**
 
 ```bash
-cd xingyuan-offline-pack/
+cd shouya-offline-pack/
 chmod +x load_images.sh
 ./load_images.sh
 ```
@@ -49,11 +49,11 @@ chmod +x load_images.sh
 **方式二：手动逐个加载**
 
 ```bash
-cd xingyuan-offline-pack/images/
-docker load -i xingyuan-api.tar
-docker load -i xingyuan-web.tar
-docker load -i xingyuan-sandbox.tar
-docker load -i xingyuan-plugin-daemon.tar
+cd shouya-offline-pack/images/
+docker load -i shouya-api.tar
+docker load -i shouya-web.tar
+docker load -i shouya-sandbox.tar
+docker load -i shouya-plugin-daemon.tar
 docker load -i postgres.tar
 docker load -i redis.tar
 docker load -i nginx.tar
@@ -65,7 +65,7 @@ docker load -i squid.tar
 **验证镜像加载成功**
 
 ```bash
-docker images | grep -E "xingyuan|postgres|redis|nginx"
+docker images | grep -E "shouya|postgres|redis|nginx"
 ```
 
 ### 2.3 配置环境变量
@@ -93,7 +93,7 @@ vi .env
 **方式一：使用启动脚本（推荐）**
 
 ```bash
-cd /opt/xingyuan-offline-pack
+cd /opt/shouya-offline-pack
 chmod +x start.sh
 ./start.sh
 ```
@@ -101,7 +101,7 @@ chmod +x start.sh
 **方式二：手动启动**
 
 ```bash
-cd /opt/xingyuan-offline-pack
+cd /opt/shouya-offline-pack
 
 # 启动所有服务
 docker-compose --env-file offline.env up -d
@@ -139,7 +139,7 @@ curl -s http://localhost:3000 | head -20
 
 ```bash
 # 1. 加载镜像
-cd xingyuan-offline-pack/
+cd shouya-offline-pack/
 ./load_images.sh
 
 # 2. 启动服务
@@ -186,21 +186,21 @@ docker-compose --env-file offline.env restart api
 docker-compose --env-file offline.env logs -f api
 
 # 进入容器
-docker exec -it xingyuan-offline-pack-api-1 bash
+docker exec -it shouya-offline-pack-api-1 bash
 ```
 
 ### 5.2 服务组件
 
 | 容器名 | 镜像 | 说明 |
 |--------|------|------|
-| xingyuan-offline-pack-api-1 | xingyuan-api:local | API 服务 |
-| xingyuan-offline-pack-web-1 | xingyuan-web:local | 前端界面 |
-| xingyuan-offline-pack-worker-1 | xingyuan-api:local | 后台任务 |
-| xingyuan-offline-pack-sandbox-1 | xingyuan-sandbox:local | 沙箱执行 |
-| xingyuan-offline-pack-plugin-daemon-1 | xingyuan-plugin-daemon:local | 插件服务 |
-| xingyuan-offline-pack-db_postgres-1 | postgres:15-alpine | PostgreSQL |
-| xingyuan-offline-pack-redis-1 | redis:7-alpine | Redis 缓存 |
-| xingyuan-offline-pack-nginx-1 | nginx:alpine | 反向代理 |
+| shouya-offline-pack-api-1 | shouya-api:local | API 服务 |
+| shouya-offline-pack-web-1 | shouya-web:local | 前端界面 |
+| shouya-offline-pack-worker-1 | shouya-api:local | 后台任务 |
+| shouya-offline-pack-sandbox-1 | shouya-sandbox:local | 沙箱执行 |
+| shouya-offline-pack-plugin-daemon-1 | shouya-plugin-daemon:local | 插件服务 |
+| shouya-offline-pack-db_postgres-1 | postgres:15-alpine | PostgreSQL |
+| shouya-offline-pack-redis-1 | redis:7-alpine | Redis 缓存 |
+| shouya-offline-pack-nginx-1 | nginx:alpine | 反向代理 |
 
 ---
 
@@ -257,7 +257,7 @@ docker-compose --env-file offline.env up -d
 
 ```bash
 # 备份 PostgreSQL
-docker exec -it xingyuan-offline-pack-db_postgres-1 pg_dump -U postgres dify > backup_$(date +%Y%m%d).sql
+docker exec -it shouya-offline-pack-db_postgres-1 pg_dump -U postgres dify > backup_$(date +%Y%m%d).sql
 ```
 
 ### 7.2 备份存储卷
@@ -272,7 +272,7 @@ tar -czvf volumes_backup_$(date +%Y%m%d).tar.gz volumes/
 ## 八、目录结构
 
 ```
-xingyuan-offline-pack/
+shouya-offline-pack/
 ├── docker-compose.yaml          # Docker Compose 配置
 ├── offline.env.example          # 离线环境变量模板
 ├── load_images.sh              # 镜像加载脚本
@@ -280,9 +280,9 @@ xingyuan-offline-pack/
 ├── stop.sh                      # 停止脚本
 ├── offline-deploy.md            # 部署手册
 └── images/                      # Docker 镜像目录
-    ├── xingyuan-api.tar         # API 镜像
-    ├── xingyuan-web.tar         # Web 镜像
-    ├── xingyuan-sandbox.tar    # Sandbox 镜像
-    ├── xingyuan-plugin-daemon.tar  # Plugin 镜像
+    ├── shouya-api.tar         # API 镜像
+    ├── shouya-web.tar         # Web 镜像
+    ├── shouya-sandbox.tar    # Sandbox 镜像
+    ├── shouya-plugin-daemon.tar  # Plugin 镜像
     └── ...                     # 其他镜像
 ```

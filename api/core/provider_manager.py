@@ -305,7 +305,7 @@ class ProviderManager:
             available_models = provider_configurations.get_models(model_type=model_type, only_active=True)
 
             if available_models:
-                # 星渊定制: 优先使用 qwen 模型
+                # 兽牙定制: 优先使用 qwen 模型
                 available_model = next(
                     (model for model in available_models if model.model.lower().startswith("qwen")), None
                 )

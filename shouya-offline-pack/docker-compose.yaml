@@ -715,7 +715,7 @@ services:
 
   # API service
   api:
-    image: xingyuan-api:1.13.0
+    image: shouya-api:1.13.0
     restart: always
     environment:
       # Use the shared environment variables.
@@ -759,7 +759,7 @@ services:
   # worker service
   # The Celery worker for processing all queues (dataset, workflow, mail, etc.)
   worker:
-    image: xingyuan-api:1.13.0
+    image: shouya-api:1.13.0
     restart: always
     environment:
       # Use the shared environment variables.
@@ -798,7 +798,7 @@ services:
   # worker_beat service
   # Celery beat for scheduling periodic tasks.
   worker_beat:
-    image: xingyuan-api:1.13.0
+    image: shouya-api:1.13.0
     restart: always
     environment:
       # Use the shared environment variables.
@@ -828,7 +828,7 @@ services:
 
   # Frontend web application.
   web:
-    image: xingyuan-web:local
+    image: shouya-web:local
     restart: always
     environment:
       CONSOLE_API_URL: ${CONSOLE_API_URL:-}
@@ -940,7 +940,7 @@ services:
 
   # The DifySandbox
   sandbox:
-    image: xingyuan-sandbox:0.2.12
+    image: shouya-sandbox:0.2.12
     restart: always
     environment:
       # The DifySandbox configurations
@@ -964,7 +964,7 @@ services:
 
   # plugin daemon
   plugin_daemon:
-    image: xingyuan-plugin-daemon:0.5.3-local
+    image: shouya-plugin-daemon:0.5.3-local
     restart: always
     environment:
       # Use the shared environment variables.

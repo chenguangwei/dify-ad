@@ -36,7 +36,7 @@ const Datasets = ({
   const observerRef = useRef<IntersectionObserver>(null)
 
   useEffect(() => {
-    document.title = `${t('knowledge', { ns: 'dataset' })} - 星渊`
+    document.title = `${t('knowledge', { ns: 'dataset' })} - 兽牙`
   }, [t])
 
   useEffect(() => {

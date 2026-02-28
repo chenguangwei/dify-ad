@@ -1,0 +1,28 @@
+<svg width="48" height="22" viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="starGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    
+    <linearGradient id="textGradDark" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+
+  <g>
+    <ellipse cx="100" cy="110" rx="80" ry="34" fill="none" stroke="#E2E8F0" stroke-width="5" transform="rotate(-25 100 110)"/>
+    <ellipse cx="100" cy="110" rx="80" ry="34" fill="none" stroke="#E2E8F0" stroke-width="5" transform="rotate(25 100 110)"/>
+    
+    <path d="M 100 30 Q 100 110 20 110 Q 100 110 100 190 Q 100 110 180 110 Q 100 110 100 30 Z" fill="url(#starGradLight)"/>
+    
+    <circle cx="100" cy="110" r="12" fill="#FFFFFF" opacity="0.9"/> 
+    <circle cx="40" cy="80" r="7" fill="#38BDF8"/>
+    <circle cx="160" cy="140" r="8" fill="#818CF8"/>
+  </g>
+
+  <text x="195" y="105" fill="url(#textGradDark)" font-family="'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif" font-size="36" font-weight="800" letter-spacing="1">兽牙智能体平台</text>
+  
+  <text x="197" y="148" fill="#0284C7" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" letter-spacing="1.5">STAR ABYSS AI</text>
+</svg>

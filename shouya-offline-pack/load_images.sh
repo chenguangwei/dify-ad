@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Xingyuan 离线镜像加载脚本
+# Shouya 离线镜像加载脚本
 # 用法: ./load_images.sh
 
 set -e
@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 IMAGES_DIR="${SCRIPT_DIR}/images"
 
 echo "=========================================="
-echo "  Xingyuan 离线镜像加载脚本"
+echo "  Shouya 离线镜像加载脚本"
 echo "=========================================="
 echo ""
 
@@ -28,10 +28,10 @@ fi
 # 定义镜像列表
 IMAGES=(
     "busybox.tar"
-    "xingyuan-api.tar"
-    "xingyuan-web.tar"
-    "xingyuan-sandbox.tar"
-    "xingyuan-plugin-daemon.tar"
+    "shouya-api.tar"
+    "shouya-web.tar"
+    "shouya-sandbox.tar"
+    "shouya-plugin-daemon.tar"
     "postgres.tar"
     "redis.tar"
     "nginx.tar"
@@ -80,7 +80,7 @@ echo ""
 
 # 显示已加载的镜像
 echo "当前本地镜像:"
-docker images | grep -E "xingyuan|postgres|redis|nginx|weaviate|elasticsearch|squid" | head -20
+docker images | grep -E "shouya|postgres|redis|nginx|weaviate|elasticsearch|squid" | head -20
 
 echo ""
 echo "镜像加载完成！"

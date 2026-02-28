@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Xingyuan 离线部署停止脚本
+# Shouya 离线部署停止脚本
 # 用法: ./stop.sh
 
 set -e
@@ -8,7 +8,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=========================================="
-echo "  Xingyuan 离线部署停止脚本"
+echo "  Shouya 离线部署停止脚本"
 echo "=========================================="
 echo ""
 

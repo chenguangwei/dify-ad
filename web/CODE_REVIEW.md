@@ -1,7 +1,7 @@
 # Dify Web 前端代码审查报告
 
 > 生成日期: 2026-02-26
-> 项目: 星渊智能体平台 (基于 Dify)
+> 项目: 兽牙智能体平台 (基于 Dify)
 
 ---
 
@@ -221,7 +221,7 @@ pnpm type-check     # 类型检查
 
 ---
 
-## 11. 星渊定制内容
+## 11. 兽牙定制内容
 
 基于 Dify 的品牌定制修改：
 
@@ -234,7 +234,7 @@ pnpm type-check     # 类型检查
 | `app/signin/one-more-step.tsx` | 移除许可证链接 |
 | `app/signin/invite-settings/page.tsx` | 移除许可证链接 |
 | `app/install/installForm.tsx` | 移除许可证链接 |
-| `hooks/use-document-title.ts` | 默认标题改为 "星渊" |
+| `hooks/use-document-title.ts` | 默认标题改为 "兽牙" |
 | `components/base/modal/index.css` | 暗色遮罩背景 |
 | `components/base/dialog/index.tsx` | 暗色遮罩背景 |
 | `components/base/content-dialog/index.tsx` | 暗色遮罩背景 |
@@ -248,7 +248,7 @@ pnpm type-check     # 类型检查
 | 文件 | 用途 |
 |------|------|
 | `docker/offline.env.example` | 离线部署配置示例 |
-| `public/logo/logo_星渊.svg` | 品牌 Logo |
+| `public/logo/logo_兽牙.svg` | 品牌 Logo |
 | `public/icon-*.png` | 多尺寸图标 |
 | `public/favicon.ico` | 网站图标 |
 
